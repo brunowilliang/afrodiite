@@ -35,7 +35,7 @@ export const Text = useStyled(TextBase, {
 		variant: {
 			title: {
 				className:
-					"bg-gradient-to-br from-text-primary to-foreground bg-clip-text text-center font-bold text-4xl text-transparent md:text-5xl lg:text-6xl",
+					"bg-gradient-to-br from-text-primary to-foreground bg-clip-text text-center font-medium text-3xl text-transparent md:text-5xl lg:text-6xl",
 			},
 		},
 	},

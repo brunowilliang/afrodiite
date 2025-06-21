@@ -7,7 +7,7 @@ export default function Home() {
 	return (
 		<>
 			<Pattern>
-				<div className="centered flex max-w-screen-2xl flex-col gap-10">
+				<div className="centered flex max-w-screen-2xl flex-col gap-10 px-4">
 					<Text variant="title">
 						Encontre as
 						<br />

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Anybody } from "next/font/google";
 import "../styles/global.css";
-import Header from "@/components/header";
+import { Logo } from "@/components/Logo";
 import { Providers } from "@/providers";
 
 const anybody = Anybody({
@@ -27,7 +27,9 @@ export default function RootLayout({
 			>
 				<Providers>
 					<div className="grid h-svh grid-rows-[auto_1fr]">
-						<Header />
+						{/* <Header /> */}
+						<Logo />
+						{children}
 						{children}
 					</div>
 				</Providers>
