@@ -1,0 +1,1133 @@
+{
+	"id": "8e653168-37f0-4be1-9ef6-4937cf4c6b1e",
+	"prevId": "00000000-0000-0000-0000-000000000000",
+	"version": "7",
+	"dialect": "postgresql",
+	"tables": {
+		"public.accounts": {
+			"name": "accounts",
+			"schema": "",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "text",
+					"primaryKey": true,
+					"notNull": true
+				},
+				"account_id": {
+					"name": "account_id",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"provider_id": {
+					"name": "provider_id",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"user_id": {
+					"name": "user_id",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"access_token": {
+					"name": "access_token",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"refresh_token": {
+					"name": "refresh_token",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"id_token": {
+					"name": "id_token",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"access_token_expires_at": {
+					"name": "access_token_expires_at",
+					"type": "timestamp",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"refresh_token_expires_at": {
+					"name": "refresh_token_expires_at",
+					"type": "timestamp",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"scope": {
+					"name": "scope",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"password": {
+					"name": "password",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"created_at": {
+					"name": "created_at",
+					"type": "timestamp",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"updated_at": {
+					"name": "updated_at",
+					"type": "timestamp",
+					"primaryKey": false,
+					"notNull": true
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {
+				"accounts_user_id_users_id_fk": {
+					"name": "accounts_user_id_users_id_fk",
+					"tableFrom": "accounts",
+					"tableTo": "users",
+					"columnsFrom": ["user_id"],
+					"columnsTo": ["id"],
+					"onDelete": "cascade",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {},
+			"policies": {
+				"account_policy": {
+					"name": "account_policy",
+					"as": "PERMISSIVE",
+					"for": "ALL",
+					"to": ["authenticated"],
+					"using": "((select auth.uid())) = \"accounts\".\"user_id\"",
+					"withCheck": "((select auth.uid())) = \"accounts\".\"user_id\""
+				}
+			},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		},
+		"public.sessions": {
+			"name": "sessions",
+			"schema": "",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "text",
+					"primaryKey": true,
+					"notNull": true
+				},
+				"expires_at": {
+					"name": "expires_at",
+					"type": "timestamp",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"token": {
+					"name": "token",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"created_at": {
+					"name": "created_at",
+					"type": "timestamp",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"updated_at": {
+					"name": "updated_at",
+					"type": "timestamp",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"ip_address": {
+					"name": "ip_address",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"user_agent": {
+					"name": "user_agent",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"user_id": {
+					"name": "user_id",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {
+				"sessions_user_id_users_id_fk": {
+					"name": "sessions_user_id_users_id_fk",
+					"tableFrom": "sessions",
+					"tableTo": "users",
+					"columnsFrom": ["user_id"],
+					"columnsTo": ["id"],
+					"onDelete": "cascade",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {
+				"sessions_token_unique": {
+					"name": "sessions_token_unique",
+					"nullsNotDistinct": false,
+					"columns": ["token"]
+				}
+			},
+			"policies": {
+				"session_policy": {
+					"name": "session_policy",
+					"as": "PERMISSIVE",
+					"for": "ALL",
+					"to": ["authenticated"],
+					"using": "((select auth.uid())) = \"sessions\".\"user_id\"",
+					"withCheck": "((select auth.uid())) = \"sessions\".\"user_id\""
+				}
+			},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		},
+		"public.users": {
+			"name": "users",
+			"schema": "",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "text",
+					"primaryKey": true,
+					"notNull": true
+				},
+				"name": {
+					"name": "name",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"email": {
+					"name": "email",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"email_verified": {
+					"name": "email_verified",
+					"type": "boolean",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"image": {
+					"name": "image",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"created_at": {
+					"name": "created_at",
+					"type": "timestamp",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"updated_at": {
+					"name": "updated_at",
+					"type": "timestamp",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"role": {
+					"name": "role",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "'escort'"
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {
+				"users_email_unique": {
+					"name": "users_email_unique",
+					"nullsNotDistinct": false,
+					"columns": ["email"]
+				}
+			},
+			"policies": {
+				"user_select_policy": {
+					"name": "user_select_policy",
+					"as": "PERMISSIVE",
+					"for": "SELECT",
+					"to": ["authenticated"],
+					"using": "((select auth.uid())) = \"users\".\"id\""
+				},
+				"user_update_policy": {
+					"name": "user_update_policy",
+					"as": "PERMISSIVE",
+					"for": "UPDATE",
+					"to": ["authenticated"],
+					"using": "((select auth.uid())) = \"users\".\"id\"",
+					"withCheck": "((select auth.uid())) = \"users\".\"id\""
+				}
+			},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		},
+		"public.verifications": {
+			"name": "verifications",
+			"schema": "",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "text",
+					"primaryKey": true,
+					"notNull": true
+				},
+				"identifier": {
+					"name": "identifier",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"value": {
+					"name": "value",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"expires_at": {
+					"name": "expires_at",
+					"type": "timestamp",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"created_at": {
+					"name": "created_at",
+					"type": "timestamp",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"updated_at": {
+					"name": "updated_at",
+					"type": "timestamp",
+					"primaryKey": false,
+					"notNull": false
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {},
+			"policies": {
+				"verification_policy": {
+					"name": "verification_policy",
+					"as": "PERMISSIVE",
+					"for": "ALL",
+					"to": ["authenticated"],
+					"using": "((select auth.uid())) = \"verifications\".\"identifier\"",
+					"withCheck": "((select auth.uid())) = \"verifications\".\"identifier\""
+				}
+			},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		},
+		"public.escort_pricing": {
+			"name": "escort_pricing",
+			"schema": "",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "text",
+					"primaryKey": true,
+					"notNull": true
+				},
+				"escort_id": {
+					"name": "escort_id",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"thirty_minutes": {
+					"name": "thirty_minutes",
+					"type": "numeric(10, 2)",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"one_hour": {
+					"name": "one_hour",
+					"type": "numeric(10, 2)",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"two_hours": {
+					"name": "two_hours",
+					"type": "numeric(10, 2)",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"overnight": {
+					"name": "overnight",
+					"type": "numeric(10, 2)",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"daily": {
+					"name": "daily",
+					"type": "numeric(10, 2)",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"created_at": {
+					"name": "created_at",
+					"type": "timestamp",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"updated_at": {
+					"name": "updated_at",
+					"type": "timestamp",
+					"primaryKey": false,
+					"notNull": true
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {
+				"escort_pricing_escort_id_escort_profiles_id_fk": {
+					"name": "escort_pricing_escort_id_escort_profiles_id_fk",
+					"tableFrom": "escort_pricing",
+					"tableTo": "escort_profiles",
+					"columnsFrom": ["escort_id"],
+					"columnsTo": ["id"],
+					"onDelete": "cascade",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {},
+			"policies": {
+				"escort_pricing_delete_policy": {
+					"name": "escort_pricing_delete_policy",
+					"as": "PERMISSIVE",
+					"for": "DELETE",
+					"to": ["authenticated"],
+					"using": "exists(\n    select 1 from escort_profiles \n    where id = \"escort_pricing\".\"escort_id\" \n    and user_id = ((select auth.uid()))\n  )"
+				},
+				"escort_pricing_insert_policy": {
+					"name": "escort_pricing_insert_policy",
+					"as": "PERMISSIVE",
+					"for": "INSERT",
+					"to": ["authenticated"],
+					"withCheck": "exists(\n    select 1 from escort_profiles \n    where id = \"escort_pricing\".\"escort_id\" \n    and user_id = ((select auth.uid()))\n  )"
+				},
+				"escort_pricing_select_policy": {
+					"name": "escort_pricing_select_policy",
+					"as": "PERMISSIVE",
+					"for": "SELECT",
+					"to": ["authenticated"],
+					"using": "true"
+				},
+				"escort_pricing_update_policy": {
+					"name": "escort_pricing_update_policy",
+					"as": "PERMISSIVE",
+					"for": "UPDATE",
+					"to": ["authenticated"],
+					"using": "exists(\n    select 1 from escort_profiles \n    where id = \"escort_pricing\".\"escort_id\" \n    and user_id = ((select auth.uid()))\n  )",
+					"withCheck": "exists(\n    select 1 from escort_profiles \n    where id = \"escort_pricing\".\"escort_id\" \n    and user_id = ((select auth.uid()))\n  )"
+				}
+			},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		},
+		"public.escort_profiles": {
+			"name": "escort_profiles",
+			"schema": "",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "text",
+					"primaryKey": true,
+					"notNull": true
+				},
+				"user_id": {
+					"name": "user_id",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"slogan": {
+					"name": "slogan",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"name": {
+					"name": "name",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"description": {
+					"name": "description",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"age": {
+					"name": "age",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"phone": {
+					"name": "phone",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"has_place": {
+					"name": "has_place",
+					"type": "has_place",
+					"typeSchema": "public",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"serves_only": {
+					"name": "serves_only",
+					"type": "serves_only",
+					"typeSchema": "public",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"address": {
+					"name": "address",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"neighborhoods_served": {
+					"name": "neighborhoods_served",
+					"type": "jsonb",
+					"primaryKey": false,
+					"notNull": false,
+					"default": "'[]'::jsonb"
+				},
+				"nearby_cities_served": {
+					"name": "nearby_cities_served",
+					"type": "jsonb",
+					"primaryKey": false,
+					"notNull": false,
+					"default": "'[]'::jsonb"
+				},
+				"gender": {
+					"name": "gender",
+					"type": "gender",
+					"typeSchema": "public",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"genitalia": {
+					"name": "genitalia",
+					"type": "genitalia",
+					"typeSchema": "public",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"sexual_preference": {
+					"name": "sexual_preference",
+					"type": "sexual_preference",
+					"typeSchema": "public",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"weight": {
+					"name": "weight",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"height": {
+					"name": "height",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"ethnicity": {
+					"name": "ethnicity",
+					"type": "ethnicity",
+					"typeSchema": "public",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"eye_color": {
+					"name": "eye_color",
+					"type": "eye_color",
+					"typeSchema": "public",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"hair_style": {
+					"name": "hair_style",
+					"type": "hair_style",
+					"typeSchema": "public",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"hair_length": {
+					"name": "hair_length",
+					"type": "hair_length",
+					"typeSchema": "public",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"foot_size": {
+					"name": "foot_size",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"has_silicone": {
+					"name": "has_silicone",
+					"type": "boolean",
+					"primaryKey": false,
+					"notNull": false,
+					"default": false
+				},
+				"has_tattoos": {
+					"name": "has_tattoos",
+					"type": "boolean",
+					"primaryKey": false,
+					"notNull": false,
+					"default": false
+				},
+				"has_piercings": {
+					"name": "has_piercings",
+					"type": "boolean",
+					"primaryKey": false,
+					"notNull": false,
+					"default": false
+				},
+				"is_smoker": {
+					"name": "is_smoker",
+					"type": "boolean",
+					"primaryKey": false,
+					"notNull": false,
+					"default": false
+				},
+				"payment_methods": {
+					"name": "payment_methods",
+					"type": "jsonb",
+					"primaryKey": false,
+					"notNull": false,
+					"default": "'[]'::jsonb"
+				},
+				"service_locations": {
+					"name": "service_locations",
+					"type": "jsonb",
+					"primaryKey": false,
+					"notNull": false,
+					"default": "'[]'::jsonb"
+				},
+				"place_amenities": {
+					"name": "place_amenities",
+					"type": "jsonb",
+					"primaryKey": false,
+					"notNull": false,
+					"default": "'[]'::jsonb"
+				},
+				"working_hours": {
+					"name": "working_hours",
+					"type": "jsonb",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"is_verified": {
+					"name": "is_verified",
+					"type": "boolean",
+					"primaryKey": false,
+					"notNull": false,
+					"default": false
+				},
+				"verification_status": {
+					"name": "verification_status",
+					"type": "verification_status",
+					"typeSchema": "public",
+					"primaryKey": false,
+					"notNull": false,
+					"default": "'pending'"
+				},
+				"is_available": {
+					"name": "is_available",
+					"type": "boolean",
+					"primaryKey": false,
+					"notNull": false,
+					"default": false
+				},
+				"is_sponsored": {
+					"name": "is_sponsored",
+					"type": "boolean",
+					"primaryKey": false,
+					"notNull": false,
+					"default": false
+				},
+				"created_at": {
+					"name": "created_at",
+					"type": "timestamp",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"updated_at": {
+					"name": "updated_at",
+					"type": "timestamp",
+					"primaryKey": false,
+					"notNull": true
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {
+				"escort_profiles_user_id_users_id_fk": {
+					"name": "escort_profiles_user_id_users_id_fk",
+					"tableFrom": "escort_profiles",
+					"tableTo": "users",
+					"columnsFrom": ["user_id"],
+					"columnsTo": ["id"],
+					"onDelete": "cascade",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {},
+			"policies": {
+				"escort_profile_delete_policy": {
+					"name": "escort_profile_delete_policy",
+					"as": "PERMISSIVE",
+					"for": "DELETE",
+					"to": ["authenticated"],
+					"using": "((select auth.uid())) = \"escort_profiles\".\"user_id\""
+				},
+				"escort_profile_insert_policy": {
+					"name": "escort_profile_insert_policy",
+					"as": "PERMISSIVE",
+					"for": "INSERT",
+					"to": ["authenticated"],
+					"withCheck": "((select auth.uid())) = \"escort_profiles\".\"user_id\""
+				},
+				"escort_profile_select_policy": {
+					"name": "escort_profile_select_policy",
+					"as": "PERMISSIVE",
+					"for": "SELECT",
+					"to": ["authenticated"],
+					"using": "true"
+				},
+				"escort_profile_update_policy": {
+					"name": "escort_profile_update_policy",
+					"as": "PERMISSIVE",
+					"for": "UPDATE",
+					"to": ["authenticated"],
+					"using": "((select auth.uid())) = \"escort_profiles\".\"user_id\"",
+					"withCheck": "((select auth.uid())) = \"escort_profiles\".\"user_id\""
+				}
+			},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		},
+		"public.escort_services": {
+			"name": "escort_services",
+			"schema": "",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "text",
+					"primaryKey": true,
+					"notNull": true
+				},
+				"escort_id": {
+					"name": "escort_id",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"greek_kiss": {
+					"name": "greek_kiss",
+					"type": "service_level",
+					"typeSchema": "public",
+					"primaryKey": false,
+					"notNull": false,
+					"default": "'not_available'"
+				},
+				"feet_worship": {
+					"name": "feet_worship",
+					"type": "service_level",
+					"typeSchema": "public",
+					"primaryKey": false,
+					"notNull": false,
+					"default": "'not_available'"
+				},
+				"sadomasochism": {
+					"name": "sadomasochism",
+					"type": "service_level",
+					"typeSchema": "public",
+					"primaryKey": false,
+					"notNull": false,
+					"default": "'not_available'"
+				},
+				"fisting": {
+					"name": "fisting",
+					"type": "service_level",
+					"typeSchema": "public",
+					"primaryKey": false,
+					"notNull": false,
+					"default": "'not_available'"
+				},
+				"facefuck": {
+					"name": "facefuck",
+					"type": "service_level",
+					"typeSchema": "public",
+					"primaryKey": false,
+					"notNull": false,
+					"default": "'not_available'"
+				},
+				"hand_fetish": {
+					"name": "hand_fetish",
+					"type": "service_level",
+					"typeSchema": "public",
+					"primaryKey": false,
+					"notNull": false,
+					"default": "'not_available'"
+				},
+				"squirt": {
+					"name": "squirt",
+					"type": "service_level",
+					"typeSchema": "public",
+					"primaryKey": false,
+					"notNull": false,
+					"default": "'not_available'"
+				},
+				"golden_shower": {
+					"name": "golden_shower",
+					"type": "service_level",
+					"typeSchema": "public",
+					"primaryKey": false,
+					"notNull": false,
+					"default": "'not_available'"
+				},
+				"escort_service": {
+					"name": "escort_service",
+					"type": "service_level",
+					"typeSchema": "public",
+					"primaryKey": false,
+					"notNull": false,
+					"default": "'not_available'"
+				},
+				"travel": {
+					"name": "travel",
+					"type": "service_level",
+					"typeSchema": "public",
+					"primaryKey": false,
+					"notNull": false,
+					"default": "'not_available'"
+				},
+				"mouth_kiss": {
+					"name": "mouth_kiss",
+					"type": "service_level",
+					"typeSchema": "public",
+					"primaryKey": false,
+					"notNull": false,
+					"default": "'not_available'"
+				},
+				"roleplay": {
+					"name": "roleplay",
+					"type": "service_level",
+					"typeSchema": "public",
+					"primaryKey": false,
+					"notNull": false,
+					"default": "'not_available'"
+				},
+				"anal_with_condom": {
+					"name": "anal_with_condom",
+					"type": "service_level",
+					"typeSchema": "public",
+					"primaryKey": false,
+					"notNull": false,
+					"default": "'not_available'"
+				},
+				"vaginal_with_condom": {
+					"name": "vaginal_with_condom",
+					"type": "service_level",
+					"typeSchema": "public",
+					"primaryKey": false,
+					"notNull": false,
+					"default": "'not_available'"
+				},
+				"oral_with_condom": {
+					"name": "oral_with_condom",
+					"type": "service_level",
+					"typeSchema": "public",
+					"primaryKey": false,
+					"notNull": false,
+					"default": "'not_available'"
+				},
+				"masturbation": {
+					"name": "masturbation",
+					"type": "service_level",
+					"typeSchema": "public",
+					"primaryKey": false,
+					"notNull": false,
+					"default": "'not_available'"
+				},
+				"traditional_massage": {
+					"name": "traditional_massage",
+					"type": "service_level",
+					"typeSchema": "public",
+					"primaryKey": false,
+					"notNull": false,
+					"default": "'not_available'"
+				},
+				"domination": {
+					"name": "domination",
+					"type": "service_level",
+					"typeSchema": "public",
+					"primaryKey": false,
+					"notNull": false,
+					"default": "'not_available'"
+				},
+				"fantasy_clothes": {
+					"name": "fantasy_clothes",
+					"type": "service_level",
+					"typeSchema": "public",
+					"primaryKey": false,
+					"notNull": false,
+					"default": "'not_available'"
+				},
+				"sex_toys_penetration": {
+					"name": "sex_toys_penetration",
+					"type": "service_level",
+					"typeSchema": "public",
+					"primaryKey": false,
+					"notNull": false,
+					"default": "'not_available'"
+				},
+				"erotic_accessories": {
+					"name": "erotic_accessories",
+					"type": "service_level",
+					"typeSchema": "public",
+					"primaryKey": false,
+					"notNull": false,
+					"default": "'not_available'"
+				},
+				"oral_without_condom": {
+					"name": "oral_without_condom",
+					"type": "service_level",
+					"typeSchema": "public",
+					"primaryKey": false,
+					"notNull": false,
+					"default": "'not_available'"
+				},
+				"striptease": {
+					"name": "striptease",
+					"type": "service_level",
+					"typeSchema": "public",
+					"primaryKey": false,
+					"notNull": false,
+					"default": "'not_available'"
+				},
+				"tantric_massage": {
+					"name": "tantric_massage",
+					"type": "service_level",
+					"typeSchema": "public",
+					"primaryKey": false,
+					"notNull": false,
+					"default": "'not_available'"
+				},
+				"virtual_sex": {
+					"name": "virtual_sex",
+					"type": "service_level",
+					"typeSchema": "public",
+					"primaryKey": false,
+					"notNull": false,
+					"default": "'not_available'"
+				},
+				"double_penetration": {
+					"name": "double_penetration",
+					"type": "service_level",
+					"typeSchema": "public",
+					"primaryKey": false,
+					"notNull": false,
+					"default": "'not_available'"
+				},
+				"triple_penetration": {
+					"name": "triple_penetration",
+					"type": "service_level",
+					"typeSchema": "public",
+					"primaryKey": false,
+					"notNull": false,
+					"default": "'not_available'"
+				},
+				"allows_filming": {
+					"name": "allows_filming",
+					"type": "service_level",
+					"typeSchema": "public",
+					"primaryKey": false,
+					"notNull": false,
+					"default": "'not_available'"
+				},
+				"voyeurism": {
+					"name": "voyeurism",
+					"type": "service_level",
+					"typeSchema": "public",
+					"primaryKey": false,
+					"notNull": false,
+					"default": "'not_available'"
+				},
+				"bondage": {
+					"name": "bondage",
+					"type": "service_level",
+					"typeSchema": "public",
+					"primaryKey": false,
+					"notNull": false,
+					"default": "'not_available'"
+				},
+				"brown_shower": {
+					"name": "brown_shower",
+					"type": "service_level",
+					"typeSchema": "public",
+					"primaryKey": false,
+					"notNull": false,
+					"default": "'not_available'"
+				},
+				"trampling": {
+					"name": "trampling",
+					"type": "service_level",
+					"typeSchema": "public",
+					"primaryKey": false,
+					"notNull": false,
+					"default": "'not_available'"
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {
+				"escort_services_escort_id_escort_profiles_id_fk": {
+					"name": "escort_services_escort_id_escort_profiles_id_fk",
+					"tableFrom": "escort_services",
+					"tableTo": "escort_profiles",
+					"columnsFrom": ["escort_id"],
+					"columnsTo": ["id"],
+					"onDelete": "cascade",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {},
+			"policies": {
+				"escort_services_delete_policy": {
+					"name": "escort_services_delete_policy",
+					"as": "PERMISSIVE",
+					"for": "DELETE",
+					"to": ["authenticated"],
+					"using": "exists(\n    select 1 from escort_profiles \n    where id = \"escort_services\".\"escort_id\" \n    and user_id = ((select auth.uid()))\n  )"
+				},
+				"escort_services_insert_policy": {
+					"name": "escort_services_insert_policy",
+					"as": "PERMISSIVE",
+					"for": "INSERT",
+					"to": ["authenticated"],
+					"withCheck": "exists(\n    select 1 from escort_profiles \n    where id = \"escort_services\".\"escort_id\" \n    and user_id = ((select auth.uid()))\n  )"
+				},
+				"escort_services_select_policy": {
+					"name": "escort_services_select_policy",
+					"as": "PERMISSIVE",
+					"for": "SELECT",
+					"to": ["authenticated"],
+					"using": "true"
+				},
+				"escort_services_update_policy": {
+					"name": "escort_services_update_policy",
+					"as": "PERMISSIVE",
+					"for": "UPDATE",
+					"to": ["authenticated"],
+					"using": "exists(\n    select 1 from escort_profiles \n    where id = \"escort_services\".\"escort_id\" \n    and user_id = ((select auth.uid()))\n  )",
+					"withCheck": "exists(\n    select 1 from escort_profiles \n    where id = \"escort_services\".\"escort_id\" \n    and user_id = ((select auth.uid()))\n  )"
+				}
+			},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		}
+	},
+	"enums": {
+		"public.ethnicity": {
+			"name": "ethnicity",
+			"schema": "public",
+			"values": ["white", "mixed", "black", "asian", "indigenous"]
+		},
+		"public.eye_color": {
+			"name": "eye_color",
+			"schema": "public",
+			"values": ["brown", "blue", "green", "hazel", "gray"]
+		},
+		"public.gender": {
+			"name": "gender",
+			"schema": "public",
+			"values": ["female", "male", "trans", "non_binary"]
+		},
+		"public.genitalia": {
+			"name": "genitalia",
+			"schema": "public",
+			"values": ["vagina", "penis", "both"]
+		},
+		"public.hair_length": {
+			"name": "hair_length",
+			"schema": "public",
+			"values": ["short", "medium", "long"]
+		},
+		"public.hair_style": {
+			"name": "hair_style",
+			"schema": "public",
+			"values": ["straight", "curly", "wavy"]
+		},
+		"public.has_place": {
+			"name": "has_place",
+			"schema": "public",
+			"values": ["own_place", "motel_only", "both"]
+		},
+		"public.serves_only": {
+			"name": "serves_only",
+			"schema": "public",
+			"values": ["men", "women", "both", "couples"]
+		},
+		"public.service_level": {
+			"name": "service_level",
+			"schema": "public",
+			"values": ["receive", "perform", "specialist", "not_available"]
+		},
+		"public.sexual_preference": {
+			"name": "sexual_preference",
+			"schema": "public",
+			"values": ["heterosexual", "homosexual", "bisexual", "pansexual"]
+		},
+		"public.verification_status": {
+			"name": "verification_status",
+			"schema": "public",
+			"values": ["pending", "approved", "rejected"]
+		}
+	},
+	"schemas": {},
+	"sequences": {},
+	"roles": {},
+	"policies": {},
+	"views": {},
+	"_meta": {
+		"columns": {},
+		"schemas": {},
+		"tables": {}
+	}
+}

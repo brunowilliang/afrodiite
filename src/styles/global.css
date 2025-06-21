@@ -1,0 +1,26 @@
+@import "tailwindcss";
+
+@theme {
+	--color-background: oklch(0.1524 0.0124 319.46);
+	--color-foreground: oklch(0.8008 0.1391 318.71);
+	--color-text-primary: oklch(95.20% 0.032 316.42);
+	--color-text-secondary: oklch(58.57% 0.074 318.92);
+	--color-tertiary: oklch(34.47% 0.048 319.14);
+	
+	--color-stroke: oklch(37.36% 0.061 317.46);
+}
+
+@utility centered {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+
+@utility gradient-primary {
+	background: linear-gradient(
+		180deg,
+		oklch(0.952 0.032 316.42) 0%,
+		oklch(0.8008 0.1391 318.71) 100%
+	);
+}
