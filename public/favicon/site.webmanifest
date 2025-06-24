@@ -1,6 +1,6 @@
 {
-	"name": "moorgana",
-	"short_name": "moorgana",
+	"name": "afrodiite",
+	"short_name": "afrodiite",
 	"icons": [
 		{
 			"src": "/web-app-manifest-192x192.png",
@@ -15,7 +15,7 @@
 			"purpose": "maskable"
 		}
 	],
-	"theme_color": "#ffffff",
-	"background_color": "#ffffff",
+	"theme_color": "#EFD9F5",
+	"background_color": "#EFD9F5",
 	"display": "standalone"
 }

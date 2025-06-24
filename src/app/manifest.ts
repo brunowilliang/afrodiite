@@ -2,13 +2,13 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
 	return {
-		name: "moorgana",
-		short_name: "moorgana",
-		description: "my pwa app",
-		start_url: "/new",
+		name: "afrodiite",
+		short_name: "afrodiite",
+		description: "Onde o prazer encontra a perfeição",
+		start_url: "/",
 		display: "standalone",
-		background_color: "#ffffff",
-		theme_color: "#000000",
+		background_color: "#EFD9F5",
+		theme_color: "#EFD9F5",
 		icons: [
 			{
 				src: "/favicon/web-app-manifest-192x192.png",
