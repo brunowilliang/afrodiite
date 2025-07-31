@@ -6,6 +6,8 @@ import {
 } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
 import type * as React from 'react';
+import { PhotoProvider } from 'react-photo-view';
+import reactPhotoViewCss from 'react-photo-view/dist/react-photo-view.css?url';
 import { DefaultCatchBoundary } from '@/components/DefaultCatchBoundary';
 import { NotFound } from '@/components/NotFound';
 import appCss from '@/styles/app.css?url';
@@ -32,6 +34,7 @@ export const Route = createRootRouteWithContext<{
 		],
 		links: [
 			{ rel: 'stylesheet', href: appCss },
+			{ rel: 'stylesheet', href: reactPhotoViewCss },
 			{
 				rel: 'stylesheet',
 				href: 'https://sets.hugeicons.com/tilwtevunhk.css',
@@ -54,8 +57,13 @@ export const Route = createRootRouteWithContext<{
 				sizes: '16x16',
 				href: '/favicon-16x16.png',
 			},
+			{
+				rel: 'icon',
+				type: 'image/png',
+				href: '/favicon.png',
+			},
 			{ rel: 'manifest', href: '/site.webmanifest', color: '#fffff' },
-			{ rel: 'icon', href: '/favicon.ico' },
+			// { rel: 'icon', href: '/favicon.ico' },
 		],
 	}),
 	errorComponent: DefaultCatchBoundary,
@@ -120,9 +128,11 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 				<HeadContent />
 			</head>
 			<body>
-				{children}
-				<TanStackRouterDevtools position="bottom-right" />
-				<Scripts />
+				<PhotoProvider>
+					{children}
+					<TanStackRouterDevtools position="bottom-right" />
+					<Scripts />
+				</PhotoProvider>
 			</body>
 		</html>
 	);

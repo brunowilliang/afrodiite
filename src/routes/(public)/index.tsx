@@ -17,22 +17,22 @@ function Home() {
 
 	return (
 		<Container className="mt-20 gap-12 overflow-hidden py-16">
-			<Stack className="gap-4">
-				<Text as="h3" weight="normal" align="center">
-					Encontre as acompanhantes de luxo mais exclusivas de
-					<br />
-					Portugal
-				</Text>
-				<Text as="p" align="center" className="text-text-secondary">
-					Explore Agora!
-				</Text>
-				<Input placeholder="Pesquise sua modelo" />
-				<Text align="center" className="text-text-secondary">
-					ou selecione o local
+			<Stack className="centered mx-auto max-w-2xl gap-4 py-40">
+				<Badge>
+					<Badge.Text className="text-lg text-text-secondary md:text-xl">
+						Explore Agora!
+					</Badge.Text>
+				</Badge>
+				<Text
+					as="h1"
+					weight="bold"
+					className="text-center text-3xl leading-tight md:text-4xl"
+				>
+					Encontre as acompanhantes de luxo mais exclusivas de Portugal
 				</Text>
 
 				<Input
-					placeholder={'Selecione o local'}
+					placeholder="Pesquise"
 					clickable
 					onClick={() => modalRef.current?.open()}
 				/>

@@ -64,6 +64,7 @@
         }
       },
       "a11y": {
+        "useButtonType": "off",
         "noSvgWithoutTitle": "off",
         "noLabelWithoutControl": "off"
       },

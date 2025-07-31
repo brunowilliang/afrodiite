@@ -5,7 +5,6 @@
 @import '@fontsource/poppins/500.css';
 @plugin 'tailwind-scrollbar';
 
-
 @theme {
 	--color-background: oklch(18.31% 0.004 285.99);
 	--color-primary: oklch(53.83% 0.248 296.42);

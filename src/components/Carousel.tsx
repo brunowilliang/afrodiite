@@ -45,8 +45,8 @@ export const Carousel = () => {
 		<>
 			<div ref={emblaRef}>
 				<div className="flex select-none gap-4">
-					{[1, 2, 3].map((item) => (
-						<div className="flex-[0_0_70%]" key={item}>
+					{[1, 2, 3, 4, 5, 6, 7, 8].map((item) => (
+						<div className="flex-[0_0_70%] md:flex-[0_0_30%]" key={item}>
 							<EscortCard />
 						</div>
 					))}

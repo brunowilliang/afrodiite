@@ -1,16 +1,11 @@
+'use client';
+
 import { Link } from '@tanstack/react-router';
 import { Card } from '@/components/core/Card';
-import { ImageCarousel } from '@/components/core/ImageCarousel';
 import { Stack } from '@/components/core/Stack';
 import { Text } from '@/components/core/Text';
 
 export function EscortCard() {
-	const images = [
-		{ src: '/assets/profile.png', alt: 'Alycia Bittencourt - Photo 1' },
-		{ src: '/assets/profile.png', alt: 'Alycia Bittencourt - Photo 2' },
-		{ src: '/assets/profile.png', alt: 'Alycia Bittencourt - Photo 3' },
-	];
-
 	return (
 		<Link
 			to="/escorts/$slug"
@@ -18,7 +13,13 @@ export function EscortCard() {
 			viewTransition
 		>
 			<Card clickable className="gap-1 p-1">
-				<ImageCarousel images={images} aspectRatio="square" />
+				<Stack className="relative aspect-square w-full flex-shrink-0">
+					<img
+						src="/assets/profile.png"
+						alt="Alycia Bittencourt"
+						className="h-full w-full rounded-lg object-cover"
+					/>
+				</Stack>
 				<Stack className="w-full items-start gap-3 p-3">
 					<Stack
 						direction="row"

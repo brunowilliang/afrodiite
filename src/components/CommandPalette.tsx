@@ -41,11 +41,12 @@ export const CommandPalette = ({ ref }: LocationSelectorProps) => {
 		<Modal
 			ref={ref}
 			onClose={() => setSearchTerm('')}
+			size="lg"
 			position="top"
 			topOffset="top-50"
 		>
 			<Input
-				placeholder="Pesquise"
+				placeholder="Pesquise por região, cidade ou modelo"
 				colorScheme="secondary"
 				value={searchTerm}
 				autoFocus
