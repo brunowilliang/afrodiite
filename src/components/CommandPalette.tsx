@@ -38,7 +38,12 @@ export const CommandPalette = ({ ref }: LocationSelectorProps) => {
 	};
 
 	return (
-		<Modal ref={ref} onClose={() => setSearchTerm('')}>
+		<Modal
+			ref={ref}
+			onClose={() => setSearchTerm('')}
+			position="top"
+			topOffset="top-50"
+		>
 			<Input
 				placeholder="Pesquise"
 				colorScheme="secondary"

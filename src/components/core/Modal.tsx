@@ -21,6 +21,8 @@ interface ModalProps {
 	className?: string;
 	ref?: React.RefObject<ModalRef | null>;
 	onClose?: () => void;
+	position?: 'center' | 'top';
+	topOffset?: string; // ex: "top-10", "top-32", etc
 }
 
 export function Modal({
@@ -29,6 +31,8 @@ export function Modal({
 	className,
 	ref: externalRef,
 	onClose,
+	position = 'center',
+	topOffset = 'top-20',
 }: ModalProps) {
 	const modalRef = useRef<HTMLDivElement>(null);
 	const overlayRef = useRef<HTMLDivElement>(null);
@@ -63,7 +67,10 @@ export function Modal({
 			modalRef.current.style.transition =
 				'opacity 0.3s cubic-bezier(0.32, 0.72, 0, 1), transform 0.3s cubic-bezier(0.32, 0.72, 0, 1)';
 			modalRef.current.style.opacity = '0';
-			modalRef.current.style.transform = 'translate(-50%, -48%) scale(0.95)';
+			modalRef.current.style.transform =
+				position === 'top'
+					? 'translateX(-50%) translateY(-20%) scale(0.95)'
+					: 'translate(-50%, -48%) scale(0.95)';
 		}
 
 		if (overlayRef.current) {
@@ -116,7 +123,10 @@ export function Modal({
 			if (modalRef.current) {
 				modalRef.current.style.transition = 'none';
 				modalRef.current.style.opacity = '0';
-				modalRef.current.style.transform = 'translate(-50%, -50%) scale(0.95)';
+				modalRef.current.style.transform =
+					position === 'top'
+						? 'translateX(-50%) translateY(0) scale(0.95)'
+						: 'translate(-50%, -50%) scale(0.95)';
 			}
 
 			if (overlayRef.current) {
@@ -129,7 +139,10 @@ export function Modal({
 					modalRef.current.style.transition =
 						'opacity 0.3s cubic-bezier(0.32, 0.72, 0, 1), transform 0.3s cubic-bezier(0.32, 0.72, 0, 1)';
 					modalRef.current.style.opacity = '1';
-					modalRef.current.style.transform = 'translate(-50%, -50%) scale(1)';
+					modalRef.current.style.transform =
+						position === 'top'
+							? 'translateX(-50%) translateY(0) scale(1)'
+							: 'translate(-50%, -50%) scale(1)';
 				}
 
 				if (overlayRef.current) {
@@ -167,12 +180,14 @@ export function Modal({
 			<div
 				ref={modalRef}
 				className={cn(
-					'fixed top-1/2 left-1/2 z-100 w-full px-4',
+					'fixed left-1/2 z-100 w-full px-4',
+					position === 'top' ? topOffset : 'top-1/2',
 					sizeClasses[size],
 					className,
 				)}
 				style={{
-					transform: 'translate(-50%, -50%)',
+					transform:
+						position === 'top' ? 'translateX(-50%)' : 'translate(-50%, -50%)',
 				}}
 			>
 				<Card className="overflow-y-auto rounded-xl bg-accent p-6">
