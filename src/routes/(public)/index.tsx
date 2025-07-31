@@ -1,8 +1,11 @@
-import { createFileRoute, Link } from '@tanstack/react-router';
+import { createFileRoute } from '@tanstack/react-router';
+import { useRef } from 'react';
 import { Carousel } from '@/components/Carousel';
+import { CommandPalette } from '@/components/CommandPalette';
 import { Badge } from '@/components/core/Badge';
 import { Input } from '@/components/core/Input';
-import { Stack } from '@/components/core/Stack';
+import type { ModalRef } from '@/components/core/Modal';
+import { Container, Stack } from '@/components/core/Stack';
 import { Text } from '@/components/core/Text';
 
 export const Route = createFileRoute('/(public)/')({
@@ -10,20 +13,17 @@ export const Route = createFileRoute('/(public)/')({
 });
 
 function Home() {
+	const modalRef = useRef<ModalRef>(null);
+
 	return (
-		<Stack container className="mt-20 gap-12 overflow-hidden py-16">
+		<Container className="mt-20 gap-12 overflow-hidden py-16">
 			<Stack className="gap-4">
 				<Text as="h3" weight="normal" align="center">
 					Encontre as acompanhantes de luxo mais exclusivas de
 					<br />
 					Portugal
 				</Text>
-				<Text
-					as="p"
-					weight="light"
-					align="center"
-					className="text-text-secondary"
-				>
+				<Text as="p" align="center" className="text-text-secondary">
 					Explore Agora!
 				</Text>
 				<Input placeholder="Pesquise sua modelo" />
@@ -31,9 +31,11 @@ function Home() {
 					ou selecione o local
 				</Text>
 
-				<Link to="/escorts" viewTransition>
-					<Input placeholder="Selecione o local" clickable />
-				</Link>
+				<Input
+					placeholder={'Selecione o local'}
+					clickable
+					onClick={() => modalRef.current?.open()}
+				/>
 			</Stack>
 
 			<Stack className="gap-4">
@@ -49,6 +51,8 @@ function Home() {
 				</Badge>
 				<Carousel />
 			</Stack>
-		</Stack>
+
+			<CommandPalette ref={modalRef} />
+		</Container>
 	);
 }

@@ -42,6 +42,7 @@ export const Icon = useStyled('i', {
 			Star: { className: 'hgi-star' },
 			Filter: { className: 'hgi-preference-horizontal' },
 			Menu: { className: 'hgi-menu-03' },
+			Close: { className: 'hgi-cancel-01' },
 		},
 	},
 	defaultVariants: {

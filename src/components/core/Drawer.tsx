@@ -5,7 +5,9 @@ import {
 	useRef,
 	useState,
 } from 'react';
+import { useSlot, useStyled } from 'use-styled';
 import { Card } from './Card';
+import { Icon } from './Icon';
 
 export interface DrawerRef {
 	open: () => void;
@@ -17,16 +19,18 @@ export interface DrawerRef {
 interface DrawerProps {
 	children: ReactNode;
 	position?: 'left' | 'right';
-	width?: string;
+	size?: 'full' | number | string;
+	disableDrag?: boolean;
 	ref?: React.RefObject<DrawerRef | null>;
 }
 
-export function Drawer({
+const DrawerRoot = ({
 	children,
 	position = 'right',
-	width = '320px',
+	size = 400,
+	disableDrag,
 	ref: externalRef,
-}: DrawerProps) {
+}: DrawerProps) => {
 	const internalRef = useRef<HTMLDivElement>(null);
 	const overlayRef = useRef<HTMLDivElement>(null);
 	const [isOpen, setIsOpen] = useState(false);
@@ -34,6 +38,28 @@ export function Drawer({
 	const [dragStartX, setDragStartX] = useState(0);
 	const [currentX, setCurrentX] = useState(0);
 	const [isAnimating, setIsAnimating] = useState(false);
+
+	// Calculate width based on size prop
+	const getWidth = () => {
+		if (size === 'full') return '100%';
+		if (typeof size === 'number') return `${size}px`;
+		return size; // String with unit (%, rem, vw, etc)
+	};
+
+	// Intelligent drag detection
+	const shouldAutoDisableDrag = () => {
+		if (disableDrag) return true;
+		if (size === 'full') return true;
+		if (typeof size === 'string') {
+			// Disable drag for 100% or >= 90%
+			const match = size.match(/^(\d+)%$/);
+			if (match && Number.parseInt(match[1]) >= 90) return true;
+		}
+		return false;
+	};
+
+	const width = getWidth();
+	const shouldDisableDrag = shouldAutoDisableDrag();
 
 	// Expose imperative methods through ref
 	useImperativeHandle(
@@ -153,7 +179,7 @@ export function Drawer({
 
 	// Handle drag start
 	const handlePointerDown = (e: React.PointerEvent) => {
-		if (isDragging) return; // Prevent multi-touch issues
+		if (isDragging || shouldDisableDrag) return; // Prevent multi-touch issues and check if drag is disabled
 
 		setIsDragging(true);
 		setDragStartX(e.clientX);
@@ -166,7 +192,7 @@ export function Drawer({
 
 	// Handle drag move
 	const handlePointerMove = (e: React.PointerEvent) => {
-		if (!isDragging) return;
+		if (!isDragging || shouldDisableDrag) return;
 
 		const deltaX = e.clientX - dragStartX;
 
@@ -201,7 +227,7 @@ export function Drawer({
 
 	// Handle drag end
 	const handlePointerUp = () => {
-		if (!isDragging) return;
+		if (!isDragging || shouldDisableDrag) return;
 
 		const deltaX = currentX - dragStartX;
 		const velocity = Math.abs(deltaX) / 100; // Simple velocity calculation
@@ -266,10 +292,21 @@ export function Drawer({
 				onPointerUp={handlePointerUp}
 				onPointerCancel={handlePointerUp}
 			>
-				<Card className="h-full flex-1 overflow-y-auto rounded-xl bg-accent p-4">
-					{children}
-				</Card>
+				<div className="absolute top-7 right-3 h-10 w-10 cursor-pointer">
+					<Icon name="Close" size="24" onClick={handleSmoothClose} />
+				</div>
+				{children}
 			</div>
 		</>
 	);
-}
+};
+
+const DrawerContent = useStyled(Card, {
+	base: {
+		className: 'h-full flex-1 overflow-y-auto rounded-xl bg-accent p-4',
+	},
+});
+
+export const Drawer = useSlot(DrawerRoot, {
+	Content: DrawerContent,
+});

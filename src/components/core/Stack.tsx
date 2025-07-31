@@ -38,3 +38,9 @@ export const Stack = useStyled(StackComponent, {
 		direction: 'column',
 	},
 });
+
+export const Container = useStyled(Stack, {
+	base: {
+		container: true,
+	},
+});
