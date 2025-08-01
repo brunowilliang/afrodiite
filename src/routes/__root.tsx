@@ -25,18 +25,18 @@ export const Route = createRootRouteWithContext<{
 				name: 'viewport',
 				content: 'width=device-width, initial-scale=1',
 			},
-			{
-				name: 'theme-color',
-				content: '#121214',
-			},
-			{
-				name: 'apple-mobile-web-app-status-bar-style',
-				content: 'black-translucent',
-			},
-			{
-				name: 'apple-mobile-web-app-capable',
-				content: 'yes',
-			},
+			// {
+			// 	name: 'theme-color',
+			// 	content: '#121214',
+			// },
+			// {
+			// 	name: 'apple-mobile-web-app-status-bar-style',
+			// 	content: 'black-translucent',
+			// },
+			// {
+			// 	name: 'apple-mobile-web-app-capable',
+			// 	content: 'yes',
+			// },
 			...seo({
 				title:
 					'TanStack Start | Type-Safe, Client-First, Full-Stack React Framework',
@@ -92,63 +92,41 @@ export const Route = createRootRouteWithContext<{
 	shellComponent: RootDocument,
 });
 
-// export const Route = createRootRoute({
-// 	head: () => ({
-// 		meta: [
-// 			{
-// 				charSet: 'utf-8',
-// 			},
-// 			{
-// 				name: 'viewport',
-// 				content: 'width=device-width, initial-scale=1',
-// 			},
-// 			...seo({
-// 				title:
-// 					'TanStack Start | Type-Safe, Client-First, Full-Stack React Framework',
-// 				description:
-// 					'TanStack Start is a type-safe, client-first, full-stack React framework.',
-// 			}),
-// 		],
-// 		links: [
-// 			{ rel: 'stylesheet', href: appCss },
-// 			{
-// 				rel: 'stylesheet',
-// 				href: 'https://sets.hugeicons.com/tilwtevunhk.css',
-// 				crossOrigin: 'anonymous',
-// 			},
-// 			{
-// 				rel: 'apple-touch-icon',
-// 				sizes: '180x180',
-// 				href: '/apple-touch-icon.png',
-// 			},
-// 			{
-// 				rel: 'icon',
-// 				type: 'image/png',
-// 				sizes: '32x32',
-// 				href: '/favicon-32x32.png',
-// 			},
-// 			{
-// 				rel: 'icon',
-// 				type: 'image/png',
-// 				sizes: '16x16',
-// 				href: '/favicon-16x16.png',
-// 			},
-// 			{ rel: 'manifest', href: '/site.webmanifest', color: '#fffff' },
-// 			{ rel: 'icon', href: '/favicon.ico' },
-// 		],
-// 	}),
-// 	errorComponent: DefaultCatchBoundary,
-// 	notFoundComponent: () => <NotFound />,
-// 	shellComponent: RootDocument,
-// });
-
 function RootDocument({ children }: { children: React.ReactNode }) {
 	return (
-		<html lang="en" className="h-full bg-background">
+		<html lang="en" className="h-full" style={{ backgroundColor: '#0f0713' }}>
 			<head>
 				<HeadContent />
+				<style
+					dangerouslySetInnerHTML={{
+						__html: `
+						/* Critical CSS - Carrega ANTES de qualquer coisa */
+						html { background-color: #0f0713 !important; }
+						body { background-color: #0f0713 !important; }
+						input, textarea, select {
+							background-color: #1a1a1d !important;
+							color: #f5f5f5 !important;
+							-webkit-appearance: none !important;
+							-moz-appearance: none !important;
+							appearance: none !important;
+						}
+						input::placeholder {
+							color: #9ca3af !important;
+						}
+						/* Previne flash no autofill */
+						input:-webkit-autofill,
+						input:-webkit-autofill:hover,
+						input:-webkit-autofill:focus {
+							-webkit-text-fill-color: #f5f5f5 !important;
+							-webkit-box-shadow: 0 0 0 1000px #1a1a1d inset !important;
+							box-shadow: 0 0 0 1000px #1a1a1d inset !important;
+							transition: background-color 5000s ease-in-out 0s !important;
+						}
+					`,
+					}}
+				/>
 			</head>
-			<body>
+			<body style={{ backgroundColor: '#0f0713' }}>
 				<PhotoProvider>
 					{children}
 					<TanStackRouterDevtools position="bottom-right" />
