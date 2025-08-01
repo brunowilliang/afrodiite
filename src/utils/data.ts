@@ -222,9 +222,9 @@ export const NavigationMenu = [
 	{
 		id: 1,
 		name: 'Porto',
-		href: '/',
+		href: '/escorts',
 		cities: [
-			{ id: 1, name: 'Porto', href: '/', badge: '10' },
+			{ id: 1, name: 'Porto', href: '/escorts', badge: '10' },
 			{ id: 2, name: 'Vila Nova de Gaia', href: '/', badge: '10' },
 			{ id: 3, name: 'Matosinhos', href: '/', badge: '10' },
 		],
