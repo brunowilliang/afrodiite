@@ -16,7 +16,7 @@ export function NotFound({ children }: { children?: any }) {
 					Go back
 				</button>
 				<Link
-					to="/"
+					to="/{-$locale}"
 					className="rounded bg-cyan-600 px-2 py-1 font-black text-sm text-white uppercase"
 				>
 					Start Over
