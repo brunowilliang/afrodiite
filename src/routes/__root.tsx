@@ -25,6 +25,18 @@ export const Route = createRootRouteWithContext<{
 				name: 'viewport',
 				content: 'width=device-width, initial-scale=1',
 			},
+			{
+				name: 'theme-color',
+				content: '#262626',
+			},
+			{
+				name: 'apple-mobile-web-app-status-bar-style',
+				content: 'black-translucent',
+			},
+			{
+				name: 'apple-mobile-web-app-capable',
+				content: 'yes',
+			},
 			...seo({
 				title:
 					'TanStack Start | Type-Safe, Client-First, Full-Stack React Framework',
@@ -33,14 +45,12 @@ export const Route = createRootRouteWithContext<{
 			}),
 		],
 		links: [
-			// Preconnect ao Google Fonts para otimizar carregamento
 			{ rel: 'preconnect', href: 'https://fonts.googleapis.com' },
 			{
 				rel: 'preconnect',
 				href: 'https://fonts.gstatic.com',
 				crossOrigin: 'anonymous',
 			},
-			// Carrega Poppins do Google Fonts como fallback para mobile
 			{
 				rel: 'stylesheet',
 				href: 'https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500&display=swap',
