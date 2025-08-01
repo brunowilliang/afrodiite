@@ -27,7 +27,7 @@ export const Route = createRootRouteWithContext<{
 			},
 			{
 				name: 'theme-color',
-				content: '#262626',
+				content: '#121214',
 			},
 			{
 				name: 'apple-mobile-web-app-status-bar-style',
@@ -84,7 +84,7 @@ export const Route = createRootRouteWithContext<{
 				type: 'image/png',
 				href: '/favicon.png',
 			},
-			{ rel: 'manifest', href: '/site.webmanifest', color: '#262626' },
+			{ rel: 'manifest', href: '/site.webmanifest', color: '#121214' },
 		],
 	}),
 	errorComponent: DefaultCatchBoundary,
