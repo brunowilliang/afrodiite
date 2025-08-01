@@ -1,9 +1,40 @@
-'use client';
-
 import useEmblaCarousel from 'embla-carousel-react';
 import { useCallback, useEffect, useState } from 'react';
+import { PhotoSlider } from 'react-photo-view';
 import { useStyled } from 'use-styled';
 import { cn } from '@/lib/utils';
+
+export const DATA_IMAGES = [
+	{ src: '/assets/profile-2.png', alt: 'Alycia Bittencourt - Photo 1' },
+	{ src: '/assets/profile-3.png', alt: 'Alycia Bittencourt - Photo 2' },
+	{ src: '/assets/profile.png', alt: 'Alycia Bittencourt - Photo 3' },
+];
+
+// Width mapping for Tailwind classes
+const CAROUSEL_WIDTH_CLASSES = {
+	'100%': 'flex-[0_0_100%]',
+	'95%': 'flex-[0_0_95%]',
+	'90%': 'flex-[0_0_90%]',
+	'85%': 'flex-[0_0_85%]',
+	'80%': 'flex-[0_0_80%]',
+	'75%': 'flex-[0_0_75%]',
+	'70%': 'flex-[0_0_70%]',
+	'65%': 'flex-[0_0_65%]',
+	'60%': 'flex-[0_0_60%]',
+	'55%': 'flex-[0_0_55%]',
+	'50%': 'flex-[0_0_50%]',
+	'45%': 'flex-[0_0_45%]',
+	'40%': 'flex-[0_0_40%]',
+	'35%': 'flex-[0_0_35%]',
+	'30%': 'flex-[0_0_30%]',
+	'25%': 'flex-[0_0_25%]',
+	'20%': 'flex-[0_0_20%]',
+	'15%': 'flex-[0_0_15%]',
+	'10%': 'flex-[0_0_10%]',
+	'5%': 'flex-[0_0_5%]',
+} as const;
+
+type CarouselWidth = keyof typeof CAROUSEL_WIDTH_CLASSES;
 
 const CarouselRoot = useStyled('div', {
 	base: { className: 'relative w-full' },
@@ -18,7 +49,7 @@ const CarouselContainer = useStyled('div', {
 });
 
 const CarouselSlide = useStyled('div', {
-	base: { className: 'relative aspect-square flex-[0_0_100%] overflow-hidden' },
+	base: { className: 'relative aspect-[3/4] overflow-hidden' },
 });
 
 const CarouselImage = useStyled('img', {
@@ -27,7 +58,7 @@ const CarouselImage = useStyled('img', {
 
 const DotsContainer = useStyled('div', {
 	base: {
-		className: '-translate-x-1/2 absolute bottom-3 left-1/2 z-10 flex gap-1.5',
+		className: '-translate-x-1/2 absolute bottom-2 left-1/2 z-10 flex gap-1.5',
 	},
 });
 
@@ -43,13 +74,13 @@ const NavigationZone = useStyled('button', {
 		position: {
 			left: {
 				className: cn(
-					'left-0 w-1/3',
+					'left-0 w-1/6',
 					'before:bg-gradient-to-r before:from-black/50 before:to-transparent',
 				),
 			},
 			right: {
 				className: cn(
-					'right-0 w-1/3',
+					'right-0 w-1/6',
 					'before:bg-gradient-to-l before:from-black/50 before:to-transparent',
 				),
 			},
@@ -60,16 +91,18 @@ const NavigationZone = useStyled('button', {
 const Dot = useStyled('button', {
 	base: {
 		className: cn(
-			'size-3 rounded-full bg-text-primary/70 transition-all duration-300',
+			'rounded-full bg-text-primary/80 transition-all duration-300',
 		),
 	},
 	variants: {
 		active: {
-			true: { className: 'w-8' },
+			true: { className: 'w-[1.8rem]' },
 		},
-	},
-	defaultVariants: {
-		active: false,
+		size: {
+			small: { className: 'h-2 w-2' },
+			medium: { className: 'h-3 w-3' },
+			large: { className: 'h-4 w-4' },
+		},
 	},
 });
 
@@ -78,25 +111,36 @@ interface ImageCarouselProps {
 		src: string;
 		alt?: string;
 	}>;
-	aspectRatio?: 'square' | 'video' | 'portrait';
+	width?: CarouselWidth;
+	gap?: string;
+	children?: React.ReactNode;
+	openPreview?: boolean;
+	drag?: boolean;
+	dotSize?: 'small' | 'medium' | 'large';
 	onSlideChange?: (index: number) => void;
 }
 
 export function ImageCarousel({
 	images,
-	aspectRatio = 'square',
+	children,
 	onSlideChange,
+	width = '100%',
+	gap = '0',
+	drag = false,
+	openPreview = false,
+	dotSize = 'small',
 }: ImageCarouselProps) {
 	const [emblaRef, emblaApi] = useEmblaCarousel({
 		loop: false,
 		duration: 20,
-		skipSnaps: false,
+		skipSnaps: true,
 		dragFree: false,
-		watchDrag: false,
-		dragThreshold: 0,
+		watchDrag: drag,
 	});
 
 	const [selectedIndex, setSelectedIndex] = useState(0);
+	const [visible, setVisible] = useState(false);
+	const [photoIndex, setPhotoIndex] = useState(0);
 
 	const scrollTo = useCallback(
 		(index: number) => {
@@ -144,55 +188,74 @@ export function ImageCarousel({
 		emblaApi?.scrollNext();
 	};
 
-	const aspectRatioClasses = {
-		square: 'aspect-square',
-		video: 'aspect-video',
-		portrait: 'aspect-[3/4]',
-	};
-
 	return (
-		<CarouselRoot className={aspectRatioClasses[aspectRatio]}>
-			<CarouselViewport ref={emblaRef}>
-				<CarouselContainer>
-					{images.map((image, index) => (
-						<CarouselSlide key={index}>
-							<CarouselImage
-								src={image.src}
-								alt={image.alt || `Slide ${index + 1}`}
-								loading={index === 0 ? 'eager' : 'lazy'}
-							/>
-						</CarouselSlide>
-					))}
-				</CarouselContainer>
-			</CarouselViewport>
-
-			{images.length > 1 && (
-				<>
-					<NavigationZone
-						type="button"
-						position="left"
-						onClick={handlePrevious}
-						aria-label="Previous image"
-					/>
-					<NavigationZone
-						type="button"
-						position="right"
-						onClick={handleNext}
-						aria-label="Next image"
-					/>
-					<DotsContainer>
-						{images.map((_, index) => (
-							<Dot
+		<>
+			<CarouselRoot>
+				<CarouselViewport ref={emblaRef}>
+					<CarouselContainer className={cn(`gap-${gap}`)}>
+						{images.map((image, index) => (
+							<CarouselSlide
 								key={index}
-								type="button"
-								active={index === selectedIndex}
-								onClick={(e) => handleDotClick(e, index)}
-								aria-label={`Go to slide ${index + 1}`}
-							/>
+								className={CAROUSEL_WIDTH_CLASSES[width]}
+							>
+								<CarouselImage
+									src={image.src}
+									alt={image.alt || `Slide ${index + 1}`}
+									loading={index === 0 ? 'eager' : 'lazy'}
+									onClick={
+										openPreview
+											? () => {
+													setPhotoIndex(index);
+													setVisible(true);
+												}
+											: undefined
+									}
+									aria-label={`View ${image.alt || `Image ${index + 1}`}`}
+								/>
+							</CarouselSlide>
 						))}
-					</DotsContainer>
-				</>
-			)}
-		</CarouselRoot>
+						{children}
+					</CarouselContainer>
+				</CarouselViewport>
+
+				{images.length > 1 && (
+					<>
+						<NavigationZone
+							type="button"
+							position="left"
+							onClick={handlePrevious}
+							aria-label="Previous image"
+						/>
+						<NavigationZone
+							type="button"
+							position="right"
+							onClick={handleNext}
+							aria-label="Next image"
+						/>
+						<DotsContainer>
+							{images.map((_, index) => (
+								<Dot
+									key={index}
+									type="button"
+									size={dotSize}
+									active={index === selectedIndex}
+									onClick={(e) => handleDotClick(e, index)}
+									aria-label={`Go to slide ${index + 1}`}
+								/>
+							))}
+						</DotsContainer>
+					</>
+				)}
+			</CarouselRoot>
+
+			<PhotoSlider
+				images={images.map((img) => ({ src: img.src, key: img.src }))}
+				visible={visible}
+				onClose={() => setVisible(false)}
+				index={photoIndex}
+				onIndexChange={setPhotoIndex}
+				maskOpacity={0.9}
+			/>
+		</>
 	);
 }

@@ -3,7 +3,7 @@ import useEmblaCarousel from 'embla-carousel-react';
 import { WheelGesturesPlugin } from 'embla-carousel-wheel-gestures';
 
 import { useCallback, useEffect, useState } from 'react';
-import { EscortCard } from '@/components/EscortCard';
+import { EscortCard } from '@/components/escorts/Card';
 
 export const Carousel = () => {
 	const [emblaRef, emblaApi] = useEmblaCarousel(

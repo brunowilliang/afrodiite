@@ -21,6 +21,7 @@ export const Icon = useStyled('i', {
 		},
 		size: {
 			'12': { className: 'text-[12px]' },
+			'14': { className: 'text-[14px]' },
 			'16': { className: 'text-[16px]' },
 			'18': { className: 'text-[18px]' },
 			'20': { className: 'text-[20px]' },
@@ -43,6 +44,7 @@ export const Icon = useStyled('i', {
 			Filter: { className: 'hgi-preference-horizontal' },
 			Menu: { className: 'hgi-menu-03' },
 			Close: { className: 'hgi-cancel-01' },
+			Search: { className: 'hgi-search-01' },
 		},
 	},
 	defaultVariants: {

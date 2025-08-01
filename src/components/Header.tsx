@@ -1,16 +1,17 @@
 import { Link } from '@tanstack/react-router';
 import { useRef } from 'react';
 import { NavigationMenu } from '@/utils/data';
+import { useGoBack } from './core/BackButton';
 import { Badge } from './core/Badge';
 import { Button } from './core/Button';
 import { Drawer, type DrawerRef } from './core/Drawer';
-import { Icon } from './core/Icon';
 import { Input } from './core/Input';
 import { Navigation } from './core/Navigation';
 import { Stack } from './core/Stack';
 
 export const Header = () => {
 	const drawerRef = useRef<DrawerRef>(null);
+	const { goBack } = useGoBack();
 
 	const handleMenuClick = () => {
 		drawerRef.current?.open();
@@ -27,33 +28,34 @@ export const Header = () => {
 				<Stack container className="py-0 pt-4">
 					<Stack
 						direction="row"
-						className=" h-[70px] items-center justify-between gap-4 rounded-lg bg-accent-10 p-4"
+						className="grid h-[70px] grid-cols-12 gap-4 rounded-lg bg-accent-10 p-4"
 					>
-						<Link to="/" viewTransition>
-							<img
-								src="/assets/logo.svg"
-								alt="Afrodiite"
-								width={120}
-								height={21}
-							/>
-						</Link>
-						<Stack direction="row" className="hidden w-fit gap-4 lg:flex">
-							<Button className="w-fit bg-transparent text-primary">
-								<Button.Text weight="bold">Anunciar</Button.Text>
-							</Button>
-							<Button className="w-fit bg-transparent text-primary">
-								<Button.Text weight="bold">Área Reservada</Button.Text>
+						<Stack direction="row" className="col-span-3 justify-start">
+							<Button variant="unstyled" onClick={goBack} className="h-auto">
+								<Button.Icon name="ArrowLeft" size={'24'} />
 							</Button>
 						</Stack>
 
-						<Stack className="flex lg:hidden">
-							<Icon name="Menu" size={'32'} onClick={handleMenuClick} />
+						<Stack direction="row" className="centered col-span-6">
+							<Link to="/{-$locale}" viewTransition>
+								<img src="/assets/logo.svg" alt="Afrodiite" />
+							</Link>
+						</Stack>
+
+						<Stack direction="row" className="col-span-3 justify-end">
+							<Button
+								className="flex h-auto lg:hidden"
+								variant="unstyled"
+								onClick={handleMenuClick}
+							>
+								<Button.Icon name="Menu" size={'32'} />
+							</Button>
 						</Stack>
 					</Stack>
 				</Stack>
 			</Stack>
 
-			<Drawer ref={drawerRef} position="right" size={'full'}>
+			<Drawer ref={drawerRef} position="right" size={'450px'}>
 				<Drawer.Content className="pt-14">
 					<Stack direction="row" className="w-full gap-4">
 						<Button className="w-full">

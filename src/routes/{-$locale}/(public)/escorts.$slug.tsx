@@ -1,13 +1,12 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { BackButton } from '@/components/core/BackButton';
 import { Badge } from '@/components/core/Badge';
 import { Button } from '@/components/core/Button';
 import { Card } from '@/components/core/Card';
 import { Icon } from '@/components/core/Icon';
+import { DATA_IMAGES, ImageCarousel } from '@/components/core/ImageCarousel';
 import { Rating } from '@/components/core/Rating';
 import { Container, Stack } from '@/components/core/Stack';
 import { Text } from '@/components/core/Text';
-import { ImageCarousel } from '@/components/ImageCarousel';
 import {
 	AvailableServices,
 	AvailableWeekHours,
@@ -26,11 +25,17 @@ export const Route = createFileRoute('/{-$locale}/(public)/escorts/$slug')({
 function RouteComponent() {
 	return (
 		<Container hasHeader>
-			<BackButton />
 			<div className="grid grid-cols-1 gap-4 lg:grid-cols-12">
 				<div className="col-span-8 space-y-4">
 					<Card className="gap-1 p-1">
-						<ImageCarousel />
+						<ImageCarousel
+							images={DATA_IMAGES}
+							drag
+							openPreview
+							width="85%"
+							gap="2"
+							dotSize="medium"
+						/>
 						<Stack className="w-full items-start gap-3 p-3">
 							<Stack className="items-start">
 								<Text

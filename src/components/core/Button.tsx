@@ -5,7 +5,7 @@ import { Text } from './Text';
 const ButtonRoot = useStyled('button', {
 	base: {
 		className:
-			'centered flex h-[56px] gap-1 rounded-lg font-normal text-text-primary',
+			'centered flex h-[60px] gap-1 rounded-lg font-normal text-text-primary',
 	},
 	variants: {
 		variant: {
@@ -31,6 +31,11 @@ const ButtonRoot = useStyled('button', {
 			},
 			false: {
 				className: 'cursor-default',
+			},
+		},
+		backButton: {
+			true: {
+				className: 'pl-2',
 			},
 		},
 	},
