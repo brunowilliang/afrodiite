@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
 
-export const Route = createFileRoute('/dashboard/$slug')({
+export const Route = createFileRoute('/{-$locale}/dashboard/$slug')({
 	component: RouteComponent,
 	loader: async ({ params }) => {
 		return params;

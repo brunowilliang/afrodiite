@@ -10,7 +10,7 @@ import { Text } from '@/components/core/Text';
 import { EscortCard } from '@/components/EscortCard';
 import { NavigationMenu } from '@/utils/data';
 
-export const Route = createFileRoute('/(public)/escorts/')({
+export const Route = createFileRoute('/{-$locale}/(public)/escorts/')({
 	component: RouteComponent,
 });
 
@@ -70,5 +70,5 @@ function RouteComponent() {
 				</div>
 			</Stack>
 		</Container>
-	);
+	)
 }

@@ -9,214 +9,264 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as DashboardRouteRouteImport } from './routes/dashboard/route'
-import { Route as publicRouteRouteImport } from './routes/(public)/route'
-import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
-import { Route as publicIndexRouteImport } from './routes/(public)/index'
-import { Route as DashboardSlugRouteImport } from './routes/dashboard/$slug'
-import { Route as authLoginRouteImport } from './routes/(auth)/login'
-import { Route as publicEscortsIndexRouteImport } from './routes/(public)/escorts.index'
-import { Route as publicEscortsSlugRouteImport } from './routes/(public)/escorts.$slug'
+import { Route as Char123LocaleChar125RouteRouteImport } from './routes/{-$locale}/route'
+import { Route as Char123LocaleChar125DashboardRouteRouteImport } from './routes/{-$locale}/dashboard/route'
+import { Route as Char123LocaleChar125publicRouteRouteImport } from './routes/{-$locale}/(public)/route'
+import { Route as Char123LocaleChar125DashboardIndexRouteImport } from './routes/{-$locale}/dashboard/index'
+import { Route as Char123LocaleChar125publicIndexRouteImport } from './routes/{-$locale}/(public)/index'
+import { Route as Char123LocaleChar125DashboardSlugRouteImport } from './routes/{-$locale}/dashboard/$slug'
+import { Route as Char123LocaleChar125authLoginRouteImport } from './routes/{-$locale}/(auth)/login'
+import { Route as Char123LocaleChar125publicEscortsIndexRouteImport } from './routes/{-$locale}/(public)/escorts.index'
+import { Route as Char123LocaleChar125publicEscortsSlugRouteImport } from './routes/{-$locale}/(public)/escorts.$slug'
 
-const DashboardRouteRoute = DashboardRouteRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const publicRouteRoute = publicRouteRouteImport.update({
-  id: '/(public)',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DashboardIndexRoute = DashboardIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => DashboardRouteRoute,
-} as any)
-const publicIndexRoute = publicIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => publicRouteRoute,
-} as any)
-const DashboardSlugRoute = DashboardSlugRouteImport.update({
-  id: '/$slug',
-  path: '/$slug',
-  getParentRoute: () => DashboardRouteRoute,
-} as any)
-const authLoginRoute = authLoginRouteImport.update({
-  id: '/(auth)/login',
-  path: '/login',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const publicEscortsIndexRoute = publicEscortsIndexRouteImport.update({
-  id: '/escorts/',
-  path: '/escorts/',
-  getParentRoute: () => publicRouteRoute,
-} as any)
-const publicEscortsSlugRoute = publicEscortsSlugRouteImport.update({
-  id: '/escorts/$slug',
-  path: '/escorts/$slug',
-  getParentRoute: () => publicRouteRoute,
-} as any)
+const Char123LocaleChar125RouteRoute =
+  Char123LocaleChar125RouteRouteImport.update({
+    id: '/{-$locale}',
+    path: '/{-$locale}',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const Char123LocaleChar125DashboardRouteRoute =
+  Char123LocaleChar125DashboardRouteRouteImport.update({
+    id: '/dashboard',
+    path: '/dashboard',
+    getParentRoute: () => Char123LocaleChar125RouteRoute,
+  } as any)
+const Char123LocaleChar125publicRouteRoute =
+  Char123LocaleChar125publicRouteRouteImport.update({
+    id: '/(public)',
+    getParentRoute: () => Char123LocaleChar125RouteRoute,
+  } as any)
+const Char123LocaleChar125DashboardIndexRoute =
+  Char123LocaleChar125DashboardIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => Char123LocaleChar125DashboardRouteRoute,
+  } as any)
+const Char123LocaleChar125publicIndexRoute =
+  Char123LocaleChar125publicIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => Char123LocaleChar125publicRouteRoute,
+  } as any)
+const Char123LocaleChar125DashboardSlugRoute =
+  Char123LocaleChar125DashboardSlugRouteImport.update({
+    id: '/$slug',
+    path: '/$slug',
+    getParentRoute: () => Char123LocaleChar125DashboardRouteRoute,
+  } as any)
+const Char123LocaleChar125authLoginRoute =
+  Char123LocaleChar125authLoginRouteImport.update({
+    id: '/(auth)/login',
+    path: '/login',
+    getParentRoute: () => Char123LocaleChar125RouteRoute,
+  } as any)
+const Char123LocaleChar125publicEscortsIndexRoute =
+  Char123LocaleChar125publicEscortsIndexRouteImport.update({
+    id: '/escorts/',
+    path: '/escorts/',
+    getParentRoute: () => Char123LocaleChar125publicRouteRoute,
+  } as any)
+const Char123LocaleChar125publicEscortsSlugRoute =
+  Char123LocaleChar125publicEscortsSlugRouteImport.update({
+    id: '/escorts/$slug',
+    path: '/escorts/$slug',
+    getParentRoute: () => Char123LocaleChar125publicRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof publicIndexRoute
-  '/dashboard': typeof DashboardRouteRouteWithChildren
-  '/login': typeof authLoginRoute
-  '/dashboard/$slug': typeof DashboardSlugRoute
-  '/dashboard/': typeof DashboardIndexRoute
-  '/escorts/$slug': typeof publicEscortsSlugRoute
-  '/escorts': typeof publicEscortsIndexRoute
+  '/{-$locale}': typeof Char123LocaleChar125RouteRouteWithChildren
+  '/{-$locale}/': typeof Char123LocaleChar125publicIndexRoute
+  '/{-$locale}/dashboard': typeof Char123LocaleChar125DashboardRouteRouteWithChildren
+  '/{-$locale}/login': typeof Char123LocaleChar125authLoginRoute
+  '/{-$locale}/dashboard/$slug': typeof Char123LocaleChar125DashboardSlugRoute
+  '/{-$locale}/dashboard/': typeof Char123LocaleChar125DashboardIndexRoute
+  '/{-$locale}/escorts/$slug': typeof Char123LocaleChar125publicEscortsSlugRoute
+  '/{-$locale}/escorts': typeof Char123LocaleChar125publicEscortsIndexRoute
 }
 export interface FileRoutesByTo {
-  '/login': typeof authLoginRoute
-  '/dashboard/$slug': typeof DashboardSlugRoute
-  '/': typeof publicIndexRoute
-  '/dashboard': typeof DashboardIndexRoute
-  '/escorts/$slug': typeof publicEscortsSlugRoute
-  '/escorts': typeof publicEscortsIndexRoute
+  '/{-$locale}/login': typeof Char123LocaleChar125authLoginRoute
+  '/{-$locale}/dashboard/$slug': typeof Char123LocaleChar125DashboardSlugRoute
+  '/{-$locale}': typeof Char123LocaleChar125publicIndexRoute
+  '/{-$locale}/dashboard': typeof Char123LocaleChar125DashboardIndexRoute
+  '/{-$locale}/escorts/$slug': typeof Char123LocaleChar125publicEscortsSlugRoute
+  '/{-$locale}/escorts': typeof Char123LocaleChar125publicEscortsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/(public)': typeof publicRouteRouteWithChildren
-  '/dashboard': typeof DashboardRouteRouteWithChildren
-  '/(auth)/login': typeof authLoginRoute
-  '/dashboard/$slug': typeof DashboardSlugRoute
-  '/(public)/': typeof publicIndexRoute
-  '/dashboard/': typeof DashboardIndexRoute
-  '/(public)/escorts/$slug': typeof publicEscortsSlugRoute
-  '/(public)/escorts/': typeof publicEscortsIndexRoute
+  '/{-$locale}': typeof Char123LocaleChar125RouteRouteWithChildren
+  '/{-$locale}/(public)': typeof Char123LocaleChar125publicRouteRouteWithChildren
+  '/{-$locale}/dashboard': typeof Char123LocaleChar125DashboardRouteRouteWithChildren
+  '/{-$locale}/(auth)/login': typeof Char123LocaleChar125authLoginRoute
+  '/{-$locale}/dashboard/$slug': typeof Char123LocaleChar125DashboardSlugRoute
+  '/{-$locale}/(public)/': typeof Char123LocaleChar125publicIndexRoute
+  '/{-$locale}/dashboard/': typeof Char123LocaleChar125DashboardIndexRoute
+  '/{-$locale}/(public)/escorts/$slug': typeof Char123LocaleChar125publicEscortsSlugRoute
+  '/{-$locale}/(public)/escorts/': typeof Char123LocaleChar125publicEscortsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | '/'
-    | '/dashboard'
-    | '/login'
-    | '/dashboard/$slug'
-    | '/dashboard/'
-    | '/escorts/$slug'
-    | '/escorts'
+    | '/{-$locale}'
+    | '/{-$locale}/'
+    | '/{-$locale}/dashboard'
+    | '/{-$locale}/login'
+    | '/{-$locale}/dashboard/$slug'
+    | '/{-$locale}/dashboard/'
+    | '/{-$locale}/escorts/$slug'
+    | '/{-$locale}/escorts'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/login'
-    | '/dashboard/$slug'
-    | '/'
-    | '/dashboard'
-    | '/escorts/$slug'
-    | '/escorts'
+    | '/{-$locale}/login'
+    | '/{-$locale}/dashboard/$slug'
+    | '/{-$locale}'
+    | '/{-$locale}/dashboard'
+    | '/{-$locale}/escorts/$slug'
+    | '/{-$locale}/escorts'
   id:
     | '__root__'
-    | '/(public)'
-    | '/dashboard'
-    | '/(auth)/login'
-    | '/dashboard/$slug'
-    | '/(public)/'
-    | '/dashboard/'
-    | '/(public)/escorts/$slug'
-    | '/(public)/escorts/'
+    | '/{-$locale}'
+    | '/{-$locale}/(public)'
+    | '/{-$locale}/dashboard'
+    | '/{-$locale}/(auth)/login'
+    | '/{-$locale}/dashboard/$slug'
+    | '/{-$locale}/(public)/'
+    | '/{-$locale}/dashboard/'
+    | '/{-$locale}/(public)/escorts/$slug'
+    | '/{-$locale}/(public)/escorts/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  publicRouteRoute: typeof publicRouteRouteWithChildren
-  DashboardRouteRoute: typeof DashboardRouteRouteWithChildren
-  authLoginRoute: typeof authLoginRoute
+  Char123LocaleChar125RouteRoute: typeof Char123LocaleChar125RouteRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/dashboard': {
-      id: '/dashboard'
+    '/{-$locale}': {
+      id: '/{-$locale}'
+      path: '/{-$locale}'
+      fullPath: '/{-$locale}'
+      preLoaderRoute: typeof Char123LocaleChar125RouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/{-$locale}/dashboard': {
+      id: '/{-$locale}/dashboard'
       path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof DashboardRouteRouteImport
-      parentRoute: typeof rootRouteImport
+      fullPath: '/{-$locale}/dashboard'
+      preLoaderRoute: typeof Char123LocaleChar125DashboardRouteRouteImport
+      parentRoute: typeof Char123LocaleChar125RouteRoute
     }
-    '/(public)': {
-      id: '/(public)'
+    '/{-$locale}/(public)': {
+      id: '/{-$locale}/(public)'
       path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof publicRouteRouteImport
-      parentRoute: typeof rootRouteImport
+      fullPath: '/{-$locale}/'
+      preLoaderRoute: typeof Char123LocaleChar125publicRouteRouteImport
+      parentRoute: typeof Char123LocaleChar125RouteRoute
     }
-    '/dashboard/': {
-      id: '/dashboard/'
+    '/{-$locale}/dashboard/': {
+      id: '/{-$locale}/dashboard/'
       path: '/'
-      fullPath: '/dashboard/'
-      preLoaderRoute: typeof DashboardIndexRouteImport
-      parentRoute: typeof DashboardRouteRoute
+      fullPath: '/{-$locale}/dashboard/'
+      preLoaderRoute: typeof Char123LocaleChar125DashboardIndexRouteImport
+      parentRoute: typeof Char123LocaleChar125DashboardRouteRoute
     }
-    '/(public)/': {
-      id: '/(public)/'
+    '/{-$locale}/(public)/': {
+      id: '/{-$locale}/(public)/'
       path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof publicIndexRouteImport
-      parentRoute: typeof publicRouteRoute
+      fullPath: '/{-$locale}/'
+      preLoaderRoute: typeof Char123LocaleChar125publicIndexRouteImport
+      parentRoute: typeof Char123LocaleChar125publicRouteRoute
     }
-    '/dashboard/$slug': {
-      id: '/dashboard/$slug'
+    '/{-$locale}/dashboard/$slug': {
+      id: '/{-$locale}/dashboard/$slug'
       path: '/$slug'
-      fullPath: '/dashboard/$slug'
-      preLoaderRoute: typeof DashboardSlugRouteImport
-      parentRoute: typeof DashboardRouteRoute
+      fullPath: '/{-$locale}/dashboard/$slug'
+      preLoaderRoute: typeof Char123LocaleChar125DashboardSlugRouteImport
+      parentRoute: typeof Char123LocaleChar125DashboardRouteRoute
     }
-    '/(auth)/login': {
-      id: '/(auth)/login'
+    '/{-$locale}/(auth)/login': {
+      id: '/{-$locale}/(auth)/login'
       path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof authLoginRouteImport
-      parentRoute: typeof rootRouteImport
+      fullPath: '/{-$locale}/login'
+      preLoaderRoute: typeof Char123LocaleChar125authLoginRouteImport
+      parentRoute: typeof Char123LocaleChar125RouteRoute
     }
-    '/(public)/escorts/': {
-      id: '/(public)/escorts/'
+    '/{-$locale}/(public)/escorts/': {
+      id: '/{-$locale}/(public)/escorts/'
       path: '/escorts'
-      fullPath: '/escorts'
-      preLoaderRoute: typeof publicEscortsIndexRouteImport
-      parentRoute: typeof publicRouteRoute
+      fullPath: '/{-$locale}/escorts'
+      preLoaderRoute: typeof Char123LocaleChar125publicEscortsIndexRouteImport
+      parentRoute: typeof Char123LocaleChar125publicRouteRoute
     }
-    '/(public)/escorts/$slug': {
-      id: '/(public)/escorts/$slug'
+    '/{-$locale}/(public)/escorts/$slug': {
+      id: '/{-$locale}/(public)/escorts/$slug'
       path: '/escorts/$slug'
-      fullPath: '/escorts/$slug'
-      preLoaderRoute: typeof publicEscortsSlugRouteImport
-      parentRoute: typeof publicRouteRoute
+      fullPath: '/{-$locale}/escorts/$slug'
+      preLoaderRoute: typeof Char123LocaleChar125publicEscortsSlugRouteImport
+      parentRoute: typeof Char123LocaleChar125publicRouteRoute
     }
   }
 }
 
-interface publicRouteRouteChildren {
-  publicIndexRoute: typeof publicIndexRoute
-  publicEscortsSlugRoute: typeof publicEscortsSlugRoute
-  publicEscortsIndexRoute: typeof publicEscortsIndexRoute
+interface Char123LocaleChar125publicRouteRouteChildren {
+  Char123LocaleChar125publicIndexRoute: typeof Char123LocaleChar125publicIndexRoute
+  Char123LocaleChar125publicEscortsSlugRoute: typeof Char123LocaleChar125publicEscortsSlugRoute
+  Char123LocaleChar125publicEscortsIndexRoute: typeof Char123LocaleChar125publicEscortsIndexRoute
 }
 
-const publicRouteRouteChildren: publicRouteRouteChildren = {
-  publicIndexRoute: publicIndexRoute,
-  publicEscortsSlugRoute: publicEscortsSlugRoute,
-  publicEscortsIndexRoute: publicEscortsIndexRoute,
+const Char123LocaleChar125publicRouteRouteChildren: Char123LocaleChar125publicRouteRouteChildren =
+  {
+    Char123LocaleChar125publicIndexRoute: Char123LocaleChar125publicIndexRoute,
+    Char123LocaleChar125publicEscortsSlugRoute:
+      Char123LocaleChar125publicEscortsSlugRoute,
+    Char123LocaleChar125publicEscortsIndexRoute:
+      Char123LocaleChar125publicEscortsIndexRoute,
+  }
+
+const Char123LocaleChar125publicRouteRouteWithChildren =
+  Char123LocaleChar125publicRouteRoute._addFileChildren(
+    Char123LocaleChar125publicRouteRouteChildren,
+  )
+
+interface Char123LocaleChar125DashboardRouteRouteChildren {
+  Char123LocaleChar125DashboardSlugRoute: typeof Char123LocaleChar125DashboardSlugRoute
+  Char123LocaleChar125DashboardIndexRoute: typeof Char123LocaleChar125DashboardIndexRoute
 }
 
-const publicRouteRouteWithChildren = publicRouteRoute._addFileChildren(
-  publicRouteRouteChildren,
-)
+const Char123LocaleChar125DashboardRouteRouteChildren: Char123LocaleChar125DashboardRouteRouteChildren =
+  {
+    Char123LocaleChar125DashboardSlugRoute:
+      Char123LocaleChar125DashboardSlugRoute,
+    Char123LocaleChar125DashboardIndexRoute:
+      Char123LocaleChar125DashboardIndexRoute,
+  }
 
-interface DashboardRouteRouteChildren {
-  DashboardSlugRoute: typeof DashboardSlugRoute
-  DashboardIndexRoute: typeof DashboardIndexRoute
+const Char123LocaleChar125DashboardRouteRouteWithChildren =
+  Char123LocaleChar125DashboardRouteRoute._addFileChildren(
+    Char123LocaleChar125DashboardRouteRouteChildren,
+  )
+
+interface Char123LocaleChar125RouteRouteChildren {
+  Char123LocaleChar125publicRouteRoute: typeof Char123LocaleChar125publicRouteRouteWithChildren
+  Char123LocaleChar125DashboardRouteRoute: typeof Char123LocaleChar125DashboardRouteRouteWithChildren
+  Char123LocaleChar125authLoginRoute: typeof Char123LocaleChar125authLoginRoute
 }
 
-const DashboardRouteRouteChildren: DashboardRouteRouteChildren = {
-  DashboardSlugRoute: DashboardSlugRoute,
-  DashboardIndexRoute: DashboardIndexRoute,
-}
+const Char123LocaleChar125RouteRouteChildren: Char123LocaleChar125RouteRouteChildren =
+  {
+    Char123LocaleChar125publicRouteRoute:
+      Char123LocaleChar125publicRouteRouteWithChildren,
+    Char123LocaleChar125DashboardRouteRoute:
+      Char123LocaleChar125DashboardRouteRouteWithChildren,
+    Char123LocaleChar125authLoginRoute: Char123LocaleChar125authLoginRoute,
+  }
 
-const DashboardRouteRouteWithChildren = DashboardRouteRoute._addFileChildren(
-  DashboardRouteRouteChildren,
-)
+const Char123LocaleChar125RouteRouteWithChildren =
+  Char123LocaleChar125RouteRoute._addFileChildren(
+    Char123LocaleChar125RouteRouteChildren,
+  )
 
 const rootRouteChildren: RootRouteChildren = {
-  publicRouteRoute: publicRouteRouteWithChildren,
-  DashboardRouteRoute: DashboardRouteRouteWithChildren,
-  authLoginRoute: authLoginRoute,
+  Char123LocaleChar125RouteRoute: Char123LocaleChar125RouteRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

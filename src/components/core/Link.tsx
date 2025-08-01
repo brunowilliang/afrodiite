@@ -1,20 +1,12 @@
-import {
-	createLink,
-	type LinkComponent,
-	Link as LinkTanstack,
-} from '@tanstack/react-router';
+import { createLink, type LinkComponent } from '@tanstack/react-router';
 import { useStyled } from 'use-styled';
 
-const LinkRoot = useStyled(LinkTanstack, {
-	variants: {
-		teste: {
-			true: {
-				to: '/escorts',
-			},
-		},
-	},
-});
+const BaseLinkRoot = useStyled('a', {});
 
-type LinkRootProps = LinkComponent<typeof LinkRoot>;
+type BaseLinkRootProps = LinkComponent<typeof BaseLinkRoot>;
 
-export const Link = createLink(LinkRoot as LinkRootProps);
+const BaseLink = createLink(BaseLinkRoot as BaseLinkRootProps);
+
+export const Link: BaseLinkRootProps = (props) => {
+	return <BaseLink preload="intent" {...props} />;
+};

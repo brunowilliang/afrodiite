@@ -16,7 +16,7 @@ import {
 	Prices,
 } from '@/utils/data';
 
-export const Route = createFileRoute('/(public)/escorts/$slug')({
+export const Route = createFileRoute('/{-$locale}/(public)/escorts/$slug')({
 	component: RouteComponent,
 	loader: async ({ params }) => {
 		return params;

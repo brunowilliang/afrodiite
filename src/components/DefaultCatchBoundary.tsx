@@ -33,7 +33,7 @@ export function DefaultCatchBoundary({ error }: ErrorComponentProps) {
 				</button>
 				{isRoot ? (
 					<Link
-						to="/"
+						to="/{-$locale}"
 						className={
 							'rounded bg-gray-600 px-2 py-1 font-extrabold text-white uppercase dark:bg-gray-700'
 						}
@@ -42,7 +42,7 @@ export function DefaultCatchBoundary({ error }: ErrorComponentProps) {
 					</Link>
 				) : (
 					<Link
-						to="/"
+						to="/{-$locale}"
 						className={
 							'rounded bg-gray-600 px-2 py-1 font-extrabold text-white uppercase dark:bg-gray-700'
 						}

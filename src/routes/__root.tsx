@@ -13,9 +13,7 @@ import { NotFound } from '@/components/NotFound';
 import appCss from '@/styles/app.css?url';
 import { seo } from '@/utils/seo';
 
-export const Route = createRootRouteWithContext<{
-	breadcrumb?: string;
-}>()({
+export const Route = createRootRouteWithContext()({
 	head: () => ({
 		meta: [
 			{
@@ -25,25 +23,17 @@ export const Route = createRootRouteWithContext<{
 				name: 'viewport',
 				content: 'width=device-width, initial-scale=1',
 			},
-			// {
-			// 	name: 'theme-color',
-			// 	content: '#121214',
-			// },
-			// {
-			// 	name: 'apple-mobile-web-app-status-bar-style',
-			// 	content: 'black-translucent',
-			// },
-			// {
-			// 	name: 'apple-mobile-web-app-capable',
-			// 	content: 'yes',
-			// },
 			...seo({
 				title: 'Afrodiite - O maior site de acompanhantes de Portugal',
 				description: 'O maior site de acompanhantes de Portugal',
 			}),
 		],
 		links: [
-			{ rel: 'preconnect', href: 'https://fonts.googleapis.com' },
+			{
+				rel: 'preconnect',
+				href: 'https://fonts.googleapis.com',
+				crossOrigin: 'anonymous',
+			},
 			{
 				rel: 'preconnect',
 				href: 'https://fonts.gstatic.com',
@@ -82,7 +72,11 @@ export const Route = createRootRouteWithContext<{
 				type: 'image/png',
 				href: '/favicon.png',
 			},
-			{ rel: 'manifest', href: '/site.webmanifest', color: '#121214' },
+			{
+				rel: 'manifest',
+				href: '/site.webmanifest',
+				color: '#121214',
+			},
 		],
 	}),
 	errorComponent: DefaultCatchBoundary,
