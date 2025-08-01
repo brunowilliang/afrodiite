@@ -43,7 +43,7 @@ export const CommandPalette = ({ ref }: LocationSelectorProps) => {
 			onClose={() => setSearchTerm('')}
 			size="lg"
 			position="top"
-			topOffset="top-50"
+			topOffset="top-30"
 		>
 			<Input
 				placeholder="Pesquise por região, cidade ou modelo"

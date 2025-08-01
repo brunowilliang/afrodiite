@@ -94,39 +94,11 @@ export const Route = createRootRouteWithContext<{
 
 function RootDocument({ children }: { children: React.ReactNode }) {
 	return (
-		<html lang="en" className="h-full" style={{ backgroundColor: '#0f0713' }}>
+		<html lang="en">
 			<head>
 				<HeadContent />
-				<style
-					dangerouslySetInnerHTML={{
-						__html: `
-						/* Critical CSS - Carrega ANTES de qualquer coisa */
-						html { background-color: #0f0713 !important; }
-						body { background-color: #0f0713 !important; }
-						input, textarea, select {
-							background-color: #1a1a1d !important;
-							color: #f5f5f5 !important;
-							-webkit-appearance: none !important;
-							-moz-appearance: none !important;
-							appearance: none !important;
-						}
-						input::placeholder {
-							color: #9ca3af !important;
-						}
-						/* Previne flash no autofill */
-						input:-webkit-autofill,
-						input:-webkit-autofill:hover,
-						input:-webkit-autofill:focus {
-							-webkit-text-fill-color: #f5f5f5 !important;
-							-webkit-box-shadow: 0 0 0 1000px #1a1a1d inset !important;
-							box-shadow: 0 0 0 1000px #1a1a1d inset !important;
-							transition: background-color 5000s ease-in-out 0s !important;
-						}
-					`,
-					}}
-				/>
 			</head>
-			<body style={{ backgroundColor: '#0f0713' }}>
+			<body>
 				<PhotoProvider>
 					{children}
 					<TanStackRouterDevtools position="bottom-right" />

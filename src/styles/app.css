@@ -20,26 +20,11 @@
 	@apply bg-background text-text-primary text-base antialiased;
 }
 
-/* Previne flash branco nos inputs durante reload no mobile */
-input,
-textarea,
-select {
-	background-color: oklch(21.95% 0.008 285.74);
-	color: oklch(95.20% 0.032 316.42);
-	-webkit-appearance: none;
-	-moz-appearance: none;
-	appearance: none;
+html,
+body {
+	background-color: var(--color-background) !important;
 }
 
-/* Estiliza autocomplete/autofill para manter cores escuras */
-input:-webkit-autofill,
-input:-webkit-autofill:hover,
-input:-webkit-autofill:focus,
-input:-webkit-autofill:active {
-	-webkit-text-fill-color: oklch(95.20% 0.032 316.42) !important;
-	-webkit-box-shadow: 0 0 0 1000px oklch(21.95% 0.008 285.74) inset !important;
-	transition: background-color 5000s ease-in-out 0s;
-}
 
 @utility centered {
 	align-items: center;
