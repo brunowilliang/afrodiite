@@ -3,7 +3,7 @@
 @import '@fontsource/poppins/300.css';
 @import '@fontsource/poppins/400.css';
 @import '@fontsource/poppins/500.css';
-@plugin 'tailwind-scrollbar';
+/* @plugin 'tailwind-scrollbar'; */
 
 @theme {
 	--color-background: oklch(18.31% 0.004 285.99);
@@ -15,10 +15,14 @@
 	--color-text-primary: oklch(95.20% 0.032 316.42);
 	--color-text-secondary: oklch(67.01% 0.025 314.65);
 	--color-danger: oklch(62.44% 0.204 16.34);
+
+	
+	--font-sans: 'Poppins', sans-serif;
+	--font-mono: 'Poppins', monospace;
 }
 
 :root {
-	font-family: 'Poppins', sans-serif;
+	font-family: var(--font-sans);
 	@apply bg-background text-text-primary text-base antialiased;
 }
 
