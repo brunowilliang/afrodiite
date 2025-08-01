@@ -24,23 +24,6 @@ export const Route = createFileRoute('/(public)/escorts/$slug')({
 });
 
 function RouteComponent() {
-	const handleToggleExpanded = () => {
-		const targetCard = document.querySelector('[data-expanded]') as HTMLElement;
-		const iconElement = document.querySelector('.toggle-icon') as HTMLElement;
-
-		if (targetCard && iconElement) {
-			const isExpanded = targetCard.getAttribute('data-expanded') === 'true';
-			const newState = (!isExpanded).toString();
-
-			// Toggle card visibility
-			targetCard.setAttribute('data-expanded', newState);
-
-			// Toggle icon rotation
-			iconElement.style.transform =
-				newState === 'true' ? 'rotate(180deg)' : 'rotate(0deg)';
-		}
-	};
-
 	return (
 		<Container hasHeader>
 			<BackButton />
@@ -74,6 +57,25 @@ function RouteComponent() {
 									578 Reviews
 								</Text>
 							</Stack>
+						</Stack>
+					</Card>
+
+					<Card className="lg:hidden">
+						<Stack
+							direction="row"
+							className="items-center justify-between gap-2"
+						>
+							<Text as="h3" weight="bold">
+								€120/1 hora
+							</Text>
+						</Stack>
+						<Stack direction="row" className="w-full gap-2">
+							<Button className="w-full">
+								<Button.Text>Telefone</Button.Text>
+							</Button>
+							<Button className="w-full">
+								<Button.Text>WhatsApp</Button.Text>
+							</Button>
 						</Stack>
 					</Card>
 
@@ -165,6 +167,25 @@ function RouteComponent() {
 							))}
 						</Card.List>
 					</Card>
+
+					<Card className="lg:hidden">
+						<Badge>
+							<Badge.Text>Valores</Badge.Text>
+						</Badge>
+
+						<Card.List>
+							{Prices.map((price) => (
+								<Card.List.Item key={price.label} invalid={!price.available}>
+									<Card.List.Item.Text weight="normal">
+										{price.label}:
+									</Card.List.Item.Text>
+									<Card.List.Item.Text weight="light">
+										{price.price ? `${price.price}€` : 'Não realiza'}
+									</Card.List.Item.Text>
+								</Card.List.Item>
+							))}
+						</Card.List>
+					</Card>
 				</div>
 				<div className="col-span-4">
 					<Stack className="gap-4 lg:sticky lg:top-[100px]">
@@ -205,61 +226,6 @@ function RouteComponent() {
 								))}
 							</Card.List>
 						</Card>
-
-						{/* Mobile Card */}
-						<Container className="fixed right-0 bottom-0 left-0 z-50 p-4 lg:hidden">
-							<Card>
-								<Card
-									data-expanded="false"
-									className="data-[expanded=false]:-mt-4 w-full overflow-hidden border-0 p-0 transition-all duration-500 ease-in-out data-[expanded=false]:max-h-0 data-[expanded=true]:max-h-96 data-[expanded=false]:opacity-0 data-[expanded=true]:opacity-100"
-								>
-									<Badge>
-										<Badge.Text>Valores</Badge.Text>
-									</Badge>
-
-									<Card.List>
-										{Prices.map((price) => (
-											<Card.List.Item
-												key={price.label}
-												invalid={!price.available}
-											>
-												<Card.List.Item.Text weight="normal">
-													{price.label}:
-												</Card.List.Item.Text>
-												<Card.List.Item.Text weight="light">
-													{price.price ? `${price.price}€` : 'Não realiza'}
-												</Card.List.Item.Text>
-											</Card.List.Item>
-										))}
-									</Card.List>
-								</Card>
-
-								<Stack className="w-full gap-4">
-									<Stack
-										direction="row"
-										className="items-center justify-between gap-2"
-									>
-										<Text as="h3" weight="bold">
-											€120/1 hora
-										</Text>
-										<button
-											onClick={handleToggleExpanded}
-											className="toggle-icon cursor-pointer transition-transform duration-300"
-										>
-											<Icon name="ArrowUp" variant="stroke" size="32" />
-										</button>
-									</Stack>
-									<Stack direction="row" className="w-full gap-2">
-										<Button className="w-full">
-											<Button.Text>Telefone</Button.Text>
-										</Button>
-										<Button className="w-full">
-											<Button.Text>WhatsApp</Button.Text>
-										</Button>
-									</Stack>
-								</Stack>
-							</Card>
-						</Container>
 					</Stack>
 				</div>
 			</div>

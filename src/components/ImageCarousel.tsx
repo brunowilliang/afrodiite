@@ -17,10 +17,11 @@ interface ImageCarouselProps {
 
 const defaultImages = [
 	{ src: '/assets/profile.png', alt: 'Alycia Bittencourt' },
+	{ src: '/assets/profile-2.png', alt: 'Alycia Bittencourt' },
+	{ src: '/assets/profile-3.png', alt: 'Alycia Bittencourt' },
 	{ src: '/assets/profile.png', alt: 'Alycia Bittencourt' },
-	{ src: '/assets/profile.png', alt: 'Alycia Bittencourt' },
-	{ src: '/assets/profile.png', alt: 'Alycia Bittencourt' },
-	{ src: '/assets/profile.png', alt: 'Alycia Bittencourt' },
+	{ src: '/assets/profile-2.png', alt: 'Alycia Bittencourt' },
+	{ src: '/assets/profile-3.png', alt: 'Alycia Bittencourt' },
 ];
 
 export const ImageCarousel = ({

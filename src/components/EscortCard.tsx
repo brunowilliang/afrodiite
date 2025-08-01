@@ -6,8 +6,8 @@ import { Text } from '@/components/core/Text';
 
 export function EscortCard() {
 	const images = [
-		{ src: '/assets/profile.png', alt: 'Alycia Bittencourt - Photo 1' },
-		{ src: '/assets/profile.png', alt: 'Alycia Bittencourt - Photo 2' },
+		{ src: '/assets/profile-2.png', alt: 'Alycia Bittencourt - Photo 1' },
+		{ src: '/assets/profile-3.png', alt: 'Alycia Bittencourt - Photo 2' },
 		{ src: '/assets/profile.png', alt: 'Alycia Bittencourt - Photo 3' },
 	];
 

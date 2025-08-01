@@ -18,11 +18,11 @@ const CarouselContainer = useStyled('div', {
 });
 
 const CarouselSlide = useStyled('div', {
-	base: { className: 'relative flex-[0_0_100%]' },
+	base: { className: 'relative aspect-square flex-[0_0_100%] overflow-hidden' },
 });
 
 const CarouselImage = useStyled('img', {
-	base: { className: 'h-full w-full object-cover' },
+	base: { className: 'size-full object-cover' },
 });
 
 const DotsContainer = useStyled('div', {
