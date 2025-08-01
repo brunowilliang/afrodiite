@@ -1,5 +1,6 @@
 import { Link } from '@tanstack/react-router';
 import { useRef } from 'react';
+import { NavigationMenu } from '@/utils/data';
 import { Badge } from './core/Badge';
 import { Button } from './core/Button';
 import { Drawer, type DrawerRef } from './core/Drawer';
@@ -36,7 +37,18 @@ export const Header = () => {
 								height={21}
 							/>
 						</Link>
-						<Icon name="Menu" size={'32'} onClick={handleMenuClick} />
+						<Stack direction="row" className="hidden w-fit gap-4 lg:flex">
+							<Button className="w-fit bg-transparent text-primary">
+								<Button.Text weight="bold">Anunciar</Button.Text>
+							</Button>
+							<Button className="w-fit bg-transparent text-primary">
+								<Button.Text weight="bold">Área Reservada</Button.Text>
+							</Button>
+						</Stack>
+
+						<Stack className="flex lg:hidden">
+							<Icon name="Menu" size={'32'} onClick={handleMenuClick} />
+						</Stack>
 					</Stack>
 				</Stack>
 			</Stack>
@@ -56,29 +68,20 @@ export const Header = () => {
 						<Badge.Text className="">Regiões</Badge.Text>
 					</Badge>
 					<Navigation>
-						<Navigation.Item label="Porto">
-							<Navigation.SubMenu>
-								<Navigation.SubMenu.Item label="Porto" href="/" />
-								<Navigation.SubMenu.Item
-									label="Vila Nova de Gaia"
-									href="/"
-									badge="10"
-								/>
-							</Navigation.SubMenu>
-						</Navigation.Item>
-
-						<Navigation.Item label="Cascais" href="/" />
-
-						<Navigation.Item label="Lisboa">
-							<Navigation.SubMenu>
-								<Navigation.SubMenu.Item label="Lisboa" href="/" badge="10" />
-								<Navigation.SubMenu.Item
-									label="Vila Nova de Lisboa"
-									href="/"
-									badge="10"
-								/>
-							</Navigation.SubMenu>
-						</Navigation.Item>
+						{NavigationMenu.map((item) => (
+							<Navigation.Item key={item.id} label={item.name}>
+								<Navigation.SubMenu>
+									{item.cities.map((city) => (
+										<Navigation.SubMenu.Item
+											key={city.id}
+											label={city.name}
+											href={city.href}
+											badge={city.badge}
+										/>
+									))}
+								</Navigation.SubMenu>
+							</Navigation.Item>
+						))}
 					</Navigation>
 				</Drawer.Content>
 			</Drawer>

@@ -33,6 +33,11 @@ export const Stack = useStyled(StackComponent, {
 				className: 'mx-auto w-full max-w-[1200px] px-4 py-8',
 			},
 		},
+		hasHeader: {
+			true: {
+				className: 'mt-[86px] gap-4 py-4 pb-32',
+			},
+		},
 	},
 	defaultVariants: {
 		direction: 'column',

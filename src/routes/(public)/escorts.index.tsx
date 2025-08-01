@@ -1,12 +1,14 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { Carousel } from '@/components/Carousel';
 import { BackButton } from '@/components/core/BackButton';
 import { Badge } from '@/components/core/Badge';
 import { Button } from '@/components/core/Button';
+import { Card } from '@/components/core/Card';
 import { Input } from '@/components/core/Input';
-import { Stack } from '@/components/core/Stack';
+import { Navigation } from '@/components/core/Navigation';
+import { Container, Stack } from '@/components/core/Stack';
 import { Text } from '@/components/core/Text';
 import { EscortCard } from '@/components/EscortCard';
+import { NavigationMenu } from '@/utils/data';
 
 export const Route = createFileRoute('/(public)/escorts/')({
 	component: RouteComponent,
@@ -14,7 +16,7 @@ export const Route = createFileRoute('/(public)/escorts/')({
 
 function RouteComponent() {
 	return (
-		<Stack container className="mt-[86px] gap-12 overflow-hidden py-4">
+		<Container hasHeader>
 			<Stack className="gap-4">
 				<BackButton />
 
@@ -35,47 +37,38 @@ function RouteComponent() {
 				<Input placeholder="Pesquise sua modelo" />
 			</Stack>
 
-			<Stack className="gap-4">
-				<Badge>
-					<Badge.Text>Destaques da semana</Badge.Text>
-				</Badge>
-				<Carousel />
+			<Stack className="grid grid-cols-1 gap-4 lg:grid-cols-12">
+				<div className="col-span-3 hidden lg:block">
+					<Card className="gap-4">
+						<Badge>
+							<Badge.Text>Regiões</Badge.Text>
+						</Badge>
+						<Navigation>
+							{NavigationMenu.map((item) => (
+								<Navigation.Item key={item.id} label={item.name}>
+									<Navigation.SubMenu>
+										{item.cities.map((city) => (
+											<Navigation.SubMenu.Item
+												key={city.id}
+												label={city.name}
+												href={city.href}
+												badge={city.badge}
+											/>
+										))}
+									</Navigation.SubMenu>
+								</Navigation.Item>
+							))}
+						</Navigation>
+					</Card>
+				</div>
+				<div className="col-span-9 space-y-4">
+					<Stack className="grid grid-cols-2 gap-4 lg:grid-cols-3">
+						{Array.from({ length: 20 }).map((_, index) => (
+							<EscortCard key={index} />
+						))}
+					</Stack>
+				</div>
 			</Stack>
-
-			<Stack className="gap-4">
-				<Badge>
-					<Badge.Text>A nossa seleção</Badge.Text>
-				</Badge>
-				<Carousel />
-			</Stack>
-
-			<Stack className="grid grid-cols-2 gap-3">
-				<Badge className="col-span-2">
-					<Badge.Text>Novidades</Badge.Text>
-				</Badge>
-				<EscortCard />
-				<EscortCard />
-				<EscortCard />
-				<EscortCard />
-				<EscortCard />
-				<EscortCard />
-				<EscortCard />
-				<EscortCard />
-			</Stack>
-
-			<Stack className="grid grid-cols-2 gap-3">
-				<Badge className="col-span-2">
-					<Badge.Text>Todas as Acompanhantes</Badge.Text>
-				</Badge>
-				<EscortCard />
-				<EscortCard />
-				<EscortCard />
-				<EscortCard />
-				<EscortCard />
-				<EscortCard />
-				<EscortCard />
-				<EscortCard />
-			</Stack>
-		</Stack>
+		</Container>
 	);
 }

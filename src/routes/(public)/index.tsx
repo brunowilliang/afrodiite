@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute, Link } from '@tanstack/react-router';
 import { useRef } from 'react';
 import { Carousel } from '@/components/Carousel';
 import { CommandPalette } from '@/components/CommandPalette';
@@ -32,10 +32,13 @@ function Home() {
 				</Text>
 
 				<Input
-					placeholder="Pesquise"
+					placeholder="Pesquise por região, cidade ou modelo"
 					clickable
 					onClick={() => modalRef.current?.open()}
 				/>
+				<Link to="/escorts">
+					<Text>Go to Escorts Page</Text>
+				</Link>
 			</Stack>
 
 			<Stack className="gap-4">

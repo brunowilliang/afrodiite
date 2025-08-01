@@ -38,10 +38,8 @@ export const Route = createRootRouteWithContext<{
 			// 	content: 'yes',
 			// },
 			...seo({
-				title:
-					'TanStack Start | Type-Safe, Client-First, Full-Stack React Framework',
-				description:
-					'TanStack Start is a type-safe, client-first, full-stack React framework.',
+				title: 'Afrodiite - O maior site de acompanhantes de Portugal',
+				description: 'O maior site de acompanhantes de Portugal',
 			}),
 		],
 		links: [

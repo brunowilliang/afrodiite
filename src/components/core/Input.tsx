@@ -1,5 +1,3 @@
-'use client';
-
 import { useSlot, useStyled } from 'use-styled';
 import { cn } from '@/lib/utils';
 
@@ -15,7 +13,7 @@ const InputRoot = useStyled('input', {
 		clickable: {
 			true: {
 				readOnly: true,
-				className: 'cursor-pointer',
+				className: 'cursor-pointer focus:border-accent-10',
 			},
 		},
 		colorScheme: {

@@ -1,11 +1,12 @@
 import { useSlot, useStyled } from 'use-styled';
+import { cn } from '@/lib/utils';
 import { Icon } from './Icon';
 import { Text } from './Text';
 
 const CardRoot = useStyled('div', {
 	base: {
 		className:
-			'flex flex-col items-start gap-5 rounded-xl border border-accent-10 bg-accent px-5 py-5 text-text-primary',
+			'flex flex-col items-start gap-5 rounded-xl border border-accent-10 bg-accent p-5 text-text-primary',
 	},
 	variants: {
 		clickable: {
@@ -49,6 +50,37 @@ const CardBadgeRoot = useStyled('div', {
 	},
 });
 
+const CardListRoot = useStyled('div', {
+	base: {
+		className: 'w-full',
+	},
+});
+
+const CardListItemRoot = useStyled('div', {
+	base: {
+		className: cn(
+			'flex items-center justify-start gap-2 border-accent-10 border-b px-2 py-3',
+			'last:border-b-0',
+		),
+	},
+	variants: {
+		invalid: {
+			true: {
+				className: 'line-through opacity-50',
+			},
+		},
+	},
+});
+
+export const CardListItem = useSlot(CardListItemRoot, {
+	Text,
+	Icon,
+});
+
+const CardList = useSlot(CardListRoot, {
+	Item: CardListItem,
+});
+
 export const CardBadge = useSlot(CardBadgeRoot, {
 	Text,
 	Icon,
@@ -56,4 +88,5 @@ export const CardBadge = useSlot(CardBadgeRoot, {
 
 export const Card = useSlot(CardRoot, {
 	Badge: CardBadge,
+	List: CardList,
 });

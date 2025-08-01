@@ -50,7 +50,7 @@ export const ImageCarousel = ({
 							<button
 								type="button"
 								key={index}
-								className="relative flex-[0_0_85%] cursor-zoom-in border-none bg-transparent p-0"
+								className="relative flex-[0_0_85%] cursor-zoom-in border-none bg-transparent p-0 md:flex-[0_0_55%]"
 								onClick={() => {
 									setPhotoIndex(index);
 									setVisible(true);
