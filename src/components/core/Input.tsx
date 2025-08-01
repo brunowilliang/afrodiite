@@ -10,7 +10,7 @@ const InputRoot = useStyled('input', {
 			'placeholder:text-text-secondary',
 			'focus:border-text-secondary focus:outline-none focus:ring-0 focus:ring-offset-0',
 			'transition-[border-color,box-shadow] duration-300',
-			// 'will-change-[border-color,box-shadow]',
+			'will-change-[border-color,box-shadow]',
 		),
 	},
 	variants: {
