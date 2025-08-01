@@ -62,7 +62,7 @@ export const Route = createRootRouteWithContext<{
 				type: 'image/png',
 				href: '/favicon.png',
 			},
-			{ rel: 'manifest', href: '/site.webmanifest', color: '#fffff' },
+			{ rel: 'manifest', href: '/site.webmanifest', color: '#262626' },
 			// { rel: 'icon', href: '/favicon.ico' },
 		],
 	}),
