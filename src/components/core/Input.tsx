@@ -9,7 +9,7 @@ const InputRoot = useStyled('input', {
 			'h-[60px] w-full rounded-lg border border-accent-10 bg-accent p-4 text-text-primary',
 			'placeholder:text-text-secondary',
 			'focus:border-text-secondary focus:outline-none focus:ring-0 focus:ring-offset-0',
-			'transition-all duration-300',
+			// 'transition-all duration-300',
 		),
 	},
 	variants: {
