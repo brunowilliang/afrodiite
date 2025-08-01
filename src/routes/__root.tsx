@@ -33,6 +33,18 @@ export const Route = createRootRouteWithContext<{
 			}),
 		],
 		links: [
+			// Preconnect ao Google Fonts para otimizar carregamento
+			{ rel: 'preconnect', href: 'https://fonts.googleapis.com' },
+			{
+				rel: 'preconnect',
+				href: 'https://fonts.gstatic.com',
+				crossOrigin: 'anonymous',
+			},
+			// Carrega Poppins do Google Fonts como fallback para mobile
+			{
+				rel: 'stylesheet',
+				href: 'https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500&display=swap',
+			},
 			{ rel: 'stylesheet', href: appCss },
 			{ rel: 'stylesheet', href: reactPhotoViewCss },
 			{
@@ -63,7 +75,6 @@ export const Route = createRootRouteWithContext<{
 				href: '/favicon.png',
 			},
 			{ rel: 'manifest', href: '/site.webmanifest', color: '#262626' },
-			// { rel: 'icon', href: '/favicon.ico' },
 		],
 	}),
 	errorComponent: DefaultCatchBoundary,
@@ -123,7 +134,7 @@ export const Route = createRootRouteWithContext<{
 
 function RootDocument({ children }: { children: React.ReactNode }) {
 	return (
-		<html lang="en" className="h-full">
+		<html lang="en" className="h-full bg-background">
 			<head>
 				<HeadContent />
 			</head>
