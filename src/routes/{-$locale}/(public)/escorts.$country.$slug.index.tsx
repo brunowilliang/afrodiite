@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute, notFound } from '@tanstack/react-router';
 import { Badge } from '@/components/core/Badge';
 import { Button } from '@/components/core/Button';
 import { Card } from '@/components/core/Card';
@@ -14,12 +14,19 @@ import {
 	Fetishes,
 	Prices,
 } from '@/utils/data';
+import type { EscortParams } from '@/utils/validators/escort';
 
-export const Route = createFileRoute('/{-$locale}/(public)/escorts/$slug')({
-	component: RouteComponent,
-	loader: async ({ params }) => {
-		return params;
+export const Route = createFileRoute(
+	'/{-$locale}/(public)/escorts/$country/$slug/',
+)({
+	beforeLoad: ({ params }) => {
+		const { country } = params as EscortParams;
+
+		if (country !== 'portugal') {
+			throw notFound();
+		}
 	},
+	component: RouteComponent,
 });
 
 function RouteComponent() {

@@ -1,4 +1,9 @@
-import { createFileRoute, Outlet, redirect } from '@tanstack/react-router';
+import {
+	createFileRoute,
+	notFound,
+	Outlet,
+	redirect,
+} from '@tanstack/react-router';
 import {
 	defaultLocale,
 	type Locale,
@@ -33,15 +38,7 @@ export const Route = createFileRoute('/{-$locale}')({
 		// --- PONTO CRÍTICO DA VALIDAÇÃO ---
 		// Se um locale foi passado na URL, mas ele NÃO é um dos que suportamos...
 		if (locale && !validateLocale(locale)) {
-			// ...nós o removemos da URL e redirecionamos.
-			// Ex: /fr/dashboard -> /dashboard
-			// A própria lógica do beforeLoad cuidará de redirecionar para /en/dashboard, se necessário, no próximo ciclo.
-			const newPathname = location.pathname.replace(`/${locale}`, '') || '/';
-			throw redirect({
-				to: newPathname,
-				search: location.search,
-				statusCode: 302, // 302 é "Found", ou redirecionamento temporário. Ideal aqui.
-			});
+			throw notFound();
 		}
 
 		// Se a URL já tiver um locale VÁLIDO (ex: /en/...), está tudo certo.

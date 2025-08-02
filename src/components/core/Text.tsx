@@ -37,6 +37,22 @@ export const Text = useStyled(TextBase, {
 			ol: { as: 'ol', className: 'text-base tracking-wider' },
 		},
 
+		size: {
+			xs: { className: 'text-xs' },
+			sm: { className: 'text-sm' },
+			md: { className: 'text-base' },
+			lg: { className: 'text-lg' },
+			xl: { className: 'text-xl' },
+			'2xl': { className: 'text-2xl' },
+			'3xl': { className: 'text-3xl' },
+			'4xl': { className: 'text-4xl' },
+			'5xl': { className: 'text-5xl' },
+			'6xl': { className: 'text-6xl' },
+			'7xl': { className: 'text-7xl' },
+			'8xl': { className: 'text-8xl' },
+			'9xl': { className: 'text-9xl' },
+		},
+
 		align: {
 			center: { className: 'text-center' },
 			right: { className: 'text-right' },

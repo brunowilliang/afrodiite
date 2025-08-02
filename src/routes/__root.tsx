@@ -8,8 +8,6 @@ import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
 import type * as React from 'react';
 import { PhotoProvider } from 'react-photo-view';
 import reactPhotoViewCss from 'react-photo-view/dist/react-photo-view.css?url';
-import { DefaultCatchBoundary } from '@/components/DefaultCatchBoundary';
-import { NotFound } from '@/components/NotFound';
 import appCss from '@/styles/app.css?url';
 import { seo } from '@/utils/seo';
 
@@ -79,12 +77,14 @@ export const Route = createRootRouteWithContext()({
 			},
 		],
 	}),
-	errorComponent: DefaultCatchBoundary,
-	notFoundComponent: () => <NotFound />,
 	shellComponent: RootDocument,
 });
 
-function RootDocument({ children }: { children: React.ReactNode }) {
+type Props = {
+	children: React.ReactNode;
+};
+
+function RootDocument({ children }: Props) {
 	return (
 		<html lang="en">
 			<head>

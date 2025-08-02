@@ -17,7 +17,8 @@ import { Route as Char123LocaleChar125publicIndexRouteImport } from './routes/{-
 import { Route as Char123LocaleChar125DashboardSlugRouteImport } from './routes/{-$locale}/dashboard/$slug'
 import { Route as Char123LocaleChar125authLoginRouteImport } from './routes/{-$locale}/(auth)/login'
 import { Route as Char123LocaleChar125publicEscortsIndexRouteImport } from './routes/{-$locale}/(public)/escorts.index'
-import { Route as Char123LocaleChar125publicEscortsSlugRouteImport } from './routes/{-$locale}/(public)/escorts.$slug'
+import { Route as Char123LocaleChar125publicEscortsCountryIndexRouteImport } from './routes/{-$locale}/(public)/escorts.$country.index'
+import { Route as Char123LocaleChar125publicEscortsCountrySlugIndexRouteImport } from './routes/{-$locale}/(public)/escorts.$country.$slug.index'
 
 const Char123LocaleChar125RouteRoute =
   Char123LocaleChar125RouteRouteImport.update({
@@ -66,10 +67,16 @@ const Char123LocaleChar125publicEscortsIndexRoute =
     path: '/escorts/',
     getParentRoute: () => Char123LocaleChar125publicRouteRoute,
   } as any)
-const Char123LocaleChar125publicEscortsSlugRoute =
-  Char123LocaleChar125publicEscortsSlugRouteImport.update({
-    id: '/escorts/$slug',
-    path: '/escorts/$slug',
+const Char123LocaleChar125publicEscortsCountryIndexRoute =
+  Char123LocaleChar125publicEscortsCountryIndexRouteImport.update({
+    id: '/escorts/$country/',
+    path: '/escorts/$country/',
+    getParentRoute: () => Char123LocaleChar125publicRouteRoute,
+  } as any)
+const Char123LocaleChar125publicEscortsCountrySlugIndexRoute =
+  Char123LocaleChar125publicEscortsCountrySlugIndexRouteImport.update({
+    id: '/escorts/$country/$slug/',
+    path: '/escorts/$country/$slug/',
     getParentRoute: () => Char123LocaleChar125publicRouteRoute,
   } as any)
 
@@ -80,16 +87,18 @@ export interface FileRoutesByFullPath {
   '/{-$locale}/login': typeof Char123LocaleChar125authLoginRoute
   '/{-$locale}/dashboard/$slug': typeof Char123LocaleChar125DashboardSlugRoute
   '/{-$locale}/dashboard/': typeof Char123LocaleChar125DashboardIndexRoute
-  '/{-$locale}/escorts/$slug': typeof Char123LocaleChar125publicEscortsSlugRoute
   '/{-$locale}/escorts': typeof Char123LocaleChar125publicEscortsIndexRoute
+  '/{-$locale}/escorts/$country': typeof Char123LocaleChar125publicEscortsCountryIndexRoute
+  '/{-$locale}/escorts/$country/$slug': typeof Char123LocaleChar125publicEscortsCountrySlugIndexRoute
 }
 export interface FileRoutesByTo {
   '/{-$locale}/login': typeof Char123LocaleChar125authLoginRoute
   '/{-$locale}/dashboard/$slug': typeof Char123LocaleChar125DashboardSlugRoute
   '/{-$locale}': typeof Char123LocaleChar125publicIndexRoute
   '/{-$locale}/dashboard': typeof Char123LocaleChar125DashboardIndexRoute
-  '/{-$locale}/escorts/$slug': typeof Char123LocaleChar125publicEscortsSlugRoute
   '/{-$locale}/escorts': typeof Char123LocaleChar125publicEscortsIndexRoute
+  '/{-$locale}/escorts/$country': typeof Char123LocaleChar125publicEscortsCountryIndexRoute
+  '/{-$locale}/escorts/$country/$slug': typeof Char123LocaleChar125publicEscortsCountrySlugIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -100,8 +109,9 @@ export interface FileRoutesById {
   '/{-$locale}/dashboard/$slug': typeof Char123LocaleChar125DashboardSlugRoute
   '/{-$locale}/(public)/': typeof Char123LocaleChar125publicIndexRoute
   '/{-$locale}/dashboard/': typeof Char123LocaleChar125DashboardIndexRoute
-  '/{-$locale}/(public)/escorts/$slug': typeof Char123LocaleChar125publicEscortsSlugRoute
   '/{-$locale}/(public)/escorts/': typeof Char123LocaleChar125publicEscortsIndexRoute
+  '/{-$locale}/(public)/escorts/$country/': typeof Char123LocaleChar125publicEscortsCountryIndexRoute
+  '/{-$locale}/(public)/escorts/$country/$slug/': typeof Char123LocaleChar125publicEscortsCountrySlugIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -112,16 +122,18 @@ export interface FileRouteTypes {
     | '/{-$locale}/login'
     | '/{-$locale}/dashboard/$slug'
     | '/{-$locale}/dashboard/'
-    | '/{-$locale}/escorts/$slug'
     | '/{-$locale}/escorts'
+    | '/{-$locale}/escorts/$country'
+    | '/{-$locale}/escorts/$country/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/{-$locale}/login'
     | '/{-$locale}/dashboard/$slug'
     | '/{-$locale}'
     | '/{-$locale}/dashboard'
-    | '/{-$locale}/escorts/$slug'
     | '/{-$locale}/escorts'
+    | '/{-$locale}/escorts/$country'
+    | '/{-$locale}/escorts/$country/$slug'
   id:
     | '__root__'
     | '/{-$locale}'
@@ -131,8 +143,9 @@ export interface FileRouteTypes {
     | '/{-$locale}/dashboard/$slug'
     | '/{-$locale}/(public)/'
     | '/{-$locale}/dashboard/'
-    | '/{-$locale}/(public)/escorts/$slug'
     | '/{-$locale}/(public)/escorts/'
+    | '/{-$locale}/(public)/escorts/$country/'
+    | '/{-$locale}/(public)/escorts/$country/$slug/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -197,11 +210,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Char123LocaleChar125publicEscortsIndexRouteImport
       parentRoute: typeof Char123LocaleChar125publicRouteRoute
     }
-    '/{-$locale}/(public)/escorts/$slug': {
-      id: '/{-$locale}/(public)/escorts/$slug'
-      path: '/escorts/$slug'
-      fullPath: '/{-$locale}/escorts/$slug'
-      preLoaderRoute: typeof Char123LocaleChar125publicEscortsSlugRouteImport
+    '/{-$locale}/(public)/escorts/$country/': {
+      id: '/{-$locale}/(public)/escorts/$country/'
+      path: '/escorts/$country'
+      fullPath: '/{-$locale}/escorts/$country'
+      preLoaderRoute: typeof Char123LocaleChar125publicEscortsCountryIndexRouteImport
+      parentRoute: typeof Char123LocaleChar125publicRouteRoute
+    }
+    '/{-$locale}/(public)/escorts/$country/$slug/': {
+      id: '/{-$locale}/(public)/escorts/$country/$slug/'
+      path: '/escorts/$country/$slug'
+      fullPath: '/{-$locale}/escorts/$country/$slug'
+      preLoaderRoute: typeof Char123LocaleChar125publicEscortsCountrySlugIndexRouteImport
       parentRoute: typeof Char123LocaleChar125publicRouteRoute
     }
   }
@@ -209,17 +229,20 @@ declare module '@tanstack/react-router' {
 
 interface Char123LocaleChar125publicRouteRouteChildren {
   Char123LocaleChar125publicIndexRoute: typeof Char123LocaleChar125publicIndexRoute
-  Char123LocaleChar125publicEscortsSlugRoute: typeof Char123LocaleChar125publicEscortsSlugRoute
   Char123LocaleChar125publicEscortsIndexRoute: typeof Char123LocaleChar125publicEscortsIndexRoute
+  Char123LocaleChar125publicEscortsCountryIndexRoute: typeof Char123LocaleChar125publicEscortsCountryIndexRoute
+  Char123LocaleChar125publicEscortsCountrySlugIndexRoute: typeof Char123LocaleChar125publicEscortsCountrySlugIndexRoute
 }
 
 const Char123LocaleChar125publicRouteRouteChildren: Char123LocaleChar125publicRouteRouteChildren =
   {
     Char123LocaleChar125publicIndexRoute: Char123LocaleChar125publicIndexRoute,
-    Char123LocaleChar125publicEscortsSlugRoute:
-      Char123LocaleChar125publicEscortsSlugRoute,
     Char123LocaleChar125publicEscortsIndexRoute:
       Char123LocaleChar125publicEscortsIndexRoute,
+    Char123LocaleChar125publicEscortsCountryIndexRoute:
+      Char123LocaleChar125publicEscortsCountryIndexRoute,
+    Char123LocaleChar125publicEscortsCountrySlugIndexRoute:
+      Char123LocaleChar125publicEscortsCountrySlugIndexRoute,
   }
 
 const Char123LocaleChar125publicRouteRouteWithChildren =

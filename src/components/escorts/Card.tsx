@@ -3,13 +3,12 @@ import { Card } from '@/components/core/Card';
 import { DATA_IMAGES, ImageCarousel } from '@/components/core/ImageCarousel';
 import { Stack } from '@/components/core/Stack';
 import { Text } from '@/components/core/Text';
-import { cn } from '@/lib/utils';
 
 export function EscortCard() {
 	return (
 		<Link
-			to="/{-$locale}/escorts/$slug"
-			params={{ slug: 'alycia-bittencourt' }}
+			to="/{-$locale}/escorts/$country/$slug"
+			params={{ country: 'portugal', slug: 'alycia-bittencourt' }}
 			viewTransition
 		>
 			<Card clickable className="gap-1 p-1">
@@ -19,20 +18,11 @@ export function EscortCard() {
 						direction="row"
 						className="w-full flex-wrap items-center justify-between gap-1"
 					>
-						<Card.Badge className="gap-0 p-1 px-2">
-							<Card.Badge.Text className="text-sm md:text-base">
-								€120/1 hora
-							</Card.Badge.Text>
+						<Card.Badge>
+							<Card.Badge.Text>€120/1 hora</Card.Badge.Text>
 						</Card.Badge>
-						<Card.Badge
-							className={cn(
-								'gap-0 border-transparent bg-transparent p-0 text-primary',
-								'md:border md:border-primary-20 md:bg-primary-10 md:px-2 md:py-1 md:text-primary',
-							)}
-						>
-							<Card.Badge.Text className="text-sm md:text-base">
-								4.7/
-							</Card.Badge.Text>
+						<Card.Badge className="gap-0">
+							<Card.Badge.Text>4.7/</Card.Badge.Text>
 							<Card.Badge.Icon name="Star" variant="solid" size="14" />
 						</Card.Badge>
 					</Stack>
