@@ -19,6 +19,7 @@ function RouteComponent() {
 	const [email, setEmail] = useState('eu@brunowillian.com');
 	const [password, setPassword] = useState('Bruno123123');
 
+	// teste de criação de usuário
 	// const createUser = async () => {
 	// 	const { data, error } = await signUp.email({
 	// 		name: '',
