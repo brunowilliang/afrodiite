@@ -1,14 +1,11 @@
-import { createFileRoute, Outlet } from '@tanstack/react-router';
+import { createFileRoute, Outlet, redirect } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/{-$locale}/dashboard')({
-	component: RouteComponent,
+	component: Outlet,
+	beforeLoad: async ({ context }) => {
+		const { session } = context;
+		if (!session) {
+			throw redirect({ to: '/{-$locale}' });
+		}
+	},
 });
-
-function RouteComponent() {
-	return (
-		<>
-			<h1>HEADER</h1>
-			<Outlet />
-		</>
-	)
-}

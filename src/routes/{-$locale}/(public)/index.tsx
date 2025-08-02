@@ -11,16 +11,30 @@ import { Text } from '@/components/core/Text';
 import { useTranslation } from '@/hooks/useTranslation';
 
 export const Route = createFileRoute('/{-$locale}/(public)/')({
-	component: Home,
+	component: RouteComponent,
+	loader: async ({ context }) => {
+		const { queryClient } = context;
+		await queryClient.fetchQuery({
+			queryKey: ['escorts'],
+			queryFn: () => console.log('queryFn'),
+		});
+		return { escorts: 'MEU DATA' };
+	},
 });
 
-function Home() {
+function RouteComponent() {
 	const modalRef = useRef<ModalRef>(null);
 	const { t } = useTranslation();
+
+	const { session } = Route.useRouteContext();
+	console.log('[HOME]: Route.useRouteContext', session);
 
 	return (
 		<Container className="mt-20 gap-12 overflow-hidden py-16">
 			<Stack className="centered mx-auto max-w-2xl gap-4 py-40">
+				<Link to="/{-$locale}/login">
+					<Text>Login</Text>
+				</Link>
 				<Badge>
 					<Badge.Text className="text-lg text-text-secondary md:text-xl">
 						{t('home.badge')}

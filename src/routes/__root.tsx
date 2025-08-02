@@ -1,17 +1,22 @@
 /// <reference types="vite/client" />
+
+import type { QueryClient } from '@tanstack/react-query';
 import {
 	createRootRouteWithContext,
 	HeadContent,
+	Outlet,
 	Scripts,
 } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
-import type * as React from 'react';
 import { PhotoProvider } from 'react-photo-view';
 import reactPhotoViewCss from 'react-photo-view/dist/react-photo-view.css?url';
+import { fetchAuthSession } from '@/lib/fetchAuthSession';
 import appCss from '@/styles/app.css?url';
 import { seo } from '@/utils/seo';
 
-export const Route = createRootRouteWithContext()({
+export const Route = createRootRouteWithContext<{
+	queryClient: QueryClient;
+}>()({
 	head: () => ({
 		meta: [
 			{
@@ -77,14 +82,18 @@ export const Route = createRootRouteWithContext()({
 			},
 		],
 	}),
-	shellComponent: RootDocument,
+	beforeLoad: async () => {
+		const { session } = await fetchAuthSession();
+		return { session };
+	},
+	component: RootDocument,
 });
 
-type Props = {
-	children: React.ReactNode;
-};
+function RootDocument() {
+	const { session } = Route.useRouteContext();
 
-function RootDocument({ children }: Props) {
+	console.log('[ROOT]: Route.useRouteContext', session);
+
 	return (
 		<html lang="en">
 			<head>
@@ -92,7 +101,7 @@ function RootDocument({ children }: Props) {
 			</head>
 			<body>
 				<PhotoProvider>
-					{children}
+					<Outlet />
 					<TanStackRouterDevtools position="bottom-right" />
 					<Scripts />
 				</PhotoProvider>
