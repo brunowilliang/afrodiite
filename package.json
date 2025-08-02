@@ -36,6 +36,7 @@
     "react-dom": "^19.0.0",
     "react-photo-view": "^1.2.7",
     "smooth-scrollbar": "^8.8.4",
+    "sonner": "^2.0.6",
     "tailwind-merge": "^3.3.1",
     "tailwindcss": "^4.1.11",
     "use-styled": "^1.1.2",

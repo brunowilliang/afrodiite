@@ -1,5 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { useState } from 'react';
+import { toast } from 'sonner';
 import { Button } from '@/components/core/Button';
 import { Card } from '@/components/core/Card';
 import { Input } from '@/components/core/Input';
@@ -40,12 +41,13 @@ function RouteComponent() {
 		});
 
 		if (result.error) {
+			toast(result.error.message);
 			console.error(result.error);
 			return;
 		}
 
 		if (result.data) {
-			navigate({ to: '/{-$locale}/dashboard' });
+			toast('Login realizado com sucesso');
 		}
 	};
 
@@ -57,7 +59,9 @@ function RouteComponent() {
 			return;
 		}
 
-		navigate({ reloadDocument: true });
+		toast('Logout realizado com sucesso');
+		navigate({ to: '/{-$locale}' });
+		// navigate({ reloadDocument: true });
 	};
 
 	return (

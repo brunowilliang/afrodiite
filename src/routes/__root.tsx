@@ -10,6 +10,7 @@ import {
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
 import { PhotoProvider } from 'react-photo-view';
 import reactPhotoViewCss from 'react-photo-view/dist/react-photo-view.css?url';
+import { Toaster } from 'sonner';
 import { fetchAuthSession } from '@/lib/fetchAuthSession';
 import appCss from '@/styles/app.css?url';
 import { seo } from '@/utils/seo';
@@ -90,10 +91,6 @@ export const Route = createRootRouteWithContext<{
 });
 
 function RootDocument() {
-	const { session } = Route.useRouteContext();
-
-	console.log('[ROOT]: Route.useRouteContext', session);
-
 	return (
 		<html lang="en">
 			<head>
@@ -102,6 +99,7 @@ function RootDocument() {
 			<body>
 				<PhotoProvider>
 					<Outlet />
+					<Toaster position="top-center" />
 					<TanStackRouterDevtools position="bottom-right" />
 					<Scripts />
 				</PhotoProvider>

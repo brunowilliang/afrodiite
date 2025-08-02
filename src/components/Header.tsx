@@ -55,9 +55,9 @@ export const Header = () => {
 				</Stack>
 			</Stack>
 
-			<Drawer ref={drawerRef} position="right" size={'450px'}>
+			<Drawer ref={drawerRef} position="right" size={'85%'}>
 				<Drawer.Content className="pt-14">
-					<Stack direction="row" className="w-full gap-4">
+					<Stack className="w-full gap-4">
 						<Button className="w-full">
 							<Button.Text>Anunciar</Button.Text>
 						</Button>
