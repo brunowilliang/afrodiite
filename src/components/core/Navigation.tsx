@@ -146,6 +146,13 @@ const SubMenuItemButton = useStyled('a', {
 			'focus:outline-none',
 		),
 	},
+	variants: {
+		isActive: {
+			true: {
+				className: cn('bg-accent-10 text-text-primary'),
+			},
+		},
+	},
 });
 
 type SubMenuItemProps = ComponentProps<typeof SubMenuItemButton> & {
@@ -167,9 +174,16 @@ const SubMenuItem = ({ label, href, badge, ...props }: SubMenuItemProps) => {
 	);
 };
 
+export const NavigationDivider = useStyled('div', {
+	base: {
+		className: cn('h-px w-full bg-accent-10'),
+	},
+});
+
 // Create SubMenu compound component
 const SubMenu = useSlot(SubMenuRoot, {
 	Item: SubMenuItem,
+	Divider: NavigationDivider,
 });
 
 // Create Navigation compound component

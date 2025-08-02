@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute, type useNavigate } from '@tanstack/react-router';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { Button } from '@/components/core/Button';
@@ -7,6 +7,20 @@ import { Input } from '@/components/core/Input';
 import { Container } from '@/components/core/Stack';
 import { Text } from '@/components/core/Text';
 import { signIn, signOut } from '@/lib/auth-client';
+
+export const handleSignOut = async (
+	navigate: ReturnType<typeof useNavigate>,
+) => {
+	const result = await signOut();
+
+	if (result.error) {
+		console.error(result.error);
+		return;
+	}
+
+	toast('Logout realizado com sucesso');
+	navigate({ to: '/{-$locale}' });
+};
 
 export const Route = createFileRoute('/{-$locale}/(public)/login')({
 	component: RouteComponent,
@@ -19,22 +33,6 @@ function RouteComponent() {
 	const [email, setEmail] = useState('eu@brunowillian.com');
 	const [password, setPassword] = useState('Bruno123123');
 
-	// teste de criação de usuário
-	// const createUser = async () => {
-	// 	const { data, error } = await signUp.email({
-	// 		name: '',
-	// 		email: email,
-	// 		password: password,
-	// 	});
-	// 	if (error) {
-	// 		console.error(error);
-	// 	}
-
-	// 	if (data) {
-	// 		console.log(data);
-	// 	}
-	// };
-
 	const login = async () => {
 		const result = await signIn.email({
 			email: email,
@@ -46,23 +44,8 @@ function RouteComponent() {
 			console.error(result.error);
 			return;
 		}
-
-		if (result.data) {
-			toast('Login realizado com sucesso');
-		}
-	};
-
-	const logout = async () => {
-		const result = await signOut();
-
-		if (result.error) {
-			console.error(result.error);
-			return;
-		}
-
-		toast('Logout realizado com sucesso');
-		navigate({ to: '/{-$locale}' });
-		// navigate({ reloadDocument: true });
+		toast('Login realizado com sucesso');
+		navigate({ to: '/{-$locale}/dashboard' });
 	};
 
 	return (
@@ -91,7 +74,7 @@ function RouteComponent() {
 					<Button.Text>Login</Button.Text>
 				</Button>
 			) : (
-				<Button onClick={() => logout()}>
+				<Button onClick={() => handleSignOut(navigate)}>
 					<Button.Text>Logout</Button.Text>
 				</Button>
 			)}

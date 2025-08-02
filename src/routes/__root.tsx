@@ -85,6 +85,7 @@ export const Route = createRootRouteWithContext<{
 	}),
 	beforeLoad: async () => {
 		const { session } = await fetchAuthSession();
+
 		return { session };
 	},
 	component: RootDocument,

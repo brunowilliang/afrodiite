@@ -1,4 +1,4 @@
-import { Link } from '@tanstack/react-router';
+import { Link, useNavigate, useRouteContext } from '@tanstack/react-router';
 import { useRef } from 'react';
 import { NavigationMenu } from '@/utils/data';
 import { useGoBack } from './core/BackButton';
@@ -8,8 +8,12 @@ import { Drawer, type DrawerRef } from './core/Drawer';
 import { Input } from './core/Input';
 import { Navigation } from './core/Navigation';
 import { Stack } from './core/Stack';
+import { Text } from './core/Text';
 
 export const Header = () => {
+	const navigate = useNavigate();
+	const { session } = useRouteContext({ from: '__root__' });
+
 	const drawerRef = useRef<DrawerRef>(null);
 	const { goBack } = useGoBack();
 
@@ -57,14 +61,35 @@ export const Header = () => {
 
 			<Drawer ref={drawerRef} position="right" size={'85%'}>
 				<Drawer.Content className="pt-14">
-					<Stack className="w-full gap-4">
-						<Button className="w-full">
-							<Button.Text>Anunciar</Button.Text>
-						</Button>
-						<Button className="w-full">
-							<Button.Text>Área Reservada</Button.Text>
-						</Button>
-					</Stack>
+					{session ? (
+						<Stack className="mb-5 w-full">
+							<Text>Olá</Text>
+							<Text weight="bold">{session?.user?.name}</Text>
+							<Button
+								variant="primary"
+								className="mt-4"
+								onClick={() => navigate({ to: '/{-$locale}/dashboard' })}
+							>
+								<Button.Text>Ir para o Dashboard</Button.Text>
+							</Button>
+						</Stack>
+					) : (
+						<Stack className="w-full gap-4">
+							<Button className="w-full">
+								<Button.Text>Anunciar</Button.Text>
+							</Button>
+							<Button
+								className="w-full"
+								onClick={() => {
+									drawerRef.current?.close();
+									navigate({ to: '/{-$locale}/login' });
+								}}
+							>
+								<Button.Text>Área Reservada</Button.Text>
+							</Button>
+						</Stack>
+					)}
+
 					<Input placeholder="Pesquisar" colorScheme="secondary" />
 					<Badge>
 						<Badge.Text className="">Regiões</Badge.Text>

@@ -1,5 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Carousel } from '@/components/Carousel';
 import { CommandPalette } from '@/components/CommandPalette';
 import { Badge } from '@/components/core/Badge';
@@ -8,23 +9,14 @@ import { Link } from '@/components/core/Link';
 import type { ModalRef } from '@/components/core/Modal';
 import { Container, Stack } from '@/components/core/Stack';
 import { Text } from '@/components/core/Text';
-import { useTranslation } from '@/hooks/useTranslation';
 
 export const Route = createFileRoute('/{-$locale}/(public)/')({
 	component: RouteComponent,
-	loader: async ({ context }) => {
-		const { queryClient } = context;
-		await queryClient.fetchQuery({
-			queryKey: ['escorts'],
-			queryFn: () => console.log('queryFn'),
-		});
-		return { escorts: 'MEU DATA' };
-	},
 });
 
 function RouteComponent() {
-	const modalRef = useRef<ModalRef>(null);
 	const { t } = useTranslation();
+	const modalRef = useRef<ModalRef>(null);
 
 	const { session } = Route.useRouteContext();
 	console.log('[HOME]: Route.useRouteContext', session);
@@ -37,7 +29,7 @@ function RouteComponent() {
 				</Link>
 				<Badge>
 					<Badge.Text className="text-lg text-text-secondary md:text-xl">
-						{t('home.badge')}
+						home.badge
 					</Badge.Text>
 				</Badge>
 				<Text
@@ -49,25 +41,25 @@ function RouteComponent() {
 				</Text>
 
 				<Input
-					placeholder={t('home.searchPlaceholder')}
+					placeholder={'home.searchPlaceholder'}
 					clickable
 					onClick={() => modalRef.current?.open()}
 				/>
 				<Link to="/{-$locale}/escorts">
-					<Text>{t('nav.escorts')}</Text>
+					<Text>nav.escorts</Text>
 				</Link>
 			</Stack>
 
 			<Stack className="gap-4">
 				<Badge>
-					<Badge.Text>{t('home.weeklyNews')}</Badge.Text>
+					<Badge.Text>home.weeklyNews</Badge.Text>
 				</Badge>
 				<Carousel />
 			</Stack>
 
 			<Stack className="gap-4">
 				<Badge>
-					<Badge.Text>{t('home.mostPopular')}</Badge.Text>
+					<Badge.Text>home.mostPopular</Badge.Text>
 				</Badge>
 				<Carousel />
 			</Stack>

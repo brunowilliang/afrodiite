@@ -259,3 +259,26 @@ export const NavigationMenu = [
 		],
 	},
 ];
+
+export const DashboardMenu = [
+	{
+		id: 1,
+		name: 'Dashboard',
+	},
+	{
+		id: 2,
+		name: 'Anúncios',
+	},
+	{
+		id: 3,
+		name: 'Minha conta',
+	},
+	{
+		id: 4,
+		name: 'Configurações',
+	},
+	{
+		id: 5,
+		name: 'Sair',
+	},
+];
