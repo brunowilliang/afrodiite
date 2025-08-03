@@ -15,7 +15,7 @@ export const Header = () => {
 	const { session } = useRouteContext({ from: '__root__' });
 
 	const drawerRef = useRef<DrawerRef>(null);
-	const { goBack } = useGoBack();
+	const { handleGoBack } = useGoBack();
 
 	const handleMenuClick = () => {
 		drawerRef.current?.open();
@@ -35,7 +35,11 @@ export const Header = () => {
 						className="grid h-[70px] grid-cols-12 gap-4 rounded-lg bg-accent-10 p-4"
 					>
 						<Stack direction="row" className="col-span-3 justify-start">
-							<Button variant="unstyled" onClick={goBack} className="h-auto">
+							<Button
+								variant="unstyled"
+								onClick={handleGoBack}
+								className="h-auto"
+							>
 								<Button.Icon name="ArrowLeft" size={'24'} />
 							</Button>
 						</Stack>

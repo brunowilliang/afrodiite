@@ -45,6 +45,7 @@ export const Icon = useStyled('i', {
 			Menu: { className: 'hgi-menu-03' },
 			Close: { className: 'hgi-cancel-01' },
 			Search: { className: 'hgi-search-01' },
+			Home: { className: 'hgi-home-01' },
 		},
 	},
 	defaultVariants: {

@@ -6,7 +6,7 @@ export const useGoBack = () => {
 	const router = useRouter();
 	const canGoBack = useCanGoBack();
 
-	const goBack = () => {
+	const handleGoBack = () => {
 		if (canGoBack) {
 			router.history.back();
 		} else {
@@ -14,5 +14,5 @@ export const useGoBack = () => {
 		}
 	};
 
-	return { goBack };
+	return { handleGoBack };
 };

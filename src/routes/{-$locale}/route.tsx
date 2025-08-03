@@ -1,28 +1,26 @@
-import { createFileRoute, notFound, Outlet } from '@tanstack/react-router';
+import { createFileRoute, Outlet } from '@tanstack/react-router';
 import { useMemo } from 'react';
+import { NotFound } from '@/components/NotFound';
 import i18n from '@/i18n';
 import { localeSchema, validateLocale } from '@/utils/validators/locale';
 
 export const Route = createFileRoute('/{-$locale}')({
 	params: localeSchema,
-	beforeLoad: ({ params }) => {
-		const { locale } = params;
-
-		if (locale && !validateLocale(locale)) {
-			throw notFound();
-		}
-
-		return { locale };
-	},
+	beforeLoad: ({ params }) => ({ locale: params.locale }),
+	errorComponent: () => <NotFound />,
 	component: () => {
 		const { locale } = Route.useParams();
 
+		const defaultLocale = locale || 'pt';
+		const isValidLocale = !locale || validateLocale(locale);
+
 		useMemo(() => {
-			const targetLocale = locale || 'pt';
-			if (i18n.language !== targetLocale) {
-				i18n.changeLanguage(targetLocale);
+			if (isValidLocale) {
+				if (i18n.language !== defaultLocale) {
+					i18n.changeLanguage(defaultLocale);
+				}
 			}
-		}, [locale]);
+		}, [locale, isValidLocale]);
 
 		return <Outlet />;
 	},
