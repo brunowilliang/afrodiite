@@ -10,6 +10,7 @@ const betterAuth = createAuthClient({
 		(env.IS_DEV ? 'http://localhost:3000' : window.location.origin),
 	plugins: [],
 });
+// asdf
 
 const supabase = createClient<Database>(
 	env.SUPABASE_URL || '',
