@@ -53,7 +53,17 @@ function RouteComponent() {
 					window.open(result.url);
 				}}
 			>
-				Checkout
+				Checkout Normal
+			</Button>
+			<Button
+				onClick={async (e) => {
+					e.preventDefault();
+					const result = await api.checkout.openServer('premium');
+
+					window.open(result.url);
+				}}
+			>
+				Checkout Server
 			</Button>
 			<Button
 				onClick={async (e) => {

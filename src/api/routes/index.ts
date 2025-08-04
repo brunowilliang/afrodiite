@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 import { client } from '@/lib/client';
 import { escortQueries, type GetParams } from './escort';
-import { getSession, getSubscriptions } from './session';
+import { getSession, getSubscriptions, openCheckout } from './session';
 
 export const api = {
 	session: {
@@ -22,6 +22,7 @@ export const api = {
 
 			return result.data;
 		},
+		openServer: (slug: string) => openCheckout({ data: { slug } }),
 	},
 	portal: {
 		open: async () => {

@@ -31,7 +31,7 @@ export const getSubscriptions = createServerFn({ method: 'GET' }).handler(
 	},
 );
 
-export const openPortal = createServerFn({ method: 'GET' })
+export const openCheckout = createServerFn({ method: 'GET' })
 	.validator(
 		z.object({
 			slug: z.string(),
@@ -40,12 +40,12 @@ export const openPortal = createServerFn({ method: 'GET' })
 	.handler(async ({ data }) => {
 		const request = getWebRequest();
 
-		const result = await auth.api.portal({
+		const result = await auth.api.checkout({
 			headers: request.headers,
-			params: {
+			body: {
 				slug: data.slug,
 			},
 		});
 
-		return { url: result.url };
+		return result;
 	});
