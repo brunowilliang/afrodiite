@@ -1,7 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
-import { client } from '@/lib/client';
 import { escortQueries, type GetParams } from './escort';
-import { getSession } from './session';
+import { getSession, openCheckout, openPortal } from './session';
 
 export const api = {
 	session: {
@@ -11,19 +10,10 @@ export const api = {
 		get: () => {},
 	},
 	checkout: {
-		open: async () => {
-			const response = await client.auth.checkout({
-				slug: 'premium',
-			});
-			return response;
-		},
+		open: () => openCheckout(),
 	},
 	portal: {
-		open: async () => {
-			const response = client.auth.customer.portal();
-
-			return response;
-		},
+		open: (customerId: string) => openPortal({ data: { customerId } }),
 	},
 	profile: {
 		get: (params: GetParams) => ({

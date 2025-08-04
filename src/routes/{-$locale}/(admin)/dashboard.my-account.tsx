@@ -1,5 +1,4 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { toast } from 'sonner';
 import { api } from '@/api/routes';
 import { Button } from '@/components/core/Button';
 import { Container, Stack } from '@/components/core/Stack';
@@ -12,6 +11,12 @@ export const Route = createFileRoute(
 });
 
 function RouteComponent() {
+	const { profile, session } = Route.useRouteContext();
+
+	if (!session) {
+		console.log('Não há session');
+	}
+
 	return (
 		<Container hasHeader>
 			<Text size="2xl" weight="bold">
@@ -34,7 +39,7 @@ function RouteComponent() {
 					'Não'
 				)} */}
 			</Stack>
-			<Button
+			{/* <Button
 				onClick={async (e) => {
 					e.preventDefault();
 					const result = await api.checkout.open();
@@ -47,17 +52,13 @@ function RouteComponent() {
 				}}
 			>
 				Checkout Normal
-			</Button>
+			</Button> */}
 			<Button
 				onClick={async (e) => {
 					e.preventDefault();
 					const result = await api.checkout.open();
 
-					if (result.error) {
-						toast(result.error.message);
-					}
-
-					window.open(result.data?.url);
+					window.open(result.url);
 				}}
 			>
 				Checkout Server
@@ -65,13 +66,11 @@ function RouteComponent() {
 			<Button
 				onClick={async (e) => {
 					e.preventDefault();
-					const result = await api.checkout.open();
+					const result = await api.portal.open(
+						session.user.polar_customer_id ?? '',
+					);
 
-					if (result.error) {
-						toast(result.error.message);
-					}
-
-					window.open(result.data?.url);
+					window.open(result.customerPortalUrl);
 				}}
 			>
 				Portal
