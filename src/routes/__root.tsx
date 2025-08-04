@@ -11,13 +11,14 @@ import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
 import { PhotoProvider } from 'react-photo-view';
 import reactPhotoViewCss from 'react-photo-view/dist/react-photo-view.css?url';
 import { Toaster } from 'sonner';
-import { fetchAuthSession } from '@/lib/fetchAuthSession';
+import { api } from '@/api/routes';
 import appCss from '@/styles/app.css?url';
 import { seo } from '@/utils/seo';
 
 export const Route = createRootRouteWithContext<{
 	queryClient: QueryClient;
 }>()({
+	component: RootDocument,
 	head: () => ({
 		meta: [
 			{
@@ -83,12 +84,20 @@ export const Route = createRootRouteWithContext<{
 			},
 		],
 	}),
-	beforeLoad: async () => {
-		const { session } = await fetchAuthSession();
+	beforeLoad: async ({ context }) => {
+		const { queryClient } = context ?? {};
+		const { session } = await api.session.get();
 
-		return { session };
+		if (!session) {
+			return { session: null };
+		}
+
+		const profile = await queryClient.fetchQuery(
+			api.profile.get({ id: session.user.id }),
+		);
+
+		return { session, profile };
 	},
-	component: RootDocument,
 });
 
 function RootDocument() {

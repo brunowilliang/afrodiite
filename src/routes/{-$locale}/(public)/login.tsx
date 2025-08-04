@@ -6,12 +6,12 @@ import { Card } from '@/components/core/Card';
 import { Input } from '@/components/core/Input';
 import { Container } from '@/components/core/Stack';
 import { Text } from '@/components/core/Text';
-import { signIn, signOut } from '@/lib/auth-client';
+import { client } from '@/lib/client';
 
 export const handleSignOut = async (
 	navigate: ReturnType<typeof useNavigate>,
 ) => {
-	const result = await signOut();
+	const result = await client.auth.signOut();
 
 	if (result.error) {
 		console.error(result.error);
@@ -30,11 +30,12 @@ function RouteComponent() {
 	const { session } = Route.useRouteContext();
 	const navigate = Route.useNavigate();
 
+	const [name, _] = useState('Bruno Garcia');
 	const [email, setEmail] = useState('eu@brunowillian.com');
 	const [password, setPassword] = useState('Bruno123123');
 
 	const login = async () => {
-		const result = await signIn.email({
+		const result = await client.auth.signIn.email({
 			email: email,
 			password: password,
 		});
@@ -46,6 +47,21 @@ function RouteComponent() {
 		}
 		toast('Login realizado com sucesso');
 		navigate({ to: '/{-$locale}/dashboard' });
+	};
+
+	const createAccount = async () => {
+		const result = await client.auth.signUp.email({
+			name: name,
+			email: email,
+			password: password,
+		});
+
+		if (result.error) {
+			toast(result.error.message);
+			console.error(result.error);
+			return;
+		}
+		toast('Account created successfully');
 	};
 
 	return (
@@ -78,6 +94,10 @@ function RouteComponent() {
 					<Button.Text>Logout</Button.Text>
 				</Button>
 			)}
+
+			<Button onClick={() => createAccount()}>
+				<Button.Text>Create Account</Button.Text>
+			</Button>
 		</Container>
 	);
 }

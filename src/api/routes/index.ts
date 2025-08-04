@@ -1,0 +1,19 @@
+import { useMutation } from '@tanstack/react-query';
+import { escortQueries, type GetParams } from './escort';
+import { getSession } from './session';
+
+export const api = {
+	session: {
+		get: () => getSession(),
+	},
+	profile: {
+		get: (params: GetParams) => ({
+			queryKey: ['profile', params.id],
+			queryFn: () => escortQueries.getProfile({ id: params.id }),
+		}),
+		update: () =>
+			useMutation({
+				mutationFn: escortQueries.updateProfile,
+			}),
+	},
+};

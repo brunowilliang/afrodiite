@@ -4,8 +4,8 @@ import { Card } from '@/components/core/Card';
 import { Navigation } from '@/components/core/Navigation';
 import { Container, Stack } from '@/components/core/Stack';
 import { EscortCard } from '@/components/escorts/Card';
+import type { EscortParams } from '@/schemas/routes/escort';
 import { NavigationMenu } from '@/utils/data';
-import type { EscortParams } from '@/utils/validators/escort';
 
 export const Route = createFileRoute('/{-$locale}/(public)/escorts/$country/')({
 	component: RouteComponent,

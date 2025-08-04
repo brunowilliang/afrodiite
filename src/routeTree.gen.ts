@@ -19,6 +19,7 @@ import { Route as Char123LocaleChar125adminDashboardRouteImport } from './routes
 import { Route as Char123LocaleChar125publicEscortsIndexRouteImport } from './routes/{-$locale}/(public)/escorts.index'
 import { Route as Char123LocaleChar125adminDashboardIndexRouteImport } from './routes/{-$locale}/(admin)/dashboard.index'
 import { Route as Char123LocaleChar125adminDashboardSettingsRouteImport } from './routes/{-$locale}/(admin)/dashboard.settings'
+import { Route as Char123LocaleChar125adminDashboardProfileRouteImport } from './routes/{-$locale}/(admin)/dashboard.profile'
 import { Route as Char123LocaleChar125adminDashboardMyAccountRouteImport } from './routes/{-$locale}/(admin)/dashboard.my-account'
 import { Route as Char123LocaleChar125adminDashboardAdvertsRouteImport } from './routes/{-$locale}/(admin)/dashboard.adverts'
 import { Route as Char123LocaleChar125publicEscortsCountryIndexRouteImport } from './routes/{-$locale}/(public)/escorts.$country.index'
@@ -74,6 +75,12 @@ const Char123LocaleChar125adminDashboardSettingsRoute =
     path: '/settings',
     getParentRoute: () => Char123LocaleChar125adminDashboardRoute,
   } as any)
+const Char123LocaleChar125adminDashboardProfileRoute =
+  Char123LocaleChar125adminDashboardProfileRouteImport.update({
+    id: '/profile',
+    path: '/profile',
+    getParentRoute: () => Char123LocaleChar125adminDashboardRoute,
+  } as any)
 const Char123LocaleChar125adminDashboardMyAccountRoute =
   Char123LocaleChar125adminDashboardMyAccountRouteImport.update({
     id: '/my-account',
@@ -111,6 +118,7 @@ export interface FileRoutesByFullPath {
   '/{-$locale}/login': typeof Char123LocaleChar125publicLoginRoute
   '/{-$locale}/dashboard/adverts': typeof Char123LocaleChar125adminDashboardAdvertsRoute
   '/{-$locale}/dashboard/my-account': typeof Char123LocaleChar125adminDashboardMyAccountRoute
+  '/{-$locale}/dashboard/profile': typeof Char123LocaleChar125adminDashboardProfileRoute
   '/{-$locale}/dashboard/settings': typeof Char123LocaleChar125adminDashboardSettingsRoute
   '/{-$locale}/dashboard/': typeof Char123LocaleChar125adminDashboardIndexRoute
   '/{-$locale}/escorts': typeof Char123LocaleChar125publicEscortsIndexRoute
@@ -122,6 +130,7 @@ export interface FileRoutesByTo {
   '/{-$locale}': typeof Char123LocaleChar125publicIndexRoute
   '/{-$locale}/dashboard/adverts': typeof Char123LocaleChar125adminDashboardAdvertsRoute
   '/{-$locale}/dashboard/my-account': typeof Char123LocaleChar125adminDashboardMyAccountRoute
+  '/{-$locale}/dashboard/profile': typeof Char123LocaleChar125adminDashboardProfileRoute
   '/{-$locale}/dashboard/settings': typeof Char123LocaleChar125adminDashboardSettingsRoute
   '/{-$locale}/dashboard': typeof Char123LocaleChar125adminDashboardIndexRoute
   '/{-$locale}/escorts': typeof Char123LocaleChar125publicEscortsIndexRoute
@@ -137,6 +146,7 @@ export interface FileRoutesById {
   '/{-$locale}/(public)/': typeof Char123LocaleChar125publicIndexRoute
   '/{-$locale}/(admin)/dashboard/adverts': typeof Char123LocaleChar125adminDashboardAdvertsRoute
   '/{-$locale}/(admin)/dashboard/my-account': typeof Char123LocaleChar125adminDashboardMyAccountRoute
+  '/{-$locale}/(admin)/dashboard/profile': typeof Char123LocaleChar125adminDashboardProfileRoute
   '/{-$locale}/(admin)/dashboard/settings': typeof Char123LocaleChar125adminDashboardSettingsRoute
   '/{-$locale}/(admin)/dashboard/': typeof Char123LocaleChar125adminDashboardIndexRoute
   '/{-$locale}/(public)/escorts/': typeof Char123LocaleChar125publicEscortsIndexRoute
@@ -152,6 +162,7 @@ export interface FileRouteTypes {
     | '/{-$locale}/login'
     | '/{-$locale}/dashboard/adverts'
     | '/{-$locale}/dashboard/my-account'
+    | '/{-$locale}/dashboard/profile'
     | '/{-$locale}/dashboard/settings'
     | '/{-$locale}/dashboard/'
     | '/{-$locale}/escorts'
@@ -163,6 +174,7 @@ export interface FileRouteTypes {
     | '/{-$locale}'
     | '/{-$locale}/dashboard/adverts'
     | '/{-$locale}/dashboard/my-account'
+    | '/{-$locale}/dashboard/profile'
     | '/{-$locale}/dashboard/settings'
     | '/{-$locale}/dashboard'
     | '/{-$locale}/escorts'
@@ -177,6 +189,7 @@ export interface FileRouteTypes {
     | '/{-$locale}/(public)/'
     | '/{-$locale}/(admin)/dashboard/adverts'
     | '/{-$locale}/(admin)/dashboard/my-account'
+    | '/{-$locale}/(admin)/dashboard/profile'
     | '/{-$locale}/(admin)/dashboard/settings'
     | '/{-$locale}/(admin)/dashboard/'
     | '/{-$locale}/(public)/escorts/'
@@ -267,6 +280,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Char123LocaleChar125adminDashboardSettingsRouteImport
       parentRoute: typeof Char123LocaleChar125adminDashboardRoute
     }
+    '/{-$locale}/(admin)/dashboard/profile': {
+      id: '/{-$locale}/(admin)/dashboard/profile'
+      path: '/profile'
+      fullPath: '/{-$locale}/dashboard/profile'
+      preLoaderRoute: typeof Char123LocaleChar125adminDashboardProfileRouteImport
+      parentRoute: typeof Char123LocaleChar125adminDashboardRoute
+    }
     '/{-$locale}/(admin)/dashboard/my-account': {
       id: '/{-$locale}/(admin)/dashboard/my-account'
       path: '/my-account'
@@ -337,6 +357,7 @@ const Char123LocaleChar125publicRouteRouteWithChildren =
 interface Char123LocaleChar125adminDashboardRouteChildren {
   Char123LocaleChar125adminDashboardAdvertsRoute: typeof Char123LocaleChar125adminDashboardAdvertsRoute
   Char123LocaleChar125adminDashboardMyAccountRoute: typeof Char123LocaleChar125adminDashboardMyAccountRoute
+  Char123LocaleChar125adminDashboardProfileRoute: typeof Char123LocaleChar125adminDashboardProfileRoute
   Char123LocaleChar125adminDashboardSettingsRoute: typeof Char123LocaleChar125adminDashboardSettingsRoute
   Char123LocaleChar125adminDashboardIndexRoute: typeof Char123LocaleChar125adminDashboardIndexRoute
 }
@@ -347,6 +368,8 @@ const Char123LocaleChar125adminDashboardRouteChildren: Char123LocaleChar125admin
       Char123LocaleChar125adminDashboardAdvertsRoute,
     Char123LocaleChar125adminDashboardMyAccountRoute:
       Char123LocaleChar125adminDashboardMyAccountRoute,
+    Char123LocaleChar125adminDashboardProfileRoute:
+      Char123LocaleChar125adminDashboardProfileRoute,
     Char123LocaleChar125adminDashboardSettingsRoute:
       Char123LocaleChar125adminDashboardSettingsRoute,
     Char123LocaleChar125adminDashboardIndexRoute:

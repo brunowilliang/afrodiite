@@ -13,7 +13,8 @@ type TextBaseProps = React.HTMLAttributes<HTMLElement> & {
 		| 'span'
 		| 'li'
 		| 'ul'
-		| 'ol';
+		| 'ol'
+		| 'label';
 };
 
 export function TextBase({ as = 'span', children, ...props }: TextBaseProps) {
@@ -35,6 +36,7 @@ export const Text = useStyled(TextBase, {
 			li: { as: 'li', className: 'text-base tracking-wider' },
 			ul: { as: 'ul', className: 'text-base tracking-wider' },
 			ol: { as: 'ol', className: 'text-base tracking-wider' },
+			label: { as: 'label', className: 'text-base tracking-wider' },
 		},
 
 		size: {

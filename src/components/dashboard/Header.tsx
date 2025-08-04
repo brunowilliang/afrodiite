@@ -1,7 +1,11 @@
-import { Link, useNavigate, useRouteContext } from '@tanstack/react-router';
-import { Fragment, useRef } from 'react';
+import {
+	Link,
+	type NavigateOptions,
+	useNavigate,
+	useRouteContext,
+} from '@tanstack/react-router';
+import { useRef } from 'react';
 import { handleSignOut } from '@/routes/{-$locale}/(public)/login';
-import { DashboardMenu } from '@/utils/data';
 import { links, useIsActiveRoute } from '@/utils/navigation';
 import { useGoBack } from '../core/BackButton';
 import { Badge } from '../core/Badge';
@@ -20,6 +24,39 @@ export const Header = () => {
 
 	const handleMenuClick = () => {
 		drawerRef.current?.open();
+	};
+
+	type HandlePageProps = {
+		href: NavigateOptions['to'];
+		search?: NavigateOptions['search'];
+		isSignOut?: boolean;
+	};
+
+	const handlePage = ({ href, search, isSignOut }: HandlePageProps) => {
+		drawerRef.current?.close();
+		if (isSignOut) {
+			handleSignOut(navigate);
+		} else {
+			navigate({
+				to: href,
+				search,
+			});
+		}
+	};
+
+	const menuActiveStates = links.map((item) => ({
+		id: item.id,
+		isMainActive: item.href ? useIsActiveRoute(item.href) : false,
+		subMenuActiveStates:
+			item.subMenu?.map((subItem) => ({
+				id: subItem.id,
+				isActive: useIsActiveRoute(subItem.href, subItem.search),
+			})) || [],
+	}));
+
+	const isSubmenuActive = (itemId: number) => {
+		const itemState = menuActiveStates.find((state) => state.id === itemId);
+		return itemState?.subMenuActiveStates.some((sub) => sub.isActive) || false;
 	};
 
 	return (
@@ -75,27 +112,53 @@ export const Header = () => {
 						<Badge.Text>Menu</Badge.Text>
 					</Badge>
 
-					<Navigation className="w-full">
-						{links.map((menu, index) => (
-							<Fragment key={menu.id}>
-								<Navigation.SubMenu.Item
-									label={menu.name}
-									isActive={useIsActiveRoute(menu.href)}
-									onClick={() => {
-										drawerRef.current?.close();
-
-										if (menu.isSignOut) {
-											handleSignOut(navigate);
-										} else if (menu.href) {
-											navigate({ to: menu.href });
+					<Navigation>
+						{links.map((item) => {
+							if (!item.subMenu || item.subMenu.length === 0) {
+								const itemState = menuActiveStates.find(
+									(state) => state.id === item.id,
+								);
+								return (
+									<Navigation.SubMenu.Item
+										key={item.id}
+										label={item.name}
+										isActive={itemState?.isMainActive || false}
+										onClick={() =>
+											handlePage({ href: item.href, isSignOut: item.isSignOut })
 										}
-									}}
-								/>
-								{index < DashboardMenu.length - 1 && (
-									<Navigation.SubMenu.Divider />
-								)}
-							</Fragment>
-						))}
+									/>
+								);
+							}
+
+							return (
+								<Navigation.Item
+									key={item.id}
+									label={item.name}
+									defaultOpen={isSubmenuActive(item.id)}
+								>
+									<Navigation.SubMenu>
+										{item.subMenu.map((menu) => {
+											const itemState = menuActiveStates.find(
+												(state) => state.id === item.id,
+											);
+											const subState = itemState?.subMenuActiveStates.find(
+												(sub) => sub.id === menu.id,
+											);
+											return (
+												<Navigation.SubMenu.Item
+													key={menu.id}
+													label={menu.name}
+													isActive={subState?.isActive || false}
+													onClick={() =>
+														handlePage({ href: menu.href, search: menu.search })
+													}
+												/>
+											);
+										})}
+									</Navigation.SubMenu>
+								</Navigation.Item>
+							);
+						})}
 					</Navigation>
 				</Drawer.Content>
 			</Drawer>

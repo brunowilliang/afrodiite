@@ -79,12 +79,25 @@ const NavigationItem = ({
 }: NavigationItemProps) => {
 	const [isOpen, setIsOpen] = useState(defaultOpen);
 	const contentRef = useRef<HTMLDivElement>(null);
+	const isFirstRender = useRef(true);
 	const hasChildren = !!children;
 
 	// Smooth height animation
 	useEffect(() => {
 		if (!contentRef.current || !hasChildren) return;
 
+		// Se é a primeira renderização e defaultOpen é true, define altura sem animação
+		if (isFirstRender.current) {
+			isFirstRender.current = false;
+			if (isOpen) {
+				contentRef.current.style.height = 'auto';
+				return;
+			}
+			contentRef.current.style.height = '0px';
+			return;
+		}
+
+		// Animação normal para mudanças subsequentes
 		if (isOpen) {
 			contentRef.current.style.height = `${contentRef.current.scrollHeight}px`;
 			contentRef.current.getBoundingClientRect();
