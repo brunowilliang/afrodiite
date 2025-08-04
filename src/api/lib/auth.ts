@@ -12,7 +12,11 @@ export const auth = betterAuth({
 	database,
 	secret: process.env.BETTER_AUTH_SECRET,
 	baseURL: process.env.VITE_BETTER_AUTH_URL,
-	trustedOrigins: [process.env.VITE_CORS_ORIGIN || '', 'afrodiite://'],
+	trustedOrigins: [
+		process.env.VITE_CORS_ORIGIN || '',
+		'afrodiite://',
+		'http://localhost:3000',
+	],
 	emailAndPassword: {
 		enabled: true,
 	},

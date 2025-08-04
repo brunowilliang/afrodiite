@@ -6,7 +6,7 @@ import tsConfigPaths from 'vite-tsconfig-paths';
 export default defineConfig({
 	server: {
 		port: 3000,
-		allowedHosts: ['afrodiite.com', 'a091a35e7107.ngrok-free.app'],
+		allowedHosts: ['afrodiite.com', 'a091a35e7107.ngrok-free.app', 'localhost'],
 	},
 	plugins: [
 		tsConfigPaths({
