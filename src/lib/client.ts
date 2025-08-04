@@ -1,4 +1,4 @@
-import { polarClient } from '@polar-sh/better-auth';
+// import { polarClient } from '@polar-sh/better-auth';
 import { createClient } from '@supabase/supabase-js';
 import { createAuthClient } from 'better-auth/react';
 import type { Database } from './client.types';
@@ -8,7 +8,7 @@ const betterAuth = createAuthClient({
 	baseURL:
 		env.BETTER_AUTH_URL ||
 		(env.IS_DEV ? 'http://localhost:3000' : window.location.origin),
-	plugins: [polarClient()],
+	plugins: [],
 });
 
 const supabase = createClient<Database>(

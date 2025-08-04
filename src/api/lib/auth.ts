@@ -3,7 +3,7 @@ import { openAPI } from 'better-auth/plugins';
 import { reactStartCookies } from 'better-auth/react-start';
 import { database, db } from '@/api/db';
 import { escortProfiles } from '../db/schemas';
-import { polar, polarPlugin } from './polar';
+// import { polar, polarPlugin } from './polar';
 
 export type UserRole = 'user' | 'escort';
 
@@ -39,11 +39,11 @@ export const auth = betterAuth({
 	user: {
 		deleteUser: {
 			enabled: true,
-			afterDelete: async (user) => {
-				await polar.customers.deleteExternal({
-					externalId: user.id,
-				});
-			},
+			// afterDelete: async (user) => {
+			// 	await polar.customers.deleteExternal({
+			// 		externalId: user.id,
+			// 	});
+			// },
 		},
 		additionalFields: {
 			role: {
@@ -64,5 +64,5 @@ export const auth = betterAuth({
 			},
 		},
 	},
-	plugins: [openAPI(), reactStartCookies(), polarPlugin],
+	plugins: [openAPI(), reactStartCookies()],
 });

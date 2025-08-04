@@ -13,29 +13,8 @@ export const getSession = createServerFn({ method: 'GET' }).handler(
 	},
 );
 
-// export const getSubscriptions = createServerFn({ method: 'GET' }).handler(
-// 	async () => {
-// 		const request = getWebRequest();
-
-// 		const { result } = await auth.api.subscriptions({
-// 			headers: request.headers,
-// 			query: {
-// 				active: true,
-// 			},
-// 		});
-
-// 		if (!result) {
-// 			throw new Error('No subscriptions found');
-// 		}
-
-// 		return { subscriptions: result };
-// 	},
-// );
-
 export const openCheckout = createServerFn({ method: 'GET' }).handler(
 	async () => {
-		const request = getWebRequest();
-
 		const result = await polar.checkouts.create({
 			products: ['70347f1f-cced-484a-b0e9-44272f10d3c4'],
 		});
