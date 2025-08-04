@@ -1,8 +1,5 @@
 {
-  "functions": {
-    "app/server.js": {
-      "includeFiles": "node_modules/@polar-sh/**"
-    }
-  },
-  "buildCommand": "bun run build"
+  "buildCommand": "bun run build",
+  "installCommand": "bun install",
+  "framework": null
 }
