@@ -9,20 +9,6 @@ import { CharacteristicsTab } from './-Tabs/Characteristics';
 import { InformationTab } from './-Tabs/Information';
 import { LocationTab } from './-Tabs/Location';
 
-// type TabType = 'information' | 'location' | 'characteristics';
-
-// interface Tab {
-// 	id: TabType;
-// 	label: string;
-// 	icon?: string;
-// }
-
-// const TABS: Tab[] = [
-// 	{ id: 'information', label: 'Informações' },
-// 	{ id: 'location', label: 'Localização' },
-// 	{ id: 'characteristics', label: 'Características' },
-// ];
-
 export const Route = createFileRoute('/{-$locale}/(admin)/dashboard/profile')({
 	component: RouteComponent,
 	validateSearch: z.object({
@@ -37,8 +23,6 @@ function RouteComponent() {
 	const { tab } = Route.useSearch();
 
 	const updateProfile = api.profile.update();
-
-	// const [activeTab, setActiveTab] = useState<TabType>('information');
 
 	const onSubmit = (data: EscortProfile[keyof EscortProfile]) => {
 		console.log('data', data);
@@ -68,18 +52,6 @@ function RouteComponent() {
 				<Text size="2xl" weight="bold">
 					Meu Perfil
 				</Text>
-
-				{/* <Tabs>
-					{TABS.map((tab) => (
-						<Tabs.Item
-							key={tab.id}
-							onClick={() => setActiveTab(tab.id)}
-							isActive={activeTab === tab.id}
-						>
-							<Tabs.Item.Text>{tab.label}</Tabs.Item.Text>
-						</Tabs.Item>
-					))}
-				</Tabs> */}
 
 				{tab === 'information' && (
 					<InformationTab
