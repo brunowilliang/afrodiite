@@ -1,6 +1,5 @@
 import { createServerFn } from '@tanstack/react-start';
 import { getWebRequest } from '@tanstack/react-start/server';
-import z from 'zod';
 import { auth } from '@/api/lib/auth';
 
 export const getSession = createServerFn({ method: 'GET' }).handler(
@@ -12,40 +11,40 @@ export const getSession = createServerFn({ method: 'GET' }).handler(
 	},
 );
 
-export const getSubscriptions = createServerFn({ method: 'GET' }).handler(
-	async () => {
-		const request = getWebRequest();
+// export const getSubscriptions = createServerFn({ method: 'GET' }).handler(
+// 	async () => {
+// 		const request = getWebRequest();
 
-		const { result } = await auth.api.subscriptions({
-			headers: request.headers,
-			query: {
-				active: true,
-			},
-		});
+// 		const { result } = await auth.api.subscriptions({
+// 			headers: request.headers,
+// 			query: {
+// 				active: true,
+// 			},
+// 		});
 
-		if (!result) {
-			throw new Error('No subscriptions found');
-		}
+// 		if (!result) {
+// 			throw new Error('No subscriptions found');
+// 		}
 
-		return { subscriptions: result };
-	},
-);
+// 		return { subscriptions: result };
+// 	},
+// );
 
-export const openCheckout = createServerFn({ method: 'GET' })
-	.validator(
-		z.object({
-			slug: z.string(),
-		}),
-	)
-	.handler(async ({ data }) => {
-		const request = getWebRequest();
+// export const openCheckout = createServerFn({ method: 'GET' })
+// 	.validator(
+// 		z.object({
+// 			slug: z.string(),
+// 		}),
+// 	)
+// 	.handler(async ({ data }) => {
+// 		const request = getWebRequest();
 
-		const result = await auth.api.checkout({
-			headers: request.headers,
-			body: {
-				slug: data.slug,
-			},
-		});
+// 		const result = await auth.api.checkout({
+// 			headers: request.headers,
+// 			body: {
+// 				slug: data.slug,
+// 			},
+// 		});
 
-		return result;
-	});
+// 		return result;
+// 	});

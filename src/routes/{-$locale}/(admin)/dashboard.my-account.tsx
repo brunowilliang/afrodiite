@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router';
+import { toast } from 'sonner';
 import { api } from '@/api/routes';
 import { Button } from '@/components/core/Button';
-import { Card } from '@/components/core/Card';
 import { Container, Stack } from '@/components/core/Stack';
 import { Text } from '@/components/core/Text';
 
@@ -9,18 +9,9 @@ export const Route = createFileRoute(
 	'/{-$locale}/(admin)/dashboard/my-account',
 )({
 	component: RouteComponent,
-	loader: async () => {
-		const { subscriptions } = await api.subscriptions.get();
-
-		return {
-			subscriptions,
-		};
-	},
 });
 
 function RouteComponent() {
-	const { subscriptions } = Route.useLoaderData();
-
 	return (
 		<Container hasHeader>
 			<Text size="2xl" weight="bold">
@@ -29,7 +20,7 @@ function RouteComponent() {
 
 			<Stack direction="row" className="gap-2">
 				<Text>Perfil Ativo Polar:</Text>
-				{subscriptions && subscriptions.items.length > 0 ? (
+				{/* {subscriptions && subscriptions.items.length > 0 ? (
 					<Stack>
 						{subscriptions.items.map((item) => (
 							<Card key={item.id}>
@@ -41,16 +32,18 @@ function RouteComponent() {
 					</Stack>
 				) : (
 					'Não'
-				)}
+				)} */}
 			</Stack>
 			<Button
 				onClick={async (e) => {
 					e.preventDefault();
-					const result = await api.checkout.open({
-						slug: 'premium',
-					});
+					const result = await api.checkout.open();
 
-					window.open(result.url);
+					if (result.error) {
+						toast(result.error.message);
+					}
+
+					window.open(result.data?.url);
 				}}
 			>
 				Checkout Normal
@@ -58,9 +51,13 @@ function RouteComponent() {
 			<Button
 				onClick={async (e) => {
 					e.preventDefault();
-					const result = await api.checkout.openServer('premium');
+					const result = await api.checkout.open();
 
-					window.open(result.url);
+					if (result.error) {
+						toast(result.error.message);
+					}
+
+					window.open(result.data?.url);
 				}}
 			>
 				Checkout Server
@@ -68,9 +65,13 @@ function RouteComponent() {
 			<Button
 				onClick={async (e) => {
 					e.preventDefault();
-					const result = await api.portal.open();
+					const result = await api.checkout.open();
 
-					window.open(result.url);
+					if (result.error) {
+						toast(result.error.message);
+					}
+
+					window.open(result.data?.url);
 				}}
 			>
 				Portal

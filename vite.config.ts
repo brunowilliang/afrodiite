@@ -18,10 +18,4 @@ export default defineConfig({
 		}),
 		viteReact(),
 	],
-	ssr: {
-		noExternal: ['@polar-sh/better-auth', '@polar-sh/sdk'],
-	},
-	optimizeDeps: {
-		include: ['@polar-sh/better-auth', '@polar-sh/sdk'],
-	},
 });
