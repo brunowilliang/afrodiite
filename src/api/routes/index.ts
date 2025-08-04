@@ -1,10 +1,38 @@
 import { useMutation } from '@tanstack/react-query';
+import { client } from '@/lib/client';
 import { escortQueries, type GetParams } from './escort';
-import { getSession } from './session';
+import { getSession, getSubscriptions } from './session';
 
 export const api = {
 	session: {
 		get: () => getSession(),
+	},
+	subscriptions: {
+		get: () => getSubscriptions(),
+	},
+	checkout: {
+		open: async ({ slug }: { slug: string }) => {
+			const result = await client.auth.checkout({
+				slug,
+			});
+
+			if (result.error) {
+				throw new Error(result.error.message);
+			}
+
+			return result.data;
+		},
+	},
+	portal: {
+		open: async () => {
+			const result = await client.auth.customer.portal();
+
+			if (result.error) {
+				throw new Error(result.error.message);
+			}
+
+			return result.data;
+		},
 	},
 	profile: {
 		get: (params: GetParams) => ({
@@ -14,6 +42,10 @@ export const api = {
 		update: () =>
 			useMutation({
 				mutationFn: escortQueries.updateProfile,
+			}),
+		delete: () =>
+			useMutation({
+				mutationFn: escortQueries.deleteProfile,
 			}),
 	},
 };

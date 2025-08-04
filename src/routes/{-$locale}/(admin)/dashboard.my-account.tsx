@@ -1,23 +1,16 @@
 import { createFileRoute } from '@tanstack/react-router';
+import { api } from '@/api/routes';
 import { Button } from '@/components/core/Button';
 import { Card } from '@/components/core/Card';
 import { Container, Stack } from '@/components/core/Stack';
 import { Text } from '@/components/core/Text';
-import { client } from '@/lib/client';
-import { getSubscriptions } from '@/lib/fetchAuthSession';
 
 export const Route = createFileRoute(
 	'/{-$locale}/(admin)/dashboard/my-account',
 )({
 	component: RouteComponent,
-	loader: async ({ context }) => {
-		const { user } = context.session ?? {};
-
-		if (!user) {
-			throw new Error('User not found');
-		}
-
-		const { subscriptions } = await getSubscriptions();
+	loader: async () => {
+		const { subscriptions } = await api.subscriptions.get();
 
 		return {
 			subscriptions,
@@ -27,40 +20,6 @@ export const Route = createFileRoute(
 
 function RouteComponent() {
 	const { subscriptions } = Route.useLoaderData();
-
-	const openCheckout = async () => {
-		const result = await client.auth.checkout({
-			slug: 'premium',
-		});
-
-		if (result.error) {
-			throw new Error(result.error.message);
-		}
-
-		return result.data.redirect;
-	};
-
-	const openPortal = async () => {
-		const result = await client.auth.customer.portal();
-
-		if (result.error) {
-			throw new Error(result.error.message);
-		}
-
-		return result.data.redirect;
-	};
-
-	const deleteUser = async () => {
-		const { data, error } = await client.auth.deleteUser();
-
-		if (error) {
-			throw new Error(error.message);
-		}
-
-		console.log('data', data);
-
-		return data;
-	};
 
 	return (
 		<Container hasHeader>
@@ -84,9 +43,34 @@ function RouteComponent() {
 					'Não'
 				)}
 			</Stack>
-			<Button onClick={openCheckout}>Checkout</Button>
-			<Button onClick={openPortal}>Portal</Button>
-			<Button variant="unstyled-danger" onClick={deleteUser}>
+			<Button
+				onClick={async (e) => {
+					e.preventDefault();
+					const result = await api.checkout.open({
+						slug: 'premium',
+					});
+
+					window.open(result.url);
+				}}
+			>
+				Checkout
+			</Button>
+			<Button
+				onClick={async (e) => {
+					e.preventDefault();
+					const result = await api.portal.open();
+
+					window.open(result.url);
+				}}
+			>
+				Portal
+			</Button>
+			<Button
+				variant="unstyled-danger"
+				onClick={() => {
+					api.profile.delete().mutate();
+				}}
+			>
 				Delete User
 			</Button>
 		</Container>

@@ -39,4 +39,14 @@ export const escortQueries = {
 
 		return result.data;
 	},
+
+	deleteProfile: async () => {
+		const result = await client.auth.deleteUser();
+
+		if (result.error) {
+			throw new Error(result.error.message);
+		}
+
+		return result.data;
+	},
 };
