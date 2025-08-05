@@ -1,12 +1,13 @@
 import { betterAuth } from 'better-auth';
 import { openAPI } from 'better-auth/plugins';
 import { reactStartCookies } from 'better-auth/react-start';
-import { database, db } from '@/api/db';
+import { database } from '@/api/db';
 import { env } from '@/lib/env';
-import { escortProfiles } from '../db/schemas';
-// import { polar, polarPlugin } from './polar';
+import { createUserProfile, deleteCustomer } from '../routes/user';
 
 export type UserRole = 'user' | 'escort';
+
+export type IUser = typeof auth.$Infer.Session.user;
 
 export const auth = betterAuth({
 	appName: 'Afrodiite',
@@ -26,12 +27,13 @@ export const auth = betterAuth({
 			create: {
 				after: async (user) => {
 					try {
-						await db.insert(escortProfiles).values({
+						await createUserProfile({
 							id: user.id,
 							name: user.name,
+							email: user.email,
 						});
 					} catch (error) {
-						console.error('Error creating escort profile:', error);
+						console.error('Error creating user profile:', error);
 					}
 				},
 			},
@@ -40,11 +42,18 @@ export const auth = betterAuth({
 	user: {
 		deleteUser: {
 			enabled: true,
-			// afterDelete: async (user) => {
-			// 	await polar.customers.deleteExternal({
-			// 		externalId: user.id,
-			// 	});
-			// },
+			beforeDelete: async (user) => {
+				const data = user as IUser;
+				try {
+					console.log('user', data);
+					await deleteCustomer({
+						customerId: data.polar_customer_id,
+					});
+				} catch (error) {
+					console.error('Error deleting user from Polar:', error);
+					// Não impede a deleção do usuário se falhar no Polar
+				}
+			},
 		},
 		additionalFields: {
 			role: {

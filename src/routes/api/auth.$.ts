@@ -8,7 +8,6 @@ export const ServerRoute = createServerFileRoute('/api/auth/$').methods({
 	},
 	POST: ({ request }) => {
 		console.log('🔄 POST request to:', request.url);
-		console.log('🔄 Headers:', Object.fromEntries(request.headers.entries()));
 		return auth.handler(request);
 	},
 });

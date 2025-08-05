@@ -1,4 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router';
+import { toast } from 'sonner';
 import { api } from '@/api/routes';
 import { Button } from '@/components/core/Button';
 import { Container, Stack } from '@/components/core/Stack';
@@ -15,6 +16,21 @@ function RouteComponent() {
 
 	// Usa a mutation já configurada no api
 	const checkoutMutation = api.checkout.open();
+	const deleteMutation = api.profile.delete();
+
+	const handleDelete = () => {
+		deleteMutation.mutate(undefined, {
+			onSuccess: () => {
+				toast.success('Usuário deletado com sucesso');
+			},
+			onError: (error) => {
+				console.log('error', error);
+				toast.error('Erro ao deletar usuário', {
+					description: error.message,
+				});
+			},
+		});
+	};
 
 	const handleCheckout = () => {
 		checkoutMutation.mutate(undefined, {
@@ -23,7 +39,10 @@ function RouteComponent() {
 				window.location.href = checkoutUrl;
 			},
 			onError: (error) => {
-				console.error('Erro ao abrir checkout:', error);
+				console.log('error', error);
+				toast.error('Erro ao abrir checkout', {
+					description: error.message,
+				});
 			},
 		});
 	};
@@ -69,12 +88,7 @@ function RouteComponent() {
 
 			<Button onClick={handleCheckoutSDK}>Checkout SDK (Server Route)</Button>
 
-			<Button
-				variant="unstyled-danger"
-				onClick={() => {
-					api.profile.delete().mutate();
-				}}
-			>
+			<Button variant="unstyled-danger" onClick={handleDelete}>
 				Delete User
 			</Button>
 		</Container>
