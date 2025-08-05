@@ -13,6 +13,7 @@ export const Route = createFileRoute(
 
 function RouteComponent() {
 	const { profile, session } = Route.useRouteContext();
+	const navigate = Route.useNavigate();
 
 	// Usa a mutation já configurada no api
 	const checkoutMutation = api.checkout.open();
@@ -22,6 +23,7 @@ function RouteComponent() {
 		deleteMutation.mutate(undefined, {
 			onSuccess: () => {
 				toast.success('Usuário deletado com sucesso');
+				navigate({ to: '/{-$locale}' });
 			},
 			onError: (error) => {
 				console.log('error', error);
