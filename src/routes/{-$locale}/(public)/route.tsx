@@ -1,26 +1,17 @@
-import { createFileRoute } from '@tanstack/react-router';
-import { Container, Stack } from '@/components/core/Stack';
-import { Text } from '@/components/core/Text';
+import { createFileRoute, Outlet } from '@tanstack/react-router';
+import { Footer } from '@/components/Footer';
+import { Header } from '@/components/Header';
 
 export const Route = createFileRoute('/{-$locale}/(public)')({
 	component: RouteComponent,
 });
 
-// function RouteComponent() {
-// 	return (
-// 		<>
-// 			<Header />
-// 			<Outlet />
-// 			<Footer />
-// 		</>
-// 	);
-// }
 function RouteComponent() {
 	return (
-		<Container>
-			<Stack>
-				<Text>Welcome to Afrodiite.com</Text>
-			</Stack>
-		</Container>
+		<>
+			<Header />
+			<Outlet />
+			<Footer />
+		</>
 	);
 }
