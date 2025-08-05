@@ -1,5 +1,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createRouter as createTanStackRouter } from '@tanstack/react-router';
+import { DefaultCatchBoundary } from './components/DefaultCatchBoundary';
+import { NotFound } from './components/NotFound';
 import { routeTree } from './routeTree.gen';
 
 const queryClient = new QueryClient();
@@ -9,9 +11,11 @@ export function createRouter() {
 		routeTree,
 		defaultPreload: 'intent',
 		defaultViewTransition: true,
-		defaultErrorComponent: () => <div>Error</div>,
+		defaultErrorComponent: ({ error, reset }) => (
+			<DefaultCatchBoundary error={error} reset={reset} />
+		),
 		notFoundMode: 'root',
-		defaultNotFoundComponent: () => <div>Not Found</div>,
+		defaultNotFoundComponent: () => <NotFound />,
 		scrollRestoration: true,
 		scrollRestorationBehavior: 'instant',
 		context: {

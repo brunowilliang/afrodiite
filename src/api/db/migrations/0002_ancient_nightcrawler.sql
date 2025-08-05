@@ -1,0 +1,2 @@
+ALTER TABLE "escort_profiles" ADD COLUMN "is_active" boolean DEFAULT false;--> statement-breakpoint
+ALTER TABLE "escort_profiles" ADD CONSTRAINT "escort_profiles_id_users_id_fk" FOREIGN KEY ("id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;

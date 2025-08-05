@@ -6,7 +6,7 @@ import {
 	HeadContent,
 } from '@tanstack/react-router';
 import reactPhotoViewCss from 'react-photo-view/dist/react-photo-view.css?url';
-
+import { api } from '@/api/routes';
 import appCss from '@/styles/app.css?url';
 
 export const Route = createRootRouteWithContext<{
@@ -79,7 +79,24 @@ export const Route = createRootRouteWithContext<{
 			},
 		],
 	}),
-	beforeLoad: async () => {},
+	beforeLoad: async ({ context }) => {
+		const { queryClient } = context ?? {};
+		const { session } = await api.session.get();
+
+		if (!session) {
+			return { session: null };
+		}
+
+		// const profile = await queryClient.fetchQuery(
+		// 	api.profile.get({ id: session.user.id }),
+		// )
+
+		// if (!profile) {
+		// 	return { session: null, profile: null };
+		// }
+
+		return { session };
+	},
 });
 
 function RootDocument() {
