@@ -28,6 +28,13 @@ function RouteComponent() {
 		});
 	};
 
+	const handleCheckoutSDK = () => {
+		// Usa a Server Route do Polar SDK com query params
+		const checkoutUrl =
+			'/api/checkout?products=70347f1f-cced-484a-b0e9-44272f10d3c4';
+		window.location.href = checkoutUrl;
+	};
+
 	if (!session) {
 		console.log('Não há session');
 	}
@@ -55,8 +62,12 @@ function RouteComponent() {
 				)} */}
 			</Stack>
 			<Button onClick={handleCheckout} disabled={checkoutMutation.isPending}>
-				{checkoutMutation.isPending ? 'Abrindo Checkout...' : 'Checkout Normal'}
+				{checkoutMutation.isPending
+					? 'Abrindo Checkout...'
+					: 'Checkout API Routes'}
 			</Button>
+
+			<Button onClick={handleCheckoutSDK}>Checkout SDK (Server Route)</Button>
 
 			<Button
 				variant="unstyled-danger"
