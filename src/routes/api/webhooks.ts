@@ -88,9 +88,13 @@ export const ServerRoute = createServerFileRoute('/api/webhooks').methods({
 		return new Response('Webhooks endpoint is working!', { status: 200 });
 	},
 	POST: Webhooks({
-		webhookSecret: env.POLAR_WEBHOOK_SECRET,
+		webhookSecret: env.POLAR_WEBHOOK_SECRET_SANDBOX,
 		onPayload: async (payload) => {
 			console.log('🔄 Webhook payload received:', payload.type);
+			console.log(
+				'🔍 POLAR_WEBHOOK_SECRET_SANDBOX configurado:',
+				!!env.POLAR_WEBHOOK_SECRET_SANDBOX,
+			);
 
 			try {
 				if (payload.type === 'subscription.created') {
