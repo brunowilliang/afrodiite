@@ -90,7 +90,7 @@ export const Header = () => {
 
 						<Stack direction="row" className="col-span-3 justify-end">
 							<Button
-								className="flex h-auto lg:hidden"
+								className="flex h-auto"
 								variant="unstyled"
 								onClick={handleMenuClick}
 							>

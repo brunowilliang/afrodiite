@@ -12,6 +12,7 @@ import { PhotoProvider } from 'react-photo-view';
 import reactPhotoViewCss from 'react-photo-view/dist/react-photo-view.css?url';
 import { Toaster } from 'sonner';
 import { api } from '@/api/routes';
+
 import appCss from '@/styles/app.css?url';
 import { seo } from '@/utils/seo';
 
@@ -81,6 +82,13 @@ export const Route = createRootRouteWithContext<{
 				rel: 'manifest',
 				href: '/site.webmanifest',
 				color: '#121214',
+			},
+		],
+		scripts: [
+			{
+				src: 'https://cdn.jsdelivr.net/npm/@polar-sh/checkout@0.1/dist/embed.global.js',
+				defer: true,
+				'data-auto-init': true,
 			},
 		],
 	}),

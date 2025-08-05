@@ -1,19 +1,22 @@
+import { Polar } from '@polar-sh/sdk';
+import { env } from '@/lib/env';
+
+export const polar = new Polar({
+	accessToken: env.POLAR_ACCESS_TOKEN_SANDBOX,
+	server: 'sandbox',
+});
+
 // import {
 // 	checkout,
 // 	polar as plugin,
 // 	portal,
 // 	webhooks,
 // } from '@polar-sh/better-auth';
-import { Polar } from '@polar-sh/sdk';
+
 // import { eq } from 'drizzle-orm';
 // import { plans } from '../../../plans';
 // import { db } from '../db';
 // import { escortProfiles, users } from '../db/schemas';
-
-export const polar = new Polar({
-	accessToken: process.env.POLAR_ACCESS_TOKEN_SANDBOX,
-	server: 'sandbox',
-});
 
 // const plan = plans[0];
 // const premiumPlan = plan.premium[0];

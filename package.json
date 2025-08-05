@@ -14,13 +14,15 @@
     "db:generate": "drizzle-kit generate --config=src/api/drizzle.config.ts",
     "db:migrate": "drizzle-kit migrate --config=src/api/drizzle.config.ts",
     "auth:generate": "bunx @better-auth/cli@latest generate --output src/api/db/schemas/auth.ts --config src/api/lib/auth.ts --yes",
-    "api:types": "npx supabase gen types typescript --project-id leyxhjfeayjurjbnlhea --schema public > src/lib/client.types.ts"
+    "api:types": "npx supabase gen types typescript --project-id leyxhjfeayjurjbnlhea --schema public > src/lib/client.types.ts",
+    "test:env": "bun run src/scripts/test-env.ts"
   },
   "dependencies": {
     "@fontsource/poppins": "^5.2.6",
     "@hookform/resolvers": "^5.2.1",
     "@polar-sh/better-auth": "^1.0.8",
     "@polar-sh/sdk": "^0.34.9",
+    "@polar-sh/tanstack-start": "^0.1.5",
     "@supabase/supabase-js": "^2.53.0",
     "@tailwindcss/postcss": "^4.1.11",
     "@tanstack/react-form": "^1.15.3",

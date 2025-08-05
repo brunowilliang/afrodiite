@@ -24,7 +24,10 @@ import { Route as Char123LocaleChar125adminDashboardMyAccountRouteImport } from 
 import { Route as Char123LocaleChar125adminDashboardAdvertsRouteImport } from './routes/{-$locale}/(admin)/dashboard.adverts'
 import { Route as Char123LocaleChar125publicEscortsCountryIndexRouteImport } from './routes/{-$locale}/(public)/escorts.$country.index'
 import { Route as Char123LocaleChar125publicEscortsCountrySlugIndexRouteImport } from './routes/{-$locale}/(public)/escorts.$country.$slug.index'
-import { ServerRoute as ApiAuthSplatServerRouteImport } from './routes/api.auth.$'
+import { ServerRoute as ApiWebhooksServerRouteImport } from './routes/api/webhooks'
+import { ServerRoute as ApiPortalServerRouteImport } from './routes/api/portal'
+import { ServerRoute as ApiCheckoutServerRouteImport } from './routes/api/checkout'
+import { ServerRoute as ApiAuthSplatServerRouteImport } from './routes/api/auth.$'
 
 const rootServerRouteImport = createServerRootRoute()
 
@@ -105,6 +108,21 @@ const Char123LocaleChar125publicEscortsCountrySlugIndexRoute =
     path: '/escorts/$country/$slug/',
     getParentRoute: () => Char123LocaleChar125publicRouteRoute,
   } as any)
+const ApiWebhooksServerRoute = ApiWebhooksServerRouteImport.update({
+  id: '/api/webhooks',
+  path: '/api/webhooks',
+  getParentRoute: () => rootServerRouteImport,
+} as any)
+const ApiPortalServerRoute = ApiPortalServerRouteImport.update({
+  id: '/api/portal',
+  path: '/api/portal',
+  getParentRoute: () => rootServerRouteImport,
+} as any)
+const ApiCheckoutServerRoute = ApiCheckoutServerRouteImport.update({
+  id: '/api/checkout',
+  path: '/api/checkout',
+  getParentRoute: () => rootServerRouteImport,
+} as any)
 const ApiAuthSplatServerRoute = ApiAuthSplatServerRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
@@ -201,24 +219,41 @@ export interface RootRouteChildren {
   Char123LocaleChar125RouteRoute: typeof Char123LocaleChar125RouteRouteWithChildren
 }
 export interface FileServerRoutesByFullPath {
+  '/api/checkout': typeof ApiCheckoutServerRoute
+  '/api/portal': typeof ApiPortalServerRoute
+  '/api/webhooks': typeof ApiWebhooksServerRoute
   '/api/auth/$': typeof ApiAuthSplatServerRoute
 }
 export interface FileServerRoutesByTo {
+  '/api/checkout': typeof ApiCheckoutServerRoute
+  '/api/portal': typeof ApiPortalServerRoute
+  '/api/webhooks': typeof ApiWebhooksServerRoute
   '/api/auth/$': typeof ApiAuthSplatServerRoute
 }
 export interface FileServerRoutesById {
   __root__: typeof rootServerRouteImport
+  '/api/checkout': typeof ApiCheckoutServerRoute
+  '/api/portal': typeof ApiPortalServerRoute
+  '/api/webhooks': typeof ApiWebhooksServerRoute
   '/api/auth/$': typeof ApiAuthSplatServerRoute
 }
 export interface FileServerRouteTypes {
   fileServerRoutesByFullPath: FileServerRoutesByFullPath
-  fullPaths: '/api/auth/$'
+  fullPaths: '/api/checkout' | '/api/portal' | '/api/webhooks' | '/api/auth/$'
   fileServerRoutesByTo: FileServerRoutesByTo
-  to: '/api/auth/$'
-  id: '__root__' | '/api/auth/$'
+  to: '/api/checkout' | '/api/portal' | '/api/webhooks' | '/api/auth/$'
+  id:
+    | '__root__'
+    | '/api/checkout'
+    | '/api/portal'
+    | '/api/webhooks'
+    | '/api/auth/$'
   fileServerRoutesById: FileServerRoutesById
 }
 export interface RootServerRouteChildren {
+  ApiCheckoutServerRoute: typeof ApiCheckoutServerRoute
+  ApiPortalServerRoute: typeof ApiPortalServerRoute
+  ApiWebhooksServerRoute: typeof ApiWebhooksServerRoute
   ApiAuthSplatServerRoute: typeof ApiAuthSplatServerRoute
 }
 
@@ -319,6 +354,27 @@ declare module '@tanstack/react-router' {
 }
 declare module '@tanstack/react-start/server' {
   interface ServerFileRoutesByPath {
+    '/api/webhooks': {
+      id: '/api/webhooks'
+      path: '/api/webhooks'
+      fullPath: '/api/webhooks'
+      preLoaderRoute: typeof ApiWebhooksServerRouteImport
+      parentRoute: typeof rootServerRouteImport
+    }
+    '/api/portal': {
+      id: '/api/portal'
+      path: '/api/portal'
+      fullPath: '/api/portal'
+      preLoaderRoute: typeof ApiPortalServerRouteImport
+      parentRoute: typeof rootServerRouteImport
+    }
+    '/api/checkout': {
+      id: '/api/checkout'
+      path: '/api/checkout'
+      fullPath: '/api/checkout'
+      preLoaderRoute: typeof ApiCheckoutServerRouteImport
+      parentRoute: typeof rootServerRouteImport
+    }
     '/api/auth/$': {
       id: '/api/auth/$'
       path: '/api/auth/$'
@@ -406,6 +462,9 @@ export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
 const rootServerRouteChildren: RootServerRouteChildren = {
+  ApiCheckoutServerRoute: ApiCheckoutServerRoute,
+  ApiPortalServerRoute: ApiPortalServerRoute,
+  ApiWebhooksServerRoute: ApiWebhooksServerRoute,
   ApiAuthSplatServerRoute: ApiAuthSplatServerRoute,
 }
 export const serverRouteTree = rootServerRouteImport

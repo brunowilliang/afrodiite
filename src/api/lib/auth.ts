@@ -2,6 +2,7 @@ import { betterAuth } from 'better-auth';
 import { openAPI } from 'better-auth/plugins';
 import { reactStartCookies } from 'better-auth/react-start';
 import { database, db } from '@/api/db';
+import { env } from '@/lib/env';
 import { escortProfiles } from '../db/schemas';
 // import { polar, polarPlugin } from './polar';
 
@@ -10,10 +11,10 @@ export type UserRole = 'user' | 'escort';
 export const auth = betterAuth({
 	appName: 'Afrodiite',
 	database,
-	secret: process.env.BETTER_AUTH_SECRET,
-	baseURL: process.env.VITE_BETTER_AUTH_URL,
+	secret: env.BETTER_AUTH_SECRET,
+	baseURL: env.VITE_BETTER_AUTH_URL,
 	trustedOrigins: [
-		process.env.VITE_CORS_ORIGIN || '',
+		env.VITE_CORS_ORIGIN,
 		'afrodiite://',
 		'http://localhost:3000',
 	],

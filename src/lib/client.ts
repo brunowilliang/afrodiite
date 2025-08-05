@@ -5,16 +5,13 @@ import type { Database } from './client.types';
 import { env } from './env';
 
 const betterAuth = createAuthClient({
-	baseURL:
-		env.BETTER_AUTH_URL ||
-		(env.IS_DEV ? 'http://localhost:3000' : window.location.origin),
+	baseURL: env.VITE_BETTER_AUTH_URL,
 	plugins: [],
 });
-// asdf
 
 const supabase = createClient<Database>(
-	env.SUPABASE_URL || '',
-	env.SUPABASE_PUBLISHABLE_KEY || '',
+	env.VITE_SUPABASE_URL,
+	env.VITE_SUPABASE_PUBLISHABLE_KEY,
 );
 
 export const client = {

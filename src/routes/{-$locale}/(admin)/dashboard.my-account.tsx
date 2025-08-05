@@ -54,12 +54,9 @@ function RouteComponent() {
 				Checkout Normal
 			</Button> */}
 			<Button
-				onClick={async (e) => {
-					e.preventDefault();
-					const result = await api.checkout.open();
-
-					window.open(result.url);
-				}}
+				href="https://sandbox.polar.sh/checkout/polar_c_on3d962M4SvesI8ZJ0F6yk7E1LjCCWTQnqvsh1dNSWF"
+				data-polar-checkout
+				data-polar-checkout-theme="dark"
 			>
 				Checkout Server
 			</Button>
