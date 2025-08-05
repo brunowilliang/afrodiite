@@ -1,6 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
+import { openCheckout } from './checkout';
 import { escortQueries, type GetParams } from './escort';
-import { getSession, openCheckout, openPortal } from './session';
+import { getSession, openPortal } from './session';
 
 export const api = {
 	session: {
@@ -10,7 +11,10 @@ export const api = {
 		get: () => {},
 	},
 	checkout: {
-		open: () => openCheckout(),
+		open: () =>
+			useMutation({
+				mutationFn: openCheckout,
+			}),
 	},
 	portal: {
 		open: (customerId: string) => openPortal({ data: { customerId } }),

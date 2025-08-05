@@ -13,6 +13,21 @@ export const Route = createFileRoute(
 function RouteComponent() {
 	const { profile, session } = Route.useRouteContext();
 
+	// Usa a mutation já configurada no api
+	const checkoutMutation = api.checkout.open();
+
+	const handleCheckout = () => {
+		checkoutMutation.mutate(undefined, {
+			onSuccess: (checkoutUrl) => {
+				// Redireciona para o checkout do Polar
+				window.location.href = checkoutUrl;
+			},
+			onError: (error) => {
+				console.error('Erro ao abrir checkout:', error);
+			},
+		});
+	};
+
 	if (!session) {
 		console.log('Não há session');
 	}
@@ -39,41 +54,10 @@ function RouteComponent() {
 					'Não'
 				)} */}
 			</Stack>
-			{/* <Button
-				onClick={async (e) => {
-					e.preventDefault();
-					const result = await api.checkout.open();
-
-					if (result.error) {
-						toast(result.error.message);
-					}
-
-					window.open(result.data?.url);
-				}}
-			>
-				Checkout Normal
-			</Button> */}
-			{/* <Button
-				href={
-					'https://sandbox.polar.sh/checkout/polar_c_on3d962M4SvesI8ZJ0F6yk7E1LjCCWTQnqvsh1dNSWF'
-				}
-				data-polar-checkout
-				data-polar-checkout-theme="dark"
-			>
-				Checkout Server
+			<Button onClick={handleCheckout} disabled={checkoutMutation.isPending}>
+				{checkoutMutation.isPending ? 'Abrindo Checkout...' : 'Checkout Normal'}
 			</Button>
-			<Button
-				onClick={async (e) => {
-					e.preventDefault();
-					const result = await api.portal.open(
-						session.user.polar_customer_id ?? '',
-					);
 
-					window.open(result.customerPortalUrl);
-				}}
-			>
-				Portal
-			</Button> */}
 			<Button
 				variant="unstyled-danger"
 				onClick={() => {

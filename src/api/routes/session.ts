@@ -13,16 +13,6 @@ export const getSession = createServerFn({ method: 'GET' }).handler(
 	},
 );
 
-export const openCheckout = createServerFn({ method: 'GET' }).handler(
-	async () => {
-		const result = await polar.checkouts.create({
-			products: ['70347f1f-cced-484a-b0e9-44272f10d3c4'],
-		});
-
-		return result;
-	},
-);
-
 export const openPortal = createServerFn({ method: 'GET' })
 	.validator(
 		z.object({
