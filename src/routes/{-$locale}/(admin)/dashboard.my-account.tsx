@@ -53,8 +53,10 @@ function RouteComponent() {
 			>
 				Checkout Normal
 			</Button> */}
-			<Button
-				href="https://sandbox.polar.sh/checkout/polar_c_on3d962M4SvesI8ZJ0F6yk7E1LjCCWTQnqvsh1dNSWF"
+			{/* <Button
+				href={
+					'https://sandbox.polar.sh/checkout/polar_c_on3d962M4SvesI8ZJ0F6yk7E1LjCCWTQnqvsh1dNSWF'
+				}
 				data-polar-checkout
 				data-polar-checkout-theme="dark"
 			>
@@ -71,7 +73,7 @@ function RouteComponent() {
 				}}
 			>
 				Portal
-			</Button>
+			</Button> */}
 			<Button
 				variant="unstyled-danger"
 				onClick={() => {
