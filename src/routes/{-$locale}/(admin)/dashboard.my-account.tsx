@@ -18,6 +18,7 @@ function RouteComponent() {
 	// Usa a mutation já configurada no api
 	const checkoutMutation = api.checkout.open();
 	const deleteMutation = api.profile.delete();
+	const portalMutation = api.portal.open();
 
 	const handleDelete = () => {
 		deleteMutation.mutate(undefined, {
@@ -28,6 +29,22 @@ function RouteComponent() {
 			onError: (error) => {
 				console.log('error', error);
 				toast.error('Erro ao deletar usuário', {
+					description: error.message,
+				});
+			},
+		});
+	};
+
+	const handleOpenPortal = () => {
+		portalMutation.mutate(undefined, {
+			onSuccess: (portal) => {
+				console.log('portal', portal);
+				toast.success('Portal aberto com sucesso');
+				window.location.href = portal;
+			},
+			onError: (error) => {
+				console.log('error', error);
+				toast.error('Erro ao abrir portal', {
 					description: error.message,
 				});
 			},
@@ -88,7 +105,9 @@ function RouteComponent() {
 					: 'Checkout API Routes'}
 			</Button>
 
-			<Button onClick={handleCheckoutSDK}>Checkout SDK (Server Route)</Button>
+			<Button onClick={handleOpenPortal} disabled={portalMutation.isPending}>
+				{portalMutation.isPending ? 'Abrindo Portal...' : 'Abrir Portal'}
+			</Button>
 
 			<Button variant="unstyled-danger" onClick={handleDelete}>
 				Delete User
