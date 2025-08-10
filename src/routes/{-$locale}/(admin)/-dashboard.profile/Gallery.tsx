@@ -2,7 +2,6 @@
 import { useUploadFiles } from 'better-upload/client';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Badge } from '@/components/core/Badge';
-import { Button } from '@/components/core/Button';
 import { UploadDropzone } from '@/components/core/Inputs/File';
 import { Stack } from '@/components/core/Stack';
 import SortableGallery from '@/components/escorts/SortableGallery';
@@ -25,7 +24,8 @@ export const GalleryTab = ({ id, onSubmit, data }: Props) => {
 	});
 
 	const [errorMsg] = useState<string | null>(null);
-	const [isSaving, setIsSaving] = useState(false);
+	// controls quick disable states while uploading
+	const [, setIsSaving] = useState(false);
 	const MAX_FILES = 4;
 	const MAX_SIZE = 2 * 1024 * 1024; // 2MB
 
@@ -62,7 +62,7 @@ export const GalleryTab = ({ id, onSubmit, data }: Props) => {
 		setOrder(display.map((d) => d.key));
 	}, [display]);
 
-	const handleFilesAdded = (input: File[] | FileList) => {
+	const handleFilesAdded = async (input: File[] | FileList) => {
 		const incoming = Array.isArray(input) ? input : Array.from(input);
 		const allowed = incoming.filter((f) => f.size <= MAX_SIZE);
 		const available = Math.max(0, MAX_FILES - items.length);
@@ -84,8 +84,75 @@ export const GalleryTab = ({ id, onSubmit, data }: Props) => {
 			};
 		});
 
+		// Otimismo imediato
 		setItems((prev) => [...prev, ...newItems]);
-		setOrder((prev) => [...prev, ...newItems.map((n) => n.id)]);
+		const newIds = newItems.map((n) => n.id);
+		const nextOrder = [...order, ...newIds];
+		setOrder(nextOrder);
+
+		// Upload e persistência imediatos
+		try {
+			setIsSaving(true);
+			const files = newIds
+				.map((id) => localFilesRef.current.get(id))
+				.filter((f): f is File => !!f);
+			const { ok } = await uploadMany(id, files);
+			const uploaded = toGalleryItems(ok);
+
+			// mapear cada localId -> meta uploaded correspondente (ordem preservada)
+			const idToUploaded = new Map<string, GalleryItem>();
+			uploaded.forEach((u, i) => {
+				const lid = newIds[i];
+				if (lid) idToUploaded.set(lid, u);
+			});
+
+			const baseItems = [...items, ...newItems];
+			// Pré-carregar imagens remotas
+			const preload = (url: string) =>
+				new Promise<void>((resolve) => {
+					const img = new Image();
+					img.onload = () => resolve();
+					img.onerror = () => resolve();
+					img.src = url;
+				});
+
+			const final: GalleryItem[] = [];
+			for (let i = 0; i < nextOrder.length; i++) {
+				const oid = nextOrder[i];
+				const up = idToUploaded.get(oid);
+				if (up) {
+					final.push({ ...up, id: oid, order: i });
+				} else {
+					const ex = baseItems.find((it) => it.id === oid);
+					if (ex) final.push({ ...ex, order: i });
+				}
+			}
+
+			await Promise.all(final.map((it) => preload(it.url)));
+
+			// Revogar blobs dos que subiram e limpar refs
+			newItems.forEach((ni) => {
+				if (ni.url.startsWith('blob:')) {
+					try {
+						URL.revokeObjectURL(ni.url);
+					} catch {}
+				}
+				localFilesRef.current.delete(ni.id);
+			});
+
+			setItems(final);
+			setOrder(final.map((it) => it.id));
+
+			const toPersist = final.filter(
+				(it) =>
+					!!it.path &&
+					typeof it.url === 'string' &&
+					!it.url.startsWith('blob:'),
+			);
+			await onSubmit.mutateAsync({ id, gallery: toPersist });
+		} finally {
+			setIsSaving(false);
+		}
 	};
 
 	const handleRemove = async (key: string) => {
@@ -119,72 +186,7 @@ export const GalleryTab = ({ id, onSubmit, data }: Props) => {
 		}
 	};
 
-	const handleSave = async () => {
-		// Local items in current order
-		const localIds = order.filter((id) => id.startsWith('local-'));
-		const files: File[] = localIds
-			.map((id) => localFilesRef.current.get(id))
-			.filter((f): f is File => !!f);
-
-		if (files.length === 0) return;
-
-		setIsSaving(true);
-		const { ok } = await uploadMany(id, files);
-		const uploaded = toGalleryItems(ok);
-
-		// Reconciliar com a ordem atual
-		let upIdx = 0;
-		const final: GalleryItem[] = order.map((oid, idx) => {
-			if (oid.startsWith('local-')) {
-				const u = uploaded[upIdx++];
-				// Preserve original local id to avoid remount/flicker
-				return { ...u, id: oid, order: idx };
-			}
-			const existing = items.find((it) => it.id === oid);
-			return existing
-				? { ...existing, order: idx }
-				: ({
-						id: oid,
-						path: '',
-						url: '',
-						size: 0,
-						width: 0,
-						height: 0,
-						order: idx,
-						createdAt: new Date().toISOString(),
-					} as GalleryItem);
-		});
-
-		// Pré-carregar imagens remotas para evitar flicker ao trocar src
-		const preload = (url: string) =>
-			new Promise<void>((resolve) => {
-				const img = new Image();
-				img.onload = () => resolve();
-				img.onerror = () => resolve();
-				img.src = url;
-			});
-		await Promise.all(final.map((it) => preload(it.url)));
-
-		// Revogar blobs antigos e limpar refs locais
-		items.forEach((it) => {
-			if (it.id.startsWith('local-') && it.url.startsWith('blob:')) {
-				try {
-					URL.revokeObjectURL(it.url);
-				} catch {}
-			}
-		});
-		localFilesRef.current.clear();
-
-		setItems(final);
-		setOrder(final.map((it) => String(it.id)));
-
-		// Persistir no banco via onSubmit da tela principal
-		try {
-			await onSubmit.mutateAsync({ id, gallery: final });
-		} finally {
-			setIsSaving(false);
-		}
-	};
+	// removed explicit save, uploads persist on drop
 
 	return (
 		<Stack className="gap-5">
@@ -233,11 +235,6 @@ export const GalleryTab = ({ id, onSubmit, data }: Props) => {
 				/>
 
 				{errorMsg ? <p className="text-danger text-sm">{errorMsg}</p> : null}
-				<div className="flex justify-end">
-					<Button onClick={handleSave} disabled={!order.length || isSaving}>
-						<Button.Text>{isSaving ? 'Salvando...' : 'Salvar'}</Button.Text>
-					</Button>
-				</div>
 			</Stack>
 		</Stack>
 	);

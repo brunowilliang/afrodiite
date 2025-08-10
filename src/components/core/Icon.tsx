@@ -48,6 +48,8 @@ export const Icon = useStyled('i', {
 			Home: { className: 'hgi-home-01' },
 			Clock: { className: 'hgi-clock-01' },
 			Euro: { className: 'hgi-euro' },
+			Upload: { className: 'hgi-upload-04' },
+			Loading: { className: 'hgi-loading-03 animate-spin' },
 		},
 	},
 	defaultVariants: {

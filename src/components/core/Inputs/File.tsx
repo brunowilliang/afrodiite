@@ -1,8 +1,8 @@
 import type { UploadHookControl } from 'better-upload/client';
-import { Loader2, Upload } from 'lucide-react';
 import { useId } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { cn } from '@/utils/cn';
+import { Icon } from '../Icon';
 
 type UploadDropzoneProps = {
 	control: UploadHookControl<true>;
@@ -67,9 +67,9 @@ export function UploadDropzone({
 			>
 				<div className="my-2">
 					{isPending ? (
-						<Loader2 className="size-6 animate-spin" />
+						<Icon name="Loading" variant="solid" size="32" />
 					) : (
-						<Upload className="size-6" />
+						<Icon name="Upload" variant="bulk" size="32" />
 					)}
 				</div>
 
@@ -104,10 +104,7 @@ export function UploadDropzone({
 			{isDragActive && (
 				<div className="pointer-events-none absolute inset-0 rounded-lg bg-background">
 					<div className="flex size-full flex-col items-center justify-center rounded-lg bg-accent dark:bg-accent/30">
-						<div className="my-2">
-							<Upload className="size-6" />
-						</div>
-
+						<Icon name="Upload" variant="bulk" size="32" />
 						<p className="mt-3 font-semibold text-sm">Drop files here</p>
 					</div>
 				</div>
