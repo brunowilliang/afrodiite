@@ -6,7 +6,7 @@ import { localeSchema, validateLocale } from '@/schemas/routes/locale';
 
 export const Route = createFileRoute('/{-$locale}')({
 	params: localeSchema,
-	beforeLoad: ({ params }) => ({ locale: params.locale }),
+	beforeLoad: async ({ params }) => ({ locale: params.locale }),
 	errorComponent: () => <NotFound />,
 	component: () => {
 		const { locale } = Route.useParams();

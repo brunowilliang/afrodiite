@@ -47,6 +47,30 @@ export const links: Navigation[] = [
 				href: '/{-$locale}/dashboard/profile',
 				search: { tab: 'characteristics' },
 			},
+			{
+				id: 4,
+				name: 'Horários',
+				href: '/{-$locale}/dashboard/profile',
+				search: { tab: 'schedule' },
+			},
+			{
+				id: 5,
+				name: 'Preços',
+				href: '/{-$locale}/dashboard/profile',
+				search: { tab: 'prices' },
+			},
+			{
+				id: 6,
+				name: 'Serviços',
+				href: '/{-$locale}/dashboard/profile',
+				search: { tab: 'services' },
+			},
+			{
+				id: 7,
+				name: 'Imagens',
+				href: '/{-$locale}/dashboard/profile',
+				search: { tab: 'gallery' },
+			},
 		],
 	},
 	{

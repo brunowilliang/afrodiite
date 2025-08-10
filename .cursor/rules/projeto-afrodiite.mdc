@@ -1,0 +1,99 @@
+---
+alwaysApply: true
+---
+
+# Projeto Afrodiite - Configuração e Arquitetura
+
+## Stack Principal
+
+- **Frontend**: TanStack Start + TanStack Router + TanStack Query + React 19
+- **Backend**: TanStack Start (Full-stack)
+- **Autenticação**: Better Auth com plugin Stripe
+- **Banco de Dados**: PostgreSQL via Supabase
+- **ORM**: Drizzle ORM
+- **Estilização**: TailwindCSS + use-styled
+- **Pagamentos**: Stripe
+- **Validação**: Zod
+
+## Estrutura de Arquivos API
+
+### Clientes API
+
+- **Client-side**: [src/lib/api/client.ts](mdc:src/lib/api/client.ts) - Better
+  Auth client + Supabase client
+- **Server-side**: [src/lib/api/server.ts](mdc:src/lib/api/server.ts) - Better
+  Auth server API
+
+### Configuração do Banco
+
+- **Database**: [src/api/db/index.ts](mdc:src/api/db/index.ts) - Configuração
+  Drizzle + Better Auth adapter
+- **Schemas**: [src/api/db/schemas/](mdc:src/api/db/schemas/) - Esquemas do
+  banco de dados
+- **Types**:
+  [src/lib/api/database.types.ts](mdc:src/lib/api/database.types.ts) - Tipos
+  gerados do Supabase
+
+### Autenticação
+
+- **Config**: [src/api/lib/auth.ts](mdc:src/api/lib/auth.ts) - Configuração
+  completa do Better Auth
+- **Features**:
+  - Email/Password authentication
+  - Stripe integration para subscriptions
+  - Roles customizados (user, escort)
+  - React Start cookies
+  - Database hooks para criação de perfis
+
+## Estrutura de Queries
+
+### Pasta Queries: [src/queries/](mdc:src/queries/)
+
+- **Auth**: [src/queries/auth.ts](mdc:src/queries/auth.ts) - Mutations para
+  login/cadastro/logout
+- **Session**: [src/queries/session.ts](mdc:src/queries/session.ts) - Server
+  functions para sessão
+- **Profile**: [src/queries/profile.ts](mdc:src/queries/profile.ts) - CRUD de
+  perfis usando react-query-kit
+- **Subscription**:
+  [src/queries/subscription.ts](mdc:src/queries/subscription.ts) - Gerenciamento
+  de assinaturas
+
+### Convenções para Queries
+
+- Use `react-query-kit` para organizar queries/mutations
+- Server functions no [src/queries/session.ts](mdc:src/queries/session.ts) para
+  dados SSR
+- Mutations no client para ações do usuário
+- Prefetch de dados críticos no servidor
+
+## Configuração de Ambiente
+
+- **Config**: [src/env.ts](mdc:src/env.ts) - Validação com Zod para
+  client/server
+- **Client vars**: Prefixo `VITE_*`
+- **Server vars**: Sem prefixo
+
+## Database Schema
+
+- **Users**: Tabela principal de usuários
+- **Escort Profiles**: Perfis detalhados das escorts
+- **Sessions**: Controle de sessões
+- **Accounts**: Contas vinculadas (OAuth, etc)
+- **Verifications**: Tokens de verificação
+
+## Scripts Disponíveis
+
+- `bun run dev` - Desenvolvimento
+- `bun run db:studio` - Interface do Drizzle Studio
+- `bun run auth:generate` - Gera schemas do Better Auth
+- `bun run api:types` - Gera tipos do Supabase
+
+## Convenções de Código
+
+- TypeScript strict
+- Componentes funcionais sem React.FC
+- use-styled para componentes estilizados
+- Zod para validação de schemas
+- Better Auth para toda autenticação
+- TanStack Query para cache e sincronização

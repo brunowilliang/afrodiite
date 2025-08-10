@@ -206,6 +206,45 @@ export type Database = {
           },
         ]
       }
+      subscriptions: {
+        Row: {
+          cancel_at_period_end: boolean | null
+          id: string
+          period_end: string | null
+          period_start: string | null
+          plan: string
+          reference_id: string
+          seats: number | null
+          status: string | null
+          stripe_customer_id: string | null
+          stripe_subscription_id: string | null
+        }
+        Insert: {
+          cancel_at_period_end?: boolean | null
+          id: string
+          period_end?: string | null
+          period_start?: string | null
+          plan: string
+          reference_id: string
+          seats?: number | null
+          status?: string | null
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+        }
+        Update: {
+          cancel_at_period_end?: boolean | null
+          id?: string
+          period_end?: string | null
+          period_start?: string | null
+          plan?: string
+          reference_id?: string
+          seats?: number | null
+          status?: string | null
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+        }
+        Relationships: []
+      }
       users: {
         Row: {
           created_at: string
@@ -214,8 +253,8 @@ export type Database = {
           id: string
           image: string | null
           name: string
-          polar_customer_id: string | null
           role: string
+          stripe_customer_id: string | null
           updated_at: string
         }
         Insert: {
@@ -225,8 +264,8 @@ export type Database = {
           id: string
           image?: string | null
           name: string
-          polar_customer_id?: string | null
           role?: string
+          stripe_customer_id?: string | null
           updated_at: string
         }
         Update: {
@@ -236,8 +275,8 @@ export type Database = {
           id?: string
           image?: string | null
           name?: string
-          polar_customer_id?: string | null
           role?: string
+          stripe_customer_id?: string | null
           updated_at?: string
         }
         Relationships: []

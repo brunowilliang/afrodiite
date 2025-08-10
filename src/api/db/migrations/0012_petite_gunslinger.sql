@@ -1,0 +1,2 @@
+ALTER TABLE "escort_profiles" ENABLE ROW LEVEL SECURITY;--> statement-breakpoint
+CREATE POLICY "public_read_active_escorts" ON "escort_profiles" AS PERMISSIVE FOR SELECT TO public USING (is_active = true);

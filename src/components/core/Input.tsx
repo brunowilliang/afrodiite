@@ -1,5 +1,5 @@
 import { useSlot, useStyled } from 'use-styled';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/cn';
 
 const InputRoot = useStyled('input', {
 	base: {

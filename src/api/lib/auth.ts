@@ -4,17 +4,17 @@ import { openAPI } from 'better-auth/plugins';
 import { reactStartCookies } from 'better-auth/react-start';
 import Stripe from 'stripe';
 import { database } from '@/api/db';
-import { env } from '@/lib/env';
-import { createUserProfile, deleteCustomer } from '../routes/user';
+import { env } from '@/env';
+import { createUserProfile, deleteCustomer } from './user';
 
 export type UserRole = 'user' | 'escort';
-export type IUser = typeof auth.$Infer.Session.user;
+export type IUser = typeof betterAuthServer.$Infer.Session.user;
 
 export const stripeClient = new Stripe(env.STRIPE_SECRET_KEY, {
 	apiVersion: '2025-07-30.basil',
 });
 
-export const auth = betterAuth({
+export const betterAuthServer = betterAuth({
 	appName: 'Afrodiite',
 	database,
 	secret: env.BETTER_AUTH_SECRET,
@@ -26,6 +26,7 @@ export const auth = betterAuth({
 	],
 	emailAndPassword: {
 		enabled: true,
+		autoSignIn: true,
 	},
 	databaseHooks: {
 		user: {
@@ -69,6 +70,12 @@ export const auth = betterAuth({
 					return validRoles.includes(value as UserRole);
 				},
 			},
+		},
+	},
+	session: {
+		cookieCache: {
+			enabled: true,
+			maxAge: 5 * 60,
 		},
 	},
 	plugins: [

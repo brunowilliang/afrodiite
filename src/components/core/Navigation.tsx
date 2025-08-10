@@ -1,6 +1,6 @@
 import { type ComponentProps, useEffect, useRef, useState } from 'react';
 import { useSlot, useStyled } from 'use-styled';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/cn';
 import { Badge } from './Badge';
 import { Icon } from './Icon';
 import { Text } from './Text';

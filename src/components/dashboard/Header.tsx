@@ -2,10 +2,10 @@ import {
 	Link,
 	type NavigateOptions,
 	useNavigate,
-	useRouteContext,
+	useRouter,
 } from '@tanstack/react-router';
 import { useRef } from 'react';
-import { handleSignOut } from '@/routes/{-$locale}/(public)/login';
+import { auth } from '@/queries/auth';
 import { links, useIsActiveRoute } from '@/utils/navigation';
 import { useGoBack } from '../core/BackButton';
 import { Badge } from '../core/Badge';
@@ -16,7 +16,9 @@ import { Stack } from '../core/Stack';
 import { Text } from '../core/Text';
 
 export const Header = () => {
-	const { session } = useRouteContext({ from: '__root__' });
+	const { mutateAsync: signOut } = auth.signOut.useMutation();
+	const router = useRouter();
+
 	const navigate = useNavigate();
 
 	const drawerRef = useRef<DrawerRef>(null);
@@ -32,10 +34,15 @@ export const Header = () => {
 		isSignOut?: boolean;
 	};
 
+	const handleLogout = async () => {
+		await signOut();
+		router.invalidate();
+	};
+
 	const handlePage = ({ href, search, isSignOut }: HandlePageProps) => {
 		drawerRef.current?.close();
 		if (isSignOut) {
-			handleSignOut(navigate);
+			handleLogout();
 		} else {
 			navigate({
 				to: href,
@@ -105,7 +112,7 @@ export const Header = () => {
 				<Drawer.Content className="pt-10">
 					<Stack>
 						<Text>Olá</Text>
-						<Text weight="bold">{session?.user?.name}</Text>
+						{/* <Text weight="bold">{session?.user?.name}</Text> */}
 					</Stack>
 
 					<Badge>

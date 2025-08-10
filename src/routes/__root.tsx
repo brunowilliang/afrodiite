@@ -4,15 +4,38 @@ import type { QueryClient } from '@tanstack/react-query';
 import {
 	createRootRouteWithContext,
 	HeadContent,
+	Outlet,
+	Scripts,
 } from '@tanstack/react-router';
+import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
+import { PhotoProvider } from 'react-photo-view';
 import reactPhotoViewCss from 'react-photo-view/dist/react-photo-view.css?url';
-import { api } from '@/api/routes';
+import { Toaster } from 'sonner';
+import { getSessionFromCache, prefetchSession } from '@/queries/session';
 import appCss from '@/styles/app.css?url';
+import { seo } from '@/utils/seo';
 
-export const Route = createRootRouteWithContext<{
+type RootContext = {
 	queryClient: QueryClient;
-}>()({
+};
+
+export const Route = createRootRouteWithContext<RootContext>()({
 	component: RootDocument,
+	beforeLoad: async ({ context: { queryClient } }) => {
+		// Prefetch da sessão
+		await prefetchSession(queryClient);
+
+		// Pega do cache com tipagem correta
+		const session = getSessionFromCache(queryClient);
+
+		if (!session) {
+			console.log('Não autenticado');
+		} else {
+			console.log('Autenticado');
+		}
+
+		return { session };
+	},
 	head: () => ({
 		meta: [
 			{
@@ -22,11 +45,10 @@ export const Route = createRootRouteWithContext<{
 				name: 'viewport',
 				content: 'width=device-width, initial-scale=1',
 			},
-			{
-				title: 'Afrodite - Professional Marketing Platform',
-				description:
-					'Digital platform for independent professionals in entertainment and events. Boost your visibility and connect with clients.',
-			},
+			...seo({
+				title: 'Afrodiite - O maior site de acompanhantes de Portugal',
+				description: 'O maior site de acompanhantes de Portugal',
+			}),
 		],
 		links: [
 			{
@@ -79,120 +101,21 @@ export const Route = createRootRouteWithContext<{
 			},
 		],
 	}),
-	beforeLoad: async ({ context }) => {
-		const { queryClient } = context ?? {};
-		const { session } = await api.session.get();
-
-		if (!session) {
-			return { session: null };
-		}
-
-		// const profile = await queryClient.fetchQuery(
-		// 	api.profile.get({ id: session.user.id }),
-		// )
-
-		// if (!profile) {
-		// 	return { session: null, profile: null };
-		// }
-
-		return { session };
-	},
 });
 
 function RootDocument() {
 	return (
-		<html lang="en" className="h-full">
+		<html lang="en">
 			<head>
 				<HeadContent />
 			</head>
-			<body
-				className="m-0 h-full p-0 font-sans"
-				style={{
-					fontFamily: 'var(--font-sans)',
-					backgroundColor: 'var(--color-background)',
-					color: 'var(--color-text-primary)',
-				}}
-			>
-				<div
-					className="flex min-h-screen items-center justify-center p-5"
-					style={{
-						background: `linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-20) 100%)`,
-					}}
-				>
-					<div
-						className="w-full max-w-2xl transform rounded-3xl px-10 py-16 text-center shadow-2xl transition-transform duration-300 hover:scale-105"
-						style={{
-							backgroundColor: 'var(--color-accent)',
-							boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
-						}}
-					>
-						<h1
-							className="mb-5 font-semibold text-4xl leading-tight md:text-5xl"
-							style={{
-								color: 'var(--color-text-primary)',
-							}}
-						>
-							Afrodite
-						</h1>
-						<p
-							className="mb-8 text-xl leading-relaxed"
-							style={{
-								color: 'var(--color-text-secondary)',
-							}}
-						>
-							Digital marketing platform for independent professionals in
-							entertainment and events
-						</p>
-						<div
-							className="mb-8 rounded-2xl p-8"
-							style={{
-								backgroundColor: 'var(--color-accent-10)',
-							}}
-						>
-							<h2
-								className="mb-4 font-medium text-2xl"
-								style={{
-									color: 'var(--color-text-primary)',
-								}}
-							>
-								🚀 Coming Soon
-							</h2>
-							<p
-								className="mb-0"
-								style={{
-									color: 'var(--color-text-secondary)',
-								}}
-							>
-								New platform to boost your professional visibility and connect
-								you with your clients
-							</p>
-						</div>
-						<button
-							className="hover:-translate-y-1 transform rounded-full px-10 py-4 font-medium text-lg text-white shadow-lg transition-all duration-200 hover:shadow-xl"
-							style={{
-								background: `linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-20) 100%)`,
-								color: 'var(--color-text-primary)',
-							}}
-						>
-							Get Notified
-						</button>
-						<div
-							className="mt-10 pt-8"
-							style={{
-								borderTop: '1px solid var(--color-accent-10)',
-							}}
-						>
-							<p
-								className="m-0 text-sm"
-								style={{
-									color: 'var(--color-text-secondary)',
-								}}
-							>
-								Follow us on social media
-							</p>
-						</div>
-					</div>
-				</div>
+			<body>
+				<PhotoProvider>
+					<Outlet />
+					<Toaster position="top-center" />
+					<TanStackRouterDevtools position="bottom-right" />
+					<Scripts />
+				</PhotoProvider>
 			</body>
 		</html>
 	);

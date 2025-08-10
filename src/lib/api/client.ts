@@ -1,10 +1,10 @@
 import { stripeClient } from '@better-auth/stripe/client';
 import { createClient } from '@supabase/supabase-js';
 import { createAuthClient } from 'better-auth/react';
-import type { Database } from './client.types';
-import { env } from './env';
+import { env } from '@/env';
+import type { Database } from './database.types';
 
-const betterAuth = createAuthClient({
+const betterAuthClient = createAuthClient({
 	baseURL: env.VITE_BETTER_AUTH_URL,
 	plugins: [
 		stripeClient({
@@ -13,12 +13,13 @@ const betterAuth = createAuthClient({
 	],
 });
 
-const supabase = createClient<Database>(
+const supabaseClient = createClient<Database>(
 	env.VITE_SUPABASE_URL,
 	env.VITE_SUPABASE_PUBLISHABLE_KEY,
 );
 
-export const client = {
-	auth: betterAuth,
-	db: supabase as Omit<typeof supabase, 'auth'>,
+// ✅ Client-only exports
+export const api = {
+	auth: betterAuthClient,
+	supabase: supabaseClient as Omit<typeof supabaseClient, 'auth'>,
 } as const;

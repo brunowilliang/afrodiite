@@ -1,68 +1,68 @@
-import { createFileRoute, type useNavigate } from '@tanstack/react-router';
+import { createFileRoute, useRouter } from '@tanstack/react-router';
 import { useState } from 'react';
-import { toast } from 'sonner';
 import { Button } from '@/components/core/Button';
-import { Card } from '@/components/core/Card';
 import { Input } from '@/components/core/Input';
 import { Container } from '@/components/core/Stack';
-import { Text } from '@/components/core/Text';
-import { client } from '@/lib/client';
-
-export const handleSignOut = async (
-	navigate: ReturnType<typeof useNavigate>,
-) => {
-	const result = await client.auth.signOut();
-
-	if (result.error) {
-		console.error(result.error);
-		return;
-	}
-
-	toast('Logout realizado com sucesso');
-	navigate({ to: '/{-$locale}' });
-};
+import { auth } from '@/queries/auth';
 
 export const Route = createFileRoute('/{-$locale}/(public)/login')({
 	component: RouteComponent,
 });
 
 function RouteComponent() {
-	const { session } = Route.useRouteContext();
-	const navigate = Route.useNavigate();
+	const router = useRouter();
 
-	const [name, _] = useState('Bruno Garcia');
+	const { mutateAsync: signIn, isPending: isSignInPending } =
+		auth.signIn.useMutation();
+	const { mutateAsync: signUp, isPending: isSignUpPending } =
+		auth.signUp.useMutation();
+	const { mutateAsync: signOut, isPending: isSignOutPending } =
+		auth.signOut.useMutation();
+	const { mutateAsync: deleteUser, isPending: isDeletePending } =
+		auth.delete.useMutation();
+
+	// Função de login direto (apenas para teste)
+	const handleLogin = async () => {
+		await signIn({
+			email: 'eu@brunowillian.com',
+			password: '123123123123',
+		});
+
+		// Invalida PRIMEIRO para refrescar a sessão
+		await router.invalidate();
+
+		// Depois navega
+		router.navigate({ to: '/{-$locale}/dashboard' });
+	};
+
+	// Função de criar conta direto (apenas para teste)
+	const handleSignUp = async () => {
+		await signUp({
+			name: 'Bruno Garcia',
+			email: 'eu@brunowillian.com',
+			password: '123456123123',
+		});
+
+		// Invalida PRIMEIRO para refrescar a sessão
+		await router.invalidate();
+
+		// Depois navega
+		router.navigate({ to: '/{-$locale}/dashboard' });
+	};
+
+	const handleDelete = async () => {
+		await deleteUser();
+		router.invalidate();
+	};
+
+	// Função de logout direto (apenas para teste)
+	const handleLogout = async () => {
+		await signOut();
+		router.invalidate();
+	};
+
 	const [email, setEmail] = useState('eu@brunowillian.com');
 	const [password, setPassword] = useState('Bruno123123');
-
-	const login = async () => {
-		const result = await client.auth.signIn.email({
-			email: email,
-			password: password,
-		});
-
-		if (result.error) {
-			toast(result.error.message);
-			console.error(result.error);
-			return;
-		}
-		toast('Login realizado com sucesso');
-		navigate({ to: '/{-$locale}/dashboard' });
-	};
-
-	const createAccount = async () => {
-		const result = await client.auth.signUp.email({
-			name: name,
-			email: email,
-			password: password,
-		});
-
-		if (result.error) {
-			toast(result.error.message);
-			console.error(result.error);
-			return;
-		}
-		toast('Account created successfully');
-	};
 
 	return (
 		<Container hasHeader>
@@ -76,27 +76,24 @@ function RouteComponent() {
 				value={password}
 				onChange={(e) => setPassword(e.target.value)}
 			/>
+			<Button onClick={handleLogin} disabled={isSignInPending}>
+				<Button.Text>
+					{isSignInPending ? 'Entrando...' : 'Login Server'}
+				</Button.Text>
+			</Button>
 
-			{session && (
-				<Card>
-					<Text>Email: {session.user?.email}</Text>
-					<Text>Name: {session.user?.name}</Text>
-					<Text>Image: {session.user?.image}</Text>
-				</Card>
-			)}
-
-			{!session ? (
-				<Button onClick={() => login()}>
-					<Button.Text>Login</Button.Text>
-				</Button>
-			) : (
-				<Button onClick={() => handleSignOut(navigate)}>
-					<Button.Text>Logout</Button.Text>
-				</Button>
-			)}
-
-			<Button onClick={() => createAccount()}>
-				<Button.Text>Create Account</Button.Text>
+			<Button onClick={handleSignUp} disabled={isSignUpPending}>
+				<Button.Text>
+					{isSignUpPending ? 'Cadastrando...' : 'Cadastro'}
+				</Button.Text>
+			</Button>
+			<Button onClick={handleLogout} disabled={isSignUpPending}>
+				<Button.Text>{isSignOutPending ? 'Saindo...' : 'Logout'}</Button.Text>
+			</Button>
+			<Button onClick={handleDelete} disabled={isDeletePending}>
+				<Button.Text>
+					{isDeletePending ? 'Deletando...' : 'Deletar'}
+				</Button.Text>
 			</Button>
 		</Container>
 	);

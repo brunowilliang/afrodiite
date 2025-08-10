@@ -1,4 +1,9 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import {
+	dehydrate,
+	hydrate,
+	QueryClient,
+	QueryClientProvider,
+} from '@tanstack/react-query';
 import { createRouter as createTanStackRouter } from '@tanstack/react-router';
 import { DefaultCatchBoundary } from './components/DefaultCatchBoundary';
 import { NotFound } from './components/NotFound';
@@ -21,6 +26,17 @@ export function createRouter() {
 		context: {
 			queryClient,
 		},
+		dehydrate: () => {
+			return {
+				queryClientState: dehydrate(queryClient),
+			};
+		},
+		// On the client, hydrate the loader client with the data
+		// we dehydrated on the server
+		hydrate: (dehydrated) => {
+			hydrate(queryClient, dehydrated.queryClientState);
+		},
+
 		Wrap: ({ children }) => {
 			return (
 				<QueryClientProvider client={queryClient}>

@@ -67,6 +67,8 @@
         "noDangerouslySetInnerHtml": "off"
       },
       "a11y": {
+        "useSemanticElements": "off",
+        "noStaticElementInteractions": "off",
         "useButtonType": "off",
         "noSvgWithoutTitle": "off",
         "noLabelWithoutControl": "off"

@@ -33,7 +33,9 @@ export function FormInput<TFieldValues extends FieldValues = FieldValues>({
 			name={name}
 			control={control}
 			rules={rules}
+			defaultValue={'' as any}
 			render={({ field, fieldState: { error } }) => {
+				const { value, onChange, onBlur, ref } = field;
 				return (
 					<Stack className={className}>
 						{label && (
@@ -45,7 +47,14 @@ export function FormInput<TFieldValues extends FieldValues = FieldValues>({
 							</label>
 						)}
 
-						<Input id={name} {...field} {...input} />
+						<Input
+							id={name}
+							ref={ref}
+							value={(value as unknown as string) ?? ''}
+							onChange={onChange}
+							onBlur={onBlur}
+							{...input}
+						/>
 
 						{error && (
 							<Text size="sm" weight="light" className="mt-1 ml-2 text-red-500">

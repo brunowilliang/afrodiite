@@ -2,7 +2,7 @@ import useEmblaCarousel from 'embla-carousel-react';
 import { useCallback, useEffect, useState } from 'react';
 import { PhotoSlider } from 'react-photo-view';
 import { useStyled } from 'use-styled';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/cn';
 
 export const DATA_IMAGES = [
 	{ src: '/assets/profile-2.png', alt: 'Alycia Bittencourt - Photo 1' },

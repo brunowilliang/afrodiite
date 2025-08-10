@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { db } from '../db';
 import { escortProfiles } from '../db/schemas';
-import { stripeClient } from '../lib/auth';
+import { stripeClient } from './auth';
 
 const CreateSchema = z.object({
 	id: z.string(),

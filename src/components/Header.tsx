@@ -12,7 +12,7 @@ import { Text } from './core/Text';
 
 export const Header = () => {
 	const navigate = useNavigate();
-	const { session } = useRouteContext({ from: '__root__' });
+	const { session } = useRouteContext({ from: '/{-$locale}' });
 
 	const drawerRef = useRef<DrawerRef>(null);
 	const { handleGoBack } = useGoBack();
@@ -65,10 +65,10 @@ export const Header = () => {
 
 			<Drawer ref={drawerRef} position="right" size={'85%'}>
 				<Drawer.Content className="pt-14">
-					{session ? (
+					{session && (
 						<Stack className="mb-5 w-full">
 							<Text>Olá</Text>
-							<Text weight="bold">{session?.user?.name}</Text>
+							<Text weight="bold">{session.user?.email}</Text>
 							<Button
 								variant="primary"
 								className="mt-4"
@@ -77,22 +77,21 @@ export const Header = () => {
 								<Button.Text>Ir para o Dashboard</Button.Text>
 							</Button>
 						</Stack>
-					) : (
-						<Stack className="w-full gap-4">
-							<Button className="w-full">
-								<Button.Text>Anunciar</Button.Text>
-							</Button>
-							<Button
-								className="w-full"
-								onClick={() => {
-									drawerRef.current?.close();
-									navigate({ to: '/{-$locale}/login' });
-								}}
-							>
-								<Button.Text>Área Reservada</Button.Text>
-							</Button>
-						</Stack>
 					)}
+					<Stack className="w-full gap-4">
+						<Button className="w-full">
+							<Button.Text>Anunciar</Button.Text>
+						</Button>
+						<Button
+							className="w-full"
+							onClick={() => {
+								drawerRef.current?.close();
+								navigate({ to: '/{-$locale}/login' });
+							}}
+						>
+							<Button.Text>Área Reservada</Button.Text>
+						</Button>
+					</Stack>
 
 					<Input placeholder="Pesquisar" colorScheme="secondary" />
 					<Badge>

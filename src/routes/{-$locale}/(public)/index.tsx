@@ -18,9 +18,6 @@ function RouteComponent() {
 	const { t } = useTranslation();
 	const modalRef = useRef<ModalRef>(null);
 
-	const { session } = Route.useRouteContext();
-	console.log('[HOME]: Route.useRouteContext', session);
-
 	return (
 		<Container className="mt-20 gap-12 overflow-hidden py-16">
 			<Stack className="centered mx-auto max-w-2xl gap-4 py-40">
@@ -45,7 +42,10 @@ function RouteComponent() {
 					clickable
 					onClick={() => modalRef.current?.open()}
 				/>
-				<Link to="/{-$locale}/escorts">
+				<Link
+					to="/{-$locale}/escorts/$country"
+					params={{ country: 'portugal' }}
+				>
 					<Text>nav.escorts</Text>
 				</Link>
 			</Stack>
