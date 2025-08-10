@@ -1,16 +1,17 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { Container } from '@/components/core/Stack';
+import { Text } from '@/components/core/Text';
 
-export const Route = createFileRoute('/{-$locale}/(admin)/dashboard/adverts')(
-	{
-		component: RouteComponent,
-	},
-);
+export const Route = createFileRoute('/{-$locale}/(admin)/dashboard/adverts')({
+	component: RouteComponent,
+});
 
 function RouteComponent() {
 	return (
 		<Container hasHeader>
-			<h1>Dashboard Page - anuncios</h1>
+			<Text size="2xl" weight="bold">
+				Dashboard - Anuncios
+			</Text>
 		</Container>
-	)
+	);
 }
