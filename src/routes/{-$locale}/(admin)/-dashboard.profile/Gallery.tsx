@@ -24,6 +24,7 @@ export const GalleryTab = ({ id, onSubmit, data }: Props) => {
 	});
 
 	const [errorMsg] = useState<string | null>(null);
+
 	// controls quick disable states while uploading
 	const [, setIsSaving] = useState(false);
 	const MAX_FILES = 4;
