@@ -25,7 +25,7 @@ function RouteComponent() {
 	const handleLogin = async () => {
 		await signIn({
 			email: 'eu@brunowillian.com',
-			password: '123123123123',
+			password: '123456123123',
 		});
 
 		// Invalida PRIMEIRO para refrescar a sessão
