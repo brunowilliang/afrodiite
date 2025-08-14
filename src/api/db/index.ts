@@ -2,7 +2,7 @@ import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
 import * as schemas from '@/api/db/schemas';
-import { env } from '@/env';
+import { env } from '@/utils/env';
 
 const client = postgres(env.DATABASE_URL, {
 	prepare: false,

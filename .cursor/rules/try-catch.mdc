@@ -1,0 +1,74 @@
+---
+alwaysApply: true
+---
+
+## **IMPORTANTE: SEMPRE use o helper `tryCatch` ao invés de try/catch tradicional!**
+
+# TryCatch Error Handling Rule
+
+## Overview
+
+Use the `tryCatch` utility for safe error handling with tuple-based returns
+`[error, data]`.
+
+## Implementation
+
+```typescript
+// Types
+type TryCatchResult<T, E = Error> = readonly [E, null] | readonly [null, T];
+
+// Universal function - handles sync, async, and direct promises
+export function tryCatch<T, E = Error>(
+  operation: Promise<T> | (() => T) | (() => Promise<T>),
+): TryCatchResult<T, E> | Promise<TryCatchResult<T, E>>;
+```
+
+## Usage Patterns
+
+### 1. Direct Promise
+
+```typescript
+const [error, user] = await tryCatch(fetch("/api/user").then((r) => r.json()));
+```
+
+### 2. Async Function
+
+```typescript
+const [error, data] = await tryCatch(async () => {
+  const response = await fetch("/api/data");
+  return response.json();
+});
+```
+
+### 3. Sync Function
+
+```typescript
+const [error, result] = tryCatch(() => JSON.parse(jsonString));
+```
+
+### 4. Error Handling
+
+```typescript
+if (error) {
+  console.error("Operation failed:", error);
+  return; // or handle appropriately
+}
+// TypeScript knows data is not null here
+console.log("Success:", data);
+```
+
+## Key Benefits
+
+- **Error-first**: Follows `[error, data]` convention
+- **Type-safe**: Full TypeScript inference
+- **Universal**: Works with sync/async/promises
+- **Clean**: Simple destructuring syntax
+- **Performance**: Lightweight tuple return
+
+## When to Use
+
+- API calls that can fail
+- JSON parsing operations
+- File system operations
+- Any operation that might throw
+- **SEMPRE que houver necessidade de try/catch - use o helper!**

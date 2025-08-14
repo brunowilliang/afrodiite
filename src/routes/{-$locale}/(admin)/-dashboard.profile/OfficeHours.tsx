@@ -1,40 +1,46 @@
+import { Form, Switch, TimeInput } from '@heroui/react';
+import { useMutation } from '@tanstack/react-query';
+import { useRouteContext, useRouter } from '@tanstack/react-router';
 import { useForm } from 'react-hook-form';
-import type { OfficeHours } from '@/api/db/schemas/escort';
+import { toast } from 'sonner';
+import { ProfileUpdate } from '@/api/utils/types/escort';
 import { Badge } from '@/components/core/Badge';
-import { Button } from '@/components/core/Button';
-import { FormInput } from '@/components/core/Inputs/FormInput';
 import { Stack } from '@/components/core/Stack';
-import type { profile } from '@/queries/profile';
-import type { EscortProfile } from '@/schemas/forms/profile';
+import { api } from '@/lib/api';
 
-interface Props {
-	id: string;
-	data?: EscortProfile['office_hours'];
-	onSubmit: ReturnType<typeof profile.update.useMutation>;
-}
+export const OfficeHoursTab = () => {
+	const router = useRouter();
+	const { session, profile } = useRouteContext({ from: '/{-$locale}' });
 
-const dayDefs: { key: keyof OfficeHours; label: string }[] = [
-	{ key: 'monday', label: 'Segunda-feira' },
-	{ key: 'tuesday', label: 'Terça-feira' },
-	{ key: 'wednesday', label: 'Quarta-feira' },
-	{ key: 'thursday', label: 'Quinta-feira' },
-	{ key: 'friday', label: 'Sexta-feira' },
-	{ key: 'saturday', label: 'Sábado' },
-	{ key: 'sunday', label: 'Domingo' },
-];
+	const updateProfile = useMutation(
+		api.queries.profile.update.mutationOptions(),
+	);
 
-export const OfficeHoursTab = ({ id, data, onSubmit }: Props) => {
+	const handleSubmit = (values: ProfileUpdate) => {
+		updateProfile.mutateAsync(
+			{
+				id: session?.user.id,
+				...values,
+			},
+			{
+				onSuccess: () => {
+					toast.success('Profile updated');
+					router.invalidate();
+				},
+				onError: (error) => {
+					console.error(error);
+					toast.error('Error updating profile', {
+						description: error.message,
+					});
+				},
+			},
+		);
+	};
+
 	const form = useForm({
 		mode: 'onChange',
-		values: { office_hours: data?.office_hours },
+		values: (profile ?? {}) as Partial<ProfileUpdate>,
 	});
-
-	const handleSubmit = async (values: typeof data) => {
-		await onSubmit.mutateAsync({
-			id,
-			office_hours: values?.office_hours,
-		});
-	};
 
 	return (
 		<Stack className="gap-5">
@@ -42,56 +48,19 @@ export const OfficeHoursTab = ({ id, data, onSubmit }: Props) => {
 				<Badge.Text>Horários de trabalho</Badge.Text>
 			</Badge>
 
-			<form onSubmit={form.handleSubmit(handleSubmit)}>
-				<Stack className="gap-4">
-					{dayDefs.map(({ key, label }) => {
-						const isAvailable = form.watch(`office_hours.${key}.is_available`);
-						return (
-							<Stack key={key} className="gap-3">
-								<Badge>
-									<Badge.Text>{label}</Badge.Text>
-								</Badge>
-
-								<Stack direction="row" className="centered gap-4">
-									<FormInput
-										control={form.control}
-										name={`office_hours.${key}.is_available`}
-										type="checkbox"
-										className="size-10"
-									/>
-									<FormInput
-										control={form.control}
-										name={`office_hours.${key}.start`}
-										label="Inicio"
-										iconName="Clock"
-										type="time"
-										className="w-full"
-										placeholder="00:00"
-										disabled={isAvailable === false}
-									/>
-
-									<FormInput
-										control={form.control}
-										name={`office_hours.${key}.end`}
-										label="Fim"
-										iconName="Clock"
-										type="time"
-										className="w-full"
-										placeholder="00:00"
-										disabled={isAvailable === false}
-									/>
-								</Stack>
-							</Stack>
-						);
-					})}
-
-					<Button type="submit" disabled={form.formState.isSubmitting}>
-						<Button.Text>
-							{form.formState.isSubmitting ? 'Salvando...' : 'Salvar'}
-						</Button.Text>
-					</Button>
+			<Form onSubmit={form.handleSubmit(handleSubmit)}>
+				<Stack className="w-full gap-4">
+					{[...Array(7)].map((_, index) => (
+						<Stack direction="row" className="w-full gap-4" key={index}>
+							<TimeInput size="md" label="Inicio" />
+							<TimeInput size="md" label="Fim" />
+							<Switch size="md" defaultSelected>
+								Ativado
+							</Switch>
+						</Stack>
+					))}
 				</Stack>
-			</form>
+			</Form>
 		</Stack>
 	);
 };

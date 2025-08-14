@@ -1,30 +1,19 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "./theme.css";
+@plugin './hero.ts';
+@source '../../node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}';
 
-@theme {
-	--color-background: oklch(18.31% 0.004 285.99);
-	--color-primary: oklch(53.83% 0.248 296.42);
-	--color-primary-10: oklch(24.93% 0.040 298.80);
-	--color-primary-20: oklch(28.06% 0.073 300.23);
-	--color-accent: oklch(21.95% 0.008 285.74);
-	--color-accent-10: oklch(28.30% 0.009 285.81);
-	--color-text-primary: oklch(95.20% 0.032 316.42);
-	--color-text-secondary: oklch(67.01% 0.025 314.65);
-	--color-danger: oklch(62.44% 0.204 16.34);
+@custom-variant dark (&:is(.dark *));
 
-	--font-sans: 'Poppins', sans-serif;
-	--font-mono: 'Poppins', monospace;
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
 }
-
-:root {
-	font-family: var(--font-sans);
-	@apply bg-background text-text-primary text-base antialiased;
-}
-
-html,
-body {
-	background-color: var(--color-background) !important;
-}
-
 
 @utility centered {
 	align-items: center;

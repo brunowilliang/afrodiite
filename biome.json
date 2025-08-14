@@ -78,6 +78,8 @@
         "noExplicitAny": "off"
       },
       "style": {
+        "noNonNullAssertion": "off",
+        "useImportType": "off",
         "useTemplate": "off",
         "noParameterAssign": "error",
         "useAsConstAssertion": "error",

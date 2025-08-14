@@ -1,8 +1,8 @@
-import { betterAuthServer } from '@/api/lib/auth';
+import { auth } from '@/lib/auth/auth.server';
 
 export const api = {
-	auth: betterAuthServer.api,
-	handler: betterAuthServer.handler,
+	auth: auth.api,
+	handler: auth.handler,
 } as const;
 
-export type Session = typeof betterAuthServer.$Infer.Session;
+export type Session = typeof auth.$Infer.Session;

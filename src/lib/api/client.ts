@@ -1,7 +1,7 @@
 import { stripeClient } from '@better-auth/stripe/client';
 import { createClient } from '@supabase/supabase-js';
 import { createAuthClient } from 'better-auth/react';
-import { env } from '@/env';
+import { env } from '@/utils/env';
 import type { Database } from './database.types';
 
 const betterAuthClient = createAuthClient({

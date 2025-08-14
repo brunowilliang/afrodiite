@@ -50,6 +50,8 @@ export const Icon = useStyled('i', {
 			Euro: { className: 'hgi-euro' },
 			Upload: { className: 'hgi-upload-04' },
 			Loading: { className: 'hgi-loading-03 animate-spin' },
+			Eye: { className: 'hgi-view' },
+			EyeOff: { className: 'hgi-view-off' },
 		},
 	},
 	defaultVariants: {

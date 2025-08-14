@@ -1,32 +1,46 @@
+import { Button, Form, Input } from '@heroui/react';
+import { useMutation } from '@tanstack/react-query';
+import { useRouteContext, useRouter } from '@tanstack/react-router';
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+import { ProfileUpdate } from '@/api/utils/types/escort';
 import { Badge } from '@/components/core/Badge';
-import { Button } from '@/components/core/Button';
-import { FormInput } from '@/components/core/Inputs/FormInput';
 import { Stack } from '@/components/core/Stack';
-import type { profile } from '@/queries/profile';
-import type { EscortProfile } from '@/schemas/forms/profile';
+import { api } from '@/lib/api';
 
-interface Props {
-	id: string;
-	data?: Partial<EscortProfile['location']>;
-	onSubmit: ReturnType<typeof profile.update.useMutation>;
-}
+export const LocationTab = () => {
+	const router = useRouter();
+	const { session, profile } = useRouteContext({ from: '/{-$locale}' });
 
-export const LocationTab = ({ id, data, onSubmit }: Props) => {
+	const updateProfile = useMutation(
+		api.queries.profile.update.mutationOptions(),
+	);
+
+	const handleSubmit = (values: ProfileUpdate) => {
+		updateProfile.mutateAsync(
+			{
+				id: session?.user.id,
+				...values,
+			},
+			{
+				onSuccess: () => {
+					toast.success('Profile updated');
+					router.invalidate();
+				},
+				onError: (error) => {
+					console.error(error);
+					toast.error('Error updating profile', {
+						description: error.message,
+					});
+				},
+			},
+		);
+	};
+
 	const form = useForm({
 		mode: 'onChange',
-		values: {
-			...data,
-			country: 'Portugal',
-		},
+		values: (profile ?? {}) as Partial<ProfileUpdate>,
 	});
-
-	const handleSubmit = async (values: typeof data) => {
-		await onSubmit.mutateAsync({
-			id,
-			...values,
-		});
-	};
 
 	return (
 		<Stack className="gap-5">
@@ -34,69 +48,52 @@ export const LocationTab = ({ id, data, onSubmit }: Props) => {
 				<Badge.Text>Localização</Badge.Text>
 			</Badge>
 
-			<form onSubmit={form.handleSubmit(handleSubmit)}>
-				<Stack className="gap-4">
-					<FormInput
-						control={form.control}
-						name="city"
+			<Form onSubmit={form.handleSubmit(handleSubmit)} className="w-full">
+				<Stack className="w-full gap-4">
+					<Input
+						isRequired
 						label="Cidade"
-						type="text"
-						placeholder="Digite a cidade"
-						rules={{
-							required: {
-								value: true,
-								message: 'Cidade é obrigatória',
-							},
-						}}
-					/>
-					<FormInput
-						control={form.control}
-						name="state"
-						label="Estado"
-						type="text"
-						placeholder="Digite o estado"
-						rules={{
-							required: {
-								value: true,
-								message: 'Estado é obrigatório',
-							},
-						}}
-					/>
-					<FormInput
-						control={form.control}
-						name="neighborhood"
-						label="Bairro"
-						type="text"
-						placeholder="Digite o bairro"
-						rules={{
-							required: {
-								value: true,
-								message: 'Bairro é obrigatório',
-							},
-						}}
-					/>
-					<FormInput
-						control={form.control}
-						name="country"
-						label="País"
-						type="text"
-						helperText="No momento, não é possível alterar o país"
-						disabled
-						rules={{
-							required: {
-								value: true,
-								message: 'País é obrigatório',
-							},
-						}}
+						placeholder="Digite a cidade onde irá atuar"
+						size="md"
+						className="w-full"
 					/>
 
-					<Button type="submit" disabled={form.formState.isSubmitting}>
-						<Button.Text>
-							{form.formState.isSubmitting ? 'Salvando...' : 'Salvar'}
-						</Button.Text>
+					<Input
+						isRequired
+						label="Estado"
+						placeholder="Digite o estado"
+						size="md"
+						className="w-full"
+					/>
+
+					<Input
+						isRequired
+						label="Bairro"
+						placeholder="Digite o bairro"
+						size="md"
+						className="w-full"
+					/>
+
+					<Input
+						isRequired
+						label="País"
+						placeholder="Digite o país"
+						size="md"
+						className="w-full"
+						description="No momento, não é possível alterar o país"
+						disabled
+					/>
+
+					<Button
+						color="primary"
+						isLoading={updateProfile.isPending}
+						size="md"
+						type="submit"
+					>
+						Salvar
 					</Button>
 				</Stack>
-			</form>
+			</Form>
 		</Stack>
 	);
 };

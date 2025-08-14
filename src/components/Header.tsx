@@ -86,7 +86,7 @@ export const Header = () => {
 							className="w-full"
 							onClick={() => {
 								drawerRef.current?.close();
-								navigate({ to: '/{-$locale}/login' });
+								navigate({ to: '/{-$locale}/sign-in' });
 							}}
 						>
 							<Button.Text>Área Reservada</Button.Text>

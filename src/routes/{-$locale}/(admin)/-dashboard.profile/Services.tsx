@@ -1,17 +1,11 @@
-import { useEffect, useState } from 'react';
+import { Button, Checkbox } from '@heroui/react';
+import { useMutation } from '@tanstack/react-query';
+import { useRouteContext, useRouter } from '@tanstack/react-router';
+import { toast } from 'sonner';
+import { ProfileUpdate } from '@/api/utils/types/escort';
 import { Badge } from '@/components/core/Badge';
-import { Button } from '@/components/core/Button';
-import { Card } from '@/components/core/Card';
 import { Stack } from '@/components/core/Stack';
-import { Text } from '@/components/core/Text';
-import type { ProfileData, profile } from '@/queries/profile';
-import { cn } from '@/utils/cn';
-
-interface Props {
-	id: string;
-	data?: ProfileData['services'];
-	onSubmit: ReturnType<typeof profile.update.useMutation>;
-}
+import { api } from '@/lib/api';
 
 const DATA_SERVICES = [
 	{
@@ -171,39 +165,33 @@ const DATA_SERVICES = [
 	},
 ];
 
-export const ServicesTab = ({ id, data, onSubmit }: Props) => {
-	const [selected, setSelected] = useState<Set<number>>(new Set());
-	const [saving, setSaving] = useState(false);
+export const ServicesTab = () => {
+	const router = useRouter();
+	const { session, profile } = useRouteContext({ from: '/{-$locale}' });
 
-	useEffect(() => {
-		const map = data ?? {};
-		setSelected(
-			new Set(
-				Object.entries(map)
-					.filter(([, v]) => !!v)
-					.map(([k]) => Number(k)),
-			),
+	const updateProfile = useMutation(
+		api.queries.profile.update.mutationOptions(),
+	);
+
+	const handleSubmit = (values: ProfileUpdate) => {
+		updateProfile.mutateAsync(
+			{
+				id: session?.user.id,
+				...values,
+			},
+			{
+				onSuccess: () => {
+					toast.success('Profile updated');
+					router.invalidate();
+				},
+				onError: (error) => {
+					console.error(error);
+					toast.error('Error updating profile', {
+						description: error.message,
+					});
+				},
+			},
 		);
-	}, [data]);
-
-	const toggle = (id: number) => {
-		setSelected((prev) => {
-			const next = new Set(prev);
-			next.has(id) ? next.delete(id) : next.add(id);
-			return next;
-		});
-	};
-
-	const handleSave = async () => {
-		setSaving(true);
-		const services = Object.fromEntries(
-			Array.from(selected).map((id) => [String(id), true]),
-		);
-		try {
-			await onSubmit.mutateAsync({ id, services });
-		} finally {
-			setSaving(false);
-		}
 	};
 
 	return (
@@ -212,27 +200,16 @@ export const ServicesTab = ({ id, data, onSubmit }: Props) => {
 				<Badge.Text>Serviços oferecidos</Badge.Text>
 			</Badge>
 
-			<div className="grid grid-cols-2 gap-3 md:grid-cols-3">
-				{DATA_SERVICES.map((svc) => {
-					const active = selected.has(svc.id);
-					return (
-						<Card
-							key={svc.id}
-							clickable
-							onClick={() => toggle(svc.id)}
-							title={svc.description}
-							className={cn(
-								active && 'border-primary bg-primary',
-								!active && 'text-text-secondary',
-							)}
-						>
-							<Text>{svc.label}</Text>
-						</Card>
-					);
-				})}
-			</div>
-			<Button type="button" disabled={saving} onClick={handleSave}>
-				<Button.Text>{saving ? 'Salvando...' : 'Salvar'}</Button.Text>
+			<Stack className="w-full">
+				{DATA_SERVICES.map((svc) => (
+					<Checkbox key={svc.id} size="md">
+						{svc.label}
+					</Checkbox>
+				))}
+			</Stack>
+
+			<Button color="primary" size="md">
+				Salvar
 			</Button>
 		</Stack>
 	);

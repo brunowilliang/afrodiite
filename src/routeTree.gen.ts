@@ -14,7 +14,9 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as Char123LocaleChar125RouteRouteImport } from './routes/{-$locale}/route'
 import { Route as Char123LocaleChar125publicRouteRouteImport } from './routes/{-$locale}/(public)/route'
 import { Route as Char123LocaleChar125publicIndexRouteImport } from './routes/{-$locale}/(public)/index'
-import { Route as Char123LocaleChar125publicLoginRouteImport } from './routes/{-$locale}/(public)/login'
+import { Route as Char123LocaleChar125publicSignInRouteImport } from './routes/{-$locale}/(public)/sign-in'
+import { Route as Char123LocaleChar125publicResetPasswordRouteImport } from './routes/{-$locale}/(public)/reset-password'
+import { Route as Char123LocaleChar125publicActivateRouteImport } from './routes/{-$locale}/(public)/activate'
 import { Route as Char123LocaleChar125adminDashboardRouteImport } from './routes/{-$locale}/(admin)/dashboard'
 import { Route as Char123LocaleChar125publicEscortsIndexRouteImport } from './routes/{-$locale}/(public)/escorts.index'
 import { Route as Char123LocaleChar125adminDashboardIndexRouteImport } from './routes/{-$locale}/(admin)/dashboard.index'
@@ -24,6 +26,7 @@ import { Route as Char123LocaleChar125adminDashboardMyAccountRouteImport } from 
 import { Route as Char123LocaleChar125adminDashboardAdvertsRouteImport } from './routes/{-$locale}/(admin)/dashboard.adverts'
 import { Route as Char123LocaleChar125publicEscortsCountryIndexRouteImport } from './routes/{-$locale}/(public)/escorts.$country.index'
 import { Route as Char123LocaleChar125publicEscortsCountrySlugIndexRouteImport } from './routes/{-$locale}/(public)/escorts.$country.$slug.index'
+import { ServerRoute as ApiRpcSplatServerRouteImport } from './routes/api/rpc.$'
 import { ServerRoute as ApiAuthSplatServerRouteImport } from './routes/api/auth.$'
 
 const rootServerRouteImport = createServerRootRoute()
@@ -45,10 +48,22 @@ const Char123LocaleChar125publicIndexRoute =
     path: '/',
     getParentRoute: () => Char123LocaleChar125publicRouteRoute,
   } as any)
-const Char123LocaleChar125publicLoginRoute =
-  Char123LocaleChar125publicLoginRouteImport.update({
-    id: '/login',
-    path: '/login',
+const Char123LocaleChar125publicSignInRoute =
+  Char123LocaleChar125publicSignInRouteImport.update({
+    id: '/sign-in',
+    path: '/sign-in',
+    getParentRoute: () => Char123LocaleChar125publicRouteRoute,
+  } as any)
+const Char123LocaleChar125publicResetPasswordRoute =
+  Char123LocaleChar125publicResetPasswordRouteImport.update({
+    id: '/reset-password',
+    path: '/reset-password',
+    getParentRoute: () => Char123LocaleChar125publicRouteRoute,
+  } as any)
+const Char123LocaleChar125publicActivateRoute =
+  Char123LocaleChar125publicActivateRouteImport.update({
+    id: '/activate',
+    path: '/activate',
     getParentRoute: () => Char123LocaleChar125publicRouteRoute,
   } as any)
 const Char123LocaleChar125adminDashboardRoute =
@@ -105,6 +120,11 @@ const Char123LocaleChar125publicEscortsCountrySlugIndexRoute =
     path: '/escorts/$country/$slug/',
     getParentRoute: () => Char123LocaleChar125publicRouteRoute,
   } as any)
+const ApiRpcSplatServerRoute = ApiRpcSplatServerRouteImport.update({
+  id: '/api/rpc/$',
+  path: '/api/rpc/$',
+  getParentRoute: () => rootServerRouteImport,
+} as any)
 const ApiAuthSplatServerRoute = ApiAuthSplatServerRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
@@ -115,7 +135,9 @@ export interface FileRoutesByFullPath {
   '/{-$locale}': typeof Char123LocaleChar125RouteRouteWithChildren
   '/{-$locale}/': typeof Char123LocaleChar125publicIndexRoute
   '/{-$locale}/dashboard': typeof Char123LocaleChar125adminDashboardRouteWithChildren
-  '/{-$locale}/login': typeof Char123LocaleChar125publicLoginRoute
+  '/{-$locale}/activate': typeof Char123LocaleChar125publicActivateRoute
+  '/{-$locale}/reset-password': typeof Char123LocaleChar125publicResetPasswordRoute
+  '/{-$locale}/sign-in': typeof Char123LocaleChar125publicSignInRoute
   '/{-$locale}/dashboard/adverts': typeof Char123LocaleChar125adminDashboardAdvertsRoute
   '/{-$locale}/dashboard/my-account': typeof Char123LocaleChar125adminDashboardMyAccountRoute
   '/{-$locale}/dashboard/profile': typeof Char123LocaleChar125adminDashboardProfileRoute
@@ -126,7 +148,9 @@ export interface FileRoutesByFullPath {
   '/{-$locale}/escorts/$country/$slug': typeof Char123LocaleChar125publicEscortsCountrySlugIndexRoute
 }
 export interface FileRoutesByTo {
-  '/{-$locale}/login': typeof Char123LocaleChar125publicLoginRoute
+  '/{-$locale}/activate': typeof Char123LocaleChar125publicActivateRoute
+  '/{-$locale}/reset-password': typeof Char123LocaleChar125publicResetPasswordRoute
+  '/{-$locale}/sign-in': typeof Char123LocaleChar125publicSignInRoute
   '/{-$locale}': typeof Char123LocaleChar125publicIndexRoute
   '/{-$locale}/dashboard/adverts': typeof Char123LocaleChar125adminDashboardAdvertsRoute
   '/{-$locale}/dashboard/my-account': typeof Char123LocaleChar125adminDashboardMyAccountRoute
@@ -142,7 +166,9 @@ export interface FileRoutesById {
   '/{-$locale}': typeof Char123LocaleChar125RouteRouteWithChildren
   '/{-$locale}/(public)': typeof Char123LocaleChar125publicRouteRouteWithChildren
   '/{-$locale}/(admin)/dashboard': typeof Char123LocaleChar125adminDashboardRouteWithChildren
-  '/{-$locale}/(public)/login': typeof Char123LocaleChar125publicLoginRoute
+  '/{-$locale}/(public)/activate': typeof Char123LocaleChar125publicActivateRoute
+  '/{-$locale}/(public)/reset-password': typeof Char123LocaleChar125publicResetPasswordRoute
+  '/{-$locale}/(public)/sign-in': typeof Char123LocaleChar125publicSignInRoute
   '/{-$locale}/(public)/': typeof Char123LocaleChar125publicIndexRoute
   '/{-$locale}/(admin)/dashboard/adverts': typeof Char123LocaleChar125adminDashboardAdvertsRoute
   '/{-$locale}/(admin)/dashboard/my-account': typeof Char123LocaleChar125adminDashboardMyAccountRoute
@@ -159,7 +185,9 @@ export interface FileRouteTypes {
     | '/{-$locale}'
     | '/{-$locale}/'
     | '/{-$locale}/dashboard'
-    | '/{-$locale}/login'
+    | '/{-$locale}/activate'
+    | '/{-$locale}/reset-password'
+    | '/{-$locale}/sign-in'
     | '/{-$locale}/dashboard/adverts'
     | '/{-$locale}/dashboard/my-account'
     | '/{-$locale}/dashboard/profile'
@@ -170,7 +198,9 @@ export interface FileRouteTypes {
     | '/{-$locale}/escorts/$country/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/{-$locale}/login'
+    | '/{-$locale}/activate'
+    | '/{-$locale}/reset-password'
+    | '/{-$locale}/sign-in'
     | '/{-$locale}'
     | '/{-$locale}/dashboard/adverts'
     | '/{-$locale}/dashboard/my-account'
@@ -185,7 +215,9 @@ export interface FileRouteTypes {
     | '/{-$locale}'
     | '/{-$locale}/(public)'
     | '/{-$locale}/(admin)/dashboard'
-    | '/{-$locale}/(public)/login'
+    | '/{-$locale}/(public)/activate'
+    | '/{-$locale}/(public)/reset-password'
+    | '/{-$locale}/(public)/sign-in'
     | '/{-$locale}/(public)/'
     | '/{-$locale}/(admin)/dashboard/adverts'
     | '/{-$locale}/(admin)/dashboard/my-account'
@@ -202,24 +234,28 @@ export interface RootRouteChildren {
 }
 export interface FileServerRoutesByFullPath {
   '/api/auth/$': typeof ApiAuthSplatServerRoute
+  '/api/rpc/$': typeof ApiRpcSplatServerRoute
 }
 export interface FileServerRoutesByTo {
   '/api/auth/$': typeof ApiAuthSplatServerRoute
+  '/api/rpc/$': typeof ApiRpcSplatServerRoute
 }
 export interface FileServerRoutesById {
   __root__: typeof rootServerRouteImport
   '/api/auth/$': typeof ApiAuthSplatServerRoute
+  '/api/rpc/$': typeof ApiRpcSplatServerRoute
 }
 export interface FileServerRouteTypes {
   fileServerRoutesByFullPath: FileServerRoutesByFullPath
-  fullPaths: '/api/auth/$'
+  fullPaths: '/api/auth/$' | '/api/rpc/$'
   fileServerRoutesByTo: FileServerRoutesByTo
-  to: '/api/auth/$'
-  id: '__root__' | '/api/auth/$'
+  to: '/api/auth/$' | '/api/rpc/$'
+  id: '__root__' | '/api/auth/$' | '/api/rpc/$'
   fileServerRoutesById: FileServerRoutesById
 }
 export interface RootServerRouteChildren {
   ApiAuthSplatServerRoute: typeof ApiAuthSplatServerRoute
+  ApiRpcSplatServerRoute: typeof ApiRpcSplatServerRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -245,11 +281,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Char123LocaleChar125publicIndexRouteImport
       parentRoute: typeof Char123LocaleChar125publicRouteRoute
     }
-    '/{-$locale}/(public)/login': {
-      id: '/{-$locale}/(public)/login'
-      path: '/login'
-      fullPath: '/{-$locale}/login'
-      preLoaderRoute: typeof Char123LocaleChar125publicLoginRouteImport
+    '/{-$locale}/(public)/sign-in': {
+      id: '/{-$locale}/(public)/sign-in'
+      path: '/sign-in'
+      fullPath: '/{-$locale}/sign-in'
+      preLoaderRoute: typeof Char123LocaleChar125publicSignInRouteImport
+      parentRoute: typeof Char123LocaleChar125publicRouteRoute
+    }
+    '/{-$locale}/(public)/reset-password': {
+      id: '/{-$locale}/(public)/reset-password'
+      path: '/reset-password'
+      fullPath: '/{-$locale}/reset-password'
+      preLoaderRoute: typeof Char123LocaleChar125publicResetPasswordRouteImport
+      parentRoute: typeof Char123LocaleChar125publicRouteRoute
+    }
+    '/{-$locale}/(public)/activate': {
+      id: '/{-$locale}/(public)/activate'
+      path: '/activate'
+      fullPath: '/{-$locale}/activate'
+      preLoaderRoute: typeof Char123LocaleChar125publicActivateRouteImport
       parentRoute: typeof Char123LocaleChar125publicRouteRoute
     }
     '/{-$locale}/(admin)/dashboard': {
@@ -319,6 +369,13 @@ declare module '@tanstack/react-router' {
 }
 declare module '@tanstack/react-start/server' {
   interface ServerFileRoutesByPath {
+    '/api/rpc/$': {
+      id: '/api/rpc/$'
+      path: '/api/rpc/$'
+      fullPath: '/api/rpc/$'
+      preLoaderRoute: typeof ApiRpcSplatServerRouteImport
+      parentRoute: typeof rootServerRouteImport
+    }
     '/api/auth/$': {
       id: '/api/auth/$'
       path: '/api/auth/$'
@@ -330,7 +387,9 @@ declare module '@tanstack/react-start/server' {
 }
 
 interface Char123LocaleChar125publicRouteRouteChildren {
-  Char123LocaleChar125publicLoginRoute: typeof Char123LocaleChar125publicLoginRoute
+  Char123LocaleChar125publicActivateRoute: typeof Char123LocaleChar125publicActivateRoute
+  Char123LocaleChar125publicResetPasswordRoute: typeof Char123LocaleChar125publicResetPasswordRoute
+  Char123LocaleChar125publicSignInRoute: typeof Char123LocaleChar125publicSignInRoute
   Char123LocaleChar125publicIndexRoute: typeof Char123LocaleChar125publicIndexRoute
   Char123LocaleChar125publicEscortsIndexRoute: typeof Char123LocaleChar125publicEscortsIndexRoute
   Char123LocaleChar125publicEscortsCountryIndexRoute: typeof Char123LocaleChar125publicEscortsCountryIndexRoute
@@ -339,7 +398,12 @@ interface Char123LocaleChar125publicRouteRouteChildren {
 
 const Char123LocaleChar125publicRouteRouteChildren: Char123LocaleChar125publicRouteRouteChildren =
   {
-    Char123LocaleChar125publicLoginRoute: Char123LocaleChar125publicLoginRoute,
+    Char123LocaleChar125publicActivateRoute:
+      Char123LocaleChar125publicActivateRoute,
+    Char123LocaleChar125publicResetPasswordRoute:
+      Char123LocaleChar125publicResetPasswordRoute,
+    Char123LocaleChar125publicSignInRoute:
+      Char123LocaleChar125publicSignInRoute,
     Char123LocaleChar125publicIndexRoute: Char123LocaleChar125publicIndexRoute,
     Char123LocaleChar125publicEscortsIndexRoute:
       Char123LocaleChar125publicEscortsIndexRoute,
@@ -407,6 +471,7 @@ export const routeTree = rootRouteImport
   ._addFileTypes<FileRouteTypes>()
 const rootServerRouteChildren: RootServerRouteChildren = {
   ApiAuthSplatServerRoute: ApiAuthSplatServerRoute,
+  ApiRpcSplatServerRoute: ApiRpcSplatServerRoute,
 }
 export const serverRouteTree = rootServerRouteImport
   ._addFileChildren(rootServerRouteChildren)

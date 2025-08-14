@@ -169,6 +169,20 @@
       "when": 1754804497231,
       "tag": "0023_strong_lady_mastermind",
       "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "7",
+      "when": 1755014700815,
+      "tag": "0024_nappy_richard_fisk",
+      "breakpoints": true
+    },
+    {
+      "idx": 25,
+      "version": "7",
+      "when": 1755122883290,
+      "tag": "0025_special_northstar",
+      "breakpoints": true
     }
   ]
 }

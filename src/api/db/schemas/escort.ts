@@ -6,47 +6,16 @@ import {
 	text,
 	timestamp,
 } from 'drizzle-orm/pg-core';
-import type { GalleryItem } from '@/queries/uploadFile';
+import {
+	type Characteristics,
+	DEFAULT_CHARACTERISTICS,
+	DEFAULT_OFFICE_HOURS,
+	DEFAULT_PRICES,
+	type GalleryItem,
+	type OfficeHour,
+	type Price,
+} from '@/api/utils/defaults/escort';
 import { users } from './auth';
-
-export type Characteristics = {
-	gender?: string;
-	age?: string;
-	height?: string;
-	weight?: string;
-	hair_color?: string;
-	eye_color?: string;
-	sexual_preference?: string;
-	ethnicity?: string;
-	silicone?: boolean;
-	tattoos?: boolean;
-	piercings?: boolean;
-	smoker?: boolean;
-	languages?: string;
-};
-
-export type OfficeHours = {
-	[K in
-		| 'monday'
-		| 'tuesday'
-		| 'wednesday'
-		| 'thursday'
-		| 'friday'
-		| 'saturday'
-		| 'sunday']: {
-		is_available: boolean;
-		start: string;
-		end: string;
-	};
-};
-
-export type Prices = {
-	[K in '30m' | '1h' | '2h' | '4h' | 'overnight' | 'daily' | 'travel_daily']: {
-		is_available: boolean;
-		amount?: number;
-		currency?: 'EUR';
-	};
-};
 
 export const escortProfiles = pgTable('escort_profiles', {
 	id: text('id')
@@ -78,43 +47,18 @@ export const escortProfiles = pgTable('escort_profiles', {
 	is_verified: boolean('is_verified').default(false),
 
 	// Content
-	characteristics: jsonb('characteristics').$type<Characteristics>().default({
-		age: '',
-		height: '',
-		weight: '',
-		hair_color: '',
-		eye_color: '',
-		sexual_preference: '',
-		ethnicity: '',
-		silicone: false,
-		tattoos: false,
-		piercings: false,
-		smoker: false,
-		languages: '',
-	}),
 	office_hours: jsonb('office_hours')
-		.$type<OfficeHours>()
-		.default({
-			monday: { is_available: true, start: '00:00', end: '23:59' },
-			tuesday: { is_available: true, start: '00:00', end: '23:59' },
-			wednesday: { is_available: true, start: '00:00', end: '23:59' },
-			thursday: { is_available: true, start: '00:00', end: '23:59' },
-			friday: { is_available: true, start: '00:00', end: '23:59' },
-			saturday: { is_available: true, start: '00:00', end: '23:59' },
-			sunday: { is_available: true, start: '00:00', end: '23:59' },
-		}),
-	prices: jsonb('prices')
-		.$type<Prices>()
-		.default({
-			'30m': { is_available: true, amount: 0, currency: 'EUR' },
-			'1h': { is_available: true, amount: 0, currency: 'EUR' },
-			'2h': { is_available: true, amount: 0, currency: 'EUR' },
-			'4h': { is_available: true, amount: 0, currency: 'EUR' },
-			overnight: { is_available: true, amount: 0, currency: 'EUR' },
-			daily: { is_available: true, amount: 0, currency: 'EUR' },
-			travel_daily: { is_available: true, amount: 0, currency: 'EUR' },
-		}),
+		.$type<OfficeHour[]>()
+		.default(DEFAULT_OFFICE_HOURS),
+
+	prices: jsonb('prices').$type<Price[]>().default(DEFAULT_PRICES),
+
+	characteristics: jsonb('characteristics')
+		.$type<Characteristics>()
+		.default(DEFAULT_CHARACTERISTICS),
+
 	services: jsonb('services').default({}),
+
 	gallery: jsonb('gallery').$type<GalleryItem[]>().default([]),
 
 	created_at: timestamp('created_at').defaultNow(),

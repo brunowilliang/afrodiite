@@ -1,29 +1,53 @@
+import {
+	Button,
+	Form,
+	Input,
+	NumberInput,
+	Select,
+	SelectItem,
+} from '@heroui/react';
+import { useMutation } from '@tanstack/react-query';
+import { useRouteContext, useRouter } from '@tanstack/react-router';
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+import { ProfileUpdate } from '@/api/utils/types/escort';
 import { Badge } from '@/components/core/Badge';
-import { Button } from '@/components/core/Button';
-import { FormInput } from '@/components/core/Inputs/FormInput';
 import { Stack } from '@/components/core/Stack';
-import type { profile } from '@/queries/profile';
-import type { EscortProfile } from '@/schemas/forms/profile';
+import { api } from '@/lib/api';
 
-interface Props {
-	id: string;
-	data?: EscortProfile['characteristics'];
-	onSubmit: ReturnType<typeof profile.update.useMutation>;
-}
+export const CharacteristicsTab = () => {
+	const router = useRouter();
+	const { session, profile } = useRouteContext({ from: '/{-$locale}' });
 
-export const CharacteristicsTab = ({ id, data, onSubmit }: Props) => {
+	const updateProfile = useMutation(
+		api.queries.profile.update.mutationOptions(),
+	);
+
+	const handleSubmit = (values: ProfileUpdate) => {
+		updateProfile.mutateAsync(
+			{
+				id: session?.user.id,
+				...values,
+			},
+			{
+				onSuccess: () => {
+					toast.success('Profile updated');
+					router.invalidate();
+				},
+				onError: (error) => {
+					console.error(error);
+					toast.error('Error updating profile', {
+						description: error.message,
+					});
+				},
+			},
+		);
+	};
+
 	const form = useForm({
 		mode: 'onChange',
-		values: { characteristics: data?.characteristics },
+		values: (profile ?? {}) as Partial<ProfileUpdate>,
 	});
-
-	const handleSubmit = async (values: typeof data) => {
-		await onSubmit.mutateAsync({
-			id,
-			characteristics: values?.characteristics ?? {},
-		});
-	};
 
 	return (
 		<Stack className="gap-5">
@@ -31,221 +55,98 @@ export const CharacteristicsTab = ({ id, data, onSubmit }: Props) => {
 				<Badge.Text>Características</Badge.Text>
 			</Badge>
 
-			<form onSubmit={form.handleSubmit(handleSubmit)}>
-				<Stack className="gap-4">
-					<FormInput
-						control={form.control}
-						name="characteristics.gender"
-						type="select"
-						label="Gênero"
-						placeholder="Selecione uma opção"
-						options={[
-							{ value: 'male', label: 'Masculino' },
-							{ value: 'female', label: 'Feminino' },
-						]}
-						rules={{
-							required: {
-								value: true,
-								message: 'Gênero é obrigatório',
-							},
-						}}
-					/>
-					<FormInput
-						control={form.control}
-						name="characteristics.age"
+			<Form onSubmit={form.handleSubmit(handleSubmit)} className="w-full">
+				<Stack className="w-full gap-4">
+					<Select label="Select o seu gênero" isRequired>
+						<SelectItem key="male">Masculino</SelectItem>
+						<SelectItem key="female">Feminino</SelectItem>
+					</Select>
+
+					<NumberInput
+						isRequired
 						label="Idade"
-						type="number"
 						placeholder="Digite sua idade"
-						rules={{
-							required: {
-								value: true,
-								message: 'Idade é obrigatória',
-							},
-						}}
+						size="md"
+						className="w-full"
 					/>
-					<FormInput
-						control={form.control}
-						name="characteristics.eye_color"
+
+					<Input
+						isRequired
 						label="Cor dos olhos"
-						type="text"
 						placeholder="Digite a cor dos olhos"
-						rules={{
-							required: {
-								value: true,
-								message: 'Cor dos olhos é obrigatória',
-							},
-						}}
+						size="md"
+						className="w-full"
 					/>
-					<FormInput
-						control={form.control}
-						name="characteristics.hair_color"
+					<Input
+						isRequired
 						label="Cor do cabelo"
-						type="text"
 						placeholder="Digite a cor do cabelo"
-						rules={{
-							required: {
-								value: true,
-								message: 'Cor do cabelo é obrigatória',
-							},
-						}}
+						size="md"
+						className="w-full"
 					/>
-					<FormInput
-						control={form.control}
-						name="characteristics.height"
+
+					<NumberInput
+						isRequired
 						label="Altura"
-						type="number"
-						placeholder="Digite a altura"
-						rules={{
-							required: {
-								value: true,
-								message: 'Altura é obrigatória',
-							},
-						}}
+						placeholder="Digite a sua altura"
+						size="md"
+						className="w-full"
 					/>
-					<FormInput
-						control={form.control}
-						name="characteristics.weight"
+
+					<NumberInput
+						isRequired
 						label="Peso"
-						type="number"
-						placeholder="Digite o peso"
-						rules={{
-							required: {
-								value: true,
-								message: 'Peso é obrigatório',
-							},
-						}}
-					/>
-					<FormInput
-						control={form.control}
-						name="characteristics.ethnicity"
-						type="select"
-						label="Etnia"
-						placeholder="Selecione uma opção"
-						options={[
-							{ value: 'white', label: 'Branco' },
-							{ value: 'black', label: 'Negro' },
-							{ value: 'brown', label: 'Pardo' },
-							{ value: 'indigenous', label: 'Indígena' },
-						]}
-						rules={{
-							required: {
-								value: true,
-								message: 'Etnia é obrigatória',
-							},
-						}}
+						placeholder="Digite o seu peso"
+						size="md"
+						className="w-full"
 					/>
 
-					<FormInput
-						control={form.control}
-						name="characteristics.languages"
+					<Select label="Etnia" isRequired>
+						<SelectItem key="white">Branco</SelectItem>
+						<SelectItem key="black">Negro</SelectItem>
+						<SelectItem key="brown">Pardo</SelectItem>
+						<SelectItem key="indigenous">Indígena</SelectItem>
+						<SelectItem key="other">Outro</SelectItem>
+					</Select>
+
+					<Input
+						isRequired
 						label="Idiomas"
-						type="text"
-						placeholder="Digite os idiomas"
-						rules={{
-							required: {
-								value: true,
-								message: 'Idiomas é obrigatório',
-							},
-						}}
+						placeholder="Digite os idiomas que você fala"
+						size="md"
+						className="w-full"
 					/>
-					<FormInput
-						control={form.control}
-						name="characteristics.sexual_preference"
-						type="select"
-						label="Preferência sexual"
-						placeholder="Selecione uma opção"
-						options={[
-							{ value: 'male', label: 'Homem' },
-							{ value: 'female', label: 'Mulher' },
-							{ value: 'both', label: 'Ambos' },
-						]}
-						rules={{
-							required: {
-								value: true,
-								message: 'Preferência sexual é obrigatória',
-							},
-						}}
-					/>
+					<Select label="Preferência sexual" isRequired>
+						<SelectItem key="male">Masculino</SelectItem>
+						<SelectItem key="female">Feminino</SelectItem>
+						<SelectItem key="both">Ambos</SelectItem>
+					</Select>
 
-					<FormInput
-						control={form.control}
-						name="characteristics.silicone"
-						type="select"
-						label="Tem silicone?"
-						placeholder="Selecione uma opção"
-						options={[
-							{ value: 'yes', label: 'Sim' },
-							{ value: 'no', label: 'Não' },
-						]}
-						rules={{
-							required: {
-								value: true,
-								message: 'Tem silicone é obrigatório',
-							},
-						}}
-					/>
+					<Select label="Tem silicone?" isRequired>
+						<SelectItem key="yes">Sim</SelectItem>
+						<SelectItem key="no">Não</SelectItem>
+					</Select>
 
-					<FormInput
-						control={form.control}
-						name="characteristics.tattoos"
-						type="select"
-						label="Tem tatuagens?"
-						placeholder="Selecione uma opção"
-						options={[
-							{ value: 'yes', label: 'Sim' },
-							{ value: 'no', label: 'Não' },
-						]}
-						rules={{
-							required: {
-								value: true,
-								message: 'Tattoos é obrigatório',
-							},
-						}}
-					/>
+					<Select label="Tem tatuagens?" isRequired>
+						<SelectItem key="yes">Sim</SelectItem>
+						<SelectItem key="no">Não</SelectItem>
+					</Select>
 
-					<FormInput
-						control={form.control}
-						name="characteristics.piercings"
-						type="select"
-						label="Piercings"
-						placeholder="Selecione uma opção"
-						options={[
-							{ value: 'yes', label: 'Sim' },
-							{ value: 'no', label: 'Não' },
-						]}
-						rules={{
-							required: {
-								value: true,
-								message: 'Piercings é obrigatório',
-							},
-						}}
-					/>
+					<Select label="Tem piercing?" isRequired>
+						<SelectItem key="yes">Sim</SelectItem>
+						<SelectItem key="no">Não</SelectItem>
+					</Select>
 
-					<FormInput
-						control={form.control}
-						name="characteristics.smoker"
-						type="select"
-						label="Fumante?"
-						placeholder="Selecione uma opção"
-						options={[
-							{ value: 'yes', label: 'Sim' },
-							{ value: 'no', label: 'Não' },
-						]}
-						rules={{
-							required: {
-								value: true,
-								message: 'Fumante é obrigatório',
-							},
-						}}
-					/>
+					<Select label="Fumante?" isRequired>
+						<SelectItem key="yes">Sim</SelectItem>
+						<SelectItem key="no">Não</SelectItem>
+					</Select>
 
-					<Button type="submit" disabled={form.formState.isSubmitting}>
-						<Button.Text>
-							{form.formState.isSubmitting ? 'Salvando...' : 'Salvar'}
-						</Button.Text>
+					<Button type="submit" isLoading={updateProfile.isPending}>
+						{updateProfile.isPending ? 'Salvando...' : 'Salvar'}
 					</Button>
 				</Stack>
-			</form>
+			</Form>
 		</Stack>
 	);
 };

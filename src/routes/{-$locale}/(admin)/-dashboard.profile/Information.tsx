@@ -1,178 +1,121 @@
+import { Button, Chip, DateInput, Form, Input, Textarea } from '@heroui/react';
+import { useMutation } from '@tanstack/react-query';
+import { useRouteContext, useRouter } from '@tanstack/react-router';
 import { useForm } from 'react-hook-form';
-import slugify from 'slugify';
-import { Badge } from '@/components/core/Badge';
-import { Button } from '@/components/core/Button';
-import { FormInput } from '@/components/core/Inputs/FormInput';
+import { toast } from 'sonner';
+import { ProfileUpdate } from '@/api/utils/types/escort';
 import { Stack } from '@/components/core/Stack';
-import type { profile } from '@/queries/profile';
-import type { EscortProfile } from '@/schemas/forms/profile';
+import { PhoneInput } from '@/components/heroui/NumberInput';
+import { api } from '@/lib/api';
 
-interface Props {
-	id: string;
-	data?: Partial<EscortProfile['information']>;
-	onSubmit: ReturnType<typeof profile.update.useMutation>;
-}
+export const InformationTab = () => {
+	const router = useRouter();
+	const { session, profile } = useRouteContext({ from: '/{-$locale}' });
 
-export const InformationTab = ({ id, data, onSubmit }: Props) => {
+	const updateProfile = useMutation(
+		api.queries.profile.update.mutationOptions(),
+	);
+
+	const handleSubmit = (values: ProfileUpdate) => {
+		updateProfile.mutateAsync(
+			{
+				id: session?.user.id,
+				...values,
+			},
+			{
+				onSuccess: () => {
+					toast.success('Profile updated');
+					router.invalidate();
+				},
+				onError: (error) => {
+					console.error(error);
+					toast.error('Error updating profile', {
+						description: error.message,
+					});
+				},
+			},
+		);
+	};
+
 	const form = useForm({
 		mode: 'onChange',
-		values: data ?? {},
+		values: (profile ?? {}) as Partial<ProfileUpdate>,
 	});
-
-	const handleSubmit = async (values: typeof data) => {
-		await onSubmit.mutateAsync({
-			id,
-			...values,
-		});
-	};
 
 	return (
 		<Stack className="gap-5">
-			<Badge>
-				<Badge.Text>Informações</Badge.Text>
-			</Badge>
+			<Chip color="default" size="lg" variant="flat" radius="sm">
+				Informações
+			</Chip>
 
-			<form onSubmit={form.handleSubmit(handleSubmit)}>
-				<Stack className="gap-4">
-					<FormInput
-						control={form.control}
-						name="artist_name"
+			<Form
+				validationBehavior="aria"
+				onSubmit={form.handleSubmit(handleSubmit)}
+			>
+				<Stack className="w-full gap-4">
+					<Input
+						isRequired
 						label="Nome Artístico"
-						type="text"
 						placeholder="Digite seu nome artístico"
-						onBlur={(e) => {
-							if (!form.formState.dirtyFields.slug) {
-								form.setValue(
-									'slug',
-									slugify(e.target.value ?? '', {
-										lower: true,
-									}),
-									{ shouldValidate: true },
-								);
-							}
-						}}
-						rules={{
-							required: {
-								value: true,
-								message: 'Nome artístico é obrigatório',
-							},
-						}}
+						size="md"
+						className="w-full"
 					/>
-					<FormInput
-						control={form.control}
-						name="slug"
-						label="URL Personalizada (Slug)"
-						type="text"
-						placeholder=""
-						onKeyDown={(e) => {
-							if (e.key === ' ') {
-								e.preventDefault();
-								const cur = form.getValues('slug') ?? '';
-								const next = (cur + '-').replace(/--+/g, '-');
-								form.setValue('slug', next, {
-									shouldDirty: true,
-									shouldValidate: true,
-								});
-							}
-						}}
-						onChange={(e) => {
-							const raw = (e.target.value ?? '').replace(/\s+/g, '-');
-							const next = slugify(raw, {
-								lower: true,
-								strict: true,
-								trim: true,
-							});
-							form.setValue('slug', next, {
-								shouldDirty: true,
-								shouldValidate: true,
-							});
-						}}
-						rules={{
-							required: {
-								value: true,
-								message: 'URL personalizada é obrigatória',
-							},
-						}}
+					<Input
+						isRequired
+						label="Slug"
+						placeholder="Sua URL personalizada"
+						size="md"
+						className="w-full"
 					/>
-					<FormInput
-						control={form.control}
-						name="description"
+
+					<Textarea
+						isRequired
 						label="Descrição"
-						type="text-area"
-						helperText={`${form.watch('description')?.length ?? 0}/1000 caracteres`}
 						placeholder="Digite uma descrição sobre você"
-						rules={{
-							required: {
-								value: true,
-								message: 'Descrição é obrigatória',
-							},
-						}}
+						size="md"
+						className="w-full"
+						minRows={10}
+						maxRows={15}
+						description={'Máximo de 1000 caracteres'}
 					/>
-					<FormInput
-						control={form.control}
-						name="birthday"
+
+					<DateInput
+						isRequired
 						label="Data de Nascimento"
-						type="date"
-						placeholder="Digite sua data de nascimento"
-						rules={{
-							required: {
-								value: true,
-								message: 'Data de nascimento é obrigatória',
-							},
-						}}
+						size="md"
+						className="w-full"
+						granularity="day"
 					/>
-					<FormInput
-						control={form.control}
-						name="nationality"
+
+					<Input
+						isRequired
 						label="Nacionalidade"
-						type="text"
-						placeholder="Digite a nacionalidade"
-						rules={{
-							required: {
-								value: true,
-								message: 'Nacionalidade é obrigatória',
-							},
-						}}
+						placeholder="Digite a sua nacionalidade"
+						size="md"
+						className="w-full"
 					/>
 
-					<Stack direction="row" className="gap-4">
-						<FormInput
-							control={form.control}
-							name="phone"
-							label="Telefone"
-							type="tel"
-							className="w-full"
-							placeholder="+55 11 99999-9999"
-							rules={{
-								required: {
-									value: true,
-									message: 'Telefone é obrigatório',
-								},
-							}}
-						/>
-						<FormInput
-							control={form.control}
-							name="whatsapp"
-							label="WhatsApp"
-							type="tel"
-							className="w-full"
-							placeholder="+55 11 99999-9999"
-							rules={{
-								required: {
-									value: true,
-									message: 'WhatsApp é obrigatório',
-								},
-							}}
-						/>
-					</Stack>
+					<PhoneInput
+						label="Telefone"
+						defaultCountry="PT"
+						onChange={(v) => console.log(v)}
+					/>
+					<PhoneInput
+						label="WhatsApp"
+						defaultCountry="PT"
+						onChange={(v) => console.log(v)}
+					/>
 
-					<Button type="submit" disabled={form.formState.isSubmitting}>
-						<Button.Text>
-							{form.formState.isSubmitting ? 'Salvando...' : 'Salvar'}
-						</Button.Text>
+					<Button
+						color="primary"
+						isLoading={updateProfile.isPending}
+						size="md"
+						type="submit"
+					>
+						Salvar
 					</Button>
 				</Stack>
-			</form>
+			</Form>
 		</Stack>
 	);
 };

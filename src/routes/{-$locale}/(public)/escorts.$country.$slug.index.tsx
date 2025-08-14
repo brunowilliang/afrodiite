@@ -7,7 +7,6 @@ import { DATA_IMAGES, ImageCarousel } from '@/components/core/ImageCarousel';
 import { Rating } from '@/components/core/Rating';
 import { Container, Stack } from '@/components/core/Stack';
 import { Text } from '@/components/core/Text';
-import type { EscortParams } from '@/schemas/routes/escort';
 import {
 	AvailableServices,
 	AvailableWeekHours,
@@ -20,7 +19,7 @@ export const Route = createFileRoute(
 	'/{-$locale}/(public)/escorts/$country/$slug/',
 )({
 	beforeLoad: ({ params }) => {
-		const { country } = params as EscortParams;
+		const { country } = params as any;
 
 		if (country !== 'portugal') {
 			throw notFound();

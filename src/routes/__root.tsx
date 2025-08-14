@@ -1,5 +1,6 @@
 /// <reference types="vite/client" />
 
+import { HeroUIProvider, ToastProvider } from '@heroui/react';
 import type { QueryClient } from '@tanstack/react-query';
 import {
 	createRootRouteWithContext,
@@ -11,7 +12,8 @@ import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
 import { PhotoProvider } from 'react-photo-view';
 import reactPhotoViewCss from 'react-photo-view/dist/react-photo-view.css?url';
 import { Toaster } from 'sonner';
-import { getSessionFromCache, prefetchSession } from '@/queries/session';
+import { ThemeProvider } from '@/components/ui/theme-provider';
+import { api } from '@/lib/api';
 import appCss from '@/styles/app.css?url';
 import { seo } from '@/utils/seo';
 
@@ -21,20 +23,13 @@ type RootContext = {
 
 export const Route = createRootRouteWithContext<RootContext>()({
 	component: RootDocument,
-	beforeLoad: async ({ context: { queryClient } }) => {
-		// Prefetch da sessão
-		await prefetchSession(queryClient);
-
-		// Pega do cache com tipagem correta
-		const session = getSessionFromCache(queryClient);
-
-		if (!session) {
-			console.log('Não autenticado');
-		} else {
-			console.log('Autenticado');
+	beforeLoad: async () => {
+		const session = await api.client.session();
+		if (session) {
+			const profile = await api.client.profile.get();
+			return { session, profile };
 		}
-
-		return { session };
+		return { session: null };
 	},
 	head: () => ({
 		meta: [
@@ -63,7 +58,7 @@ export const Route = createRootRouteWithContext<RootContext>()({
 			},
 			{
 				rel: 'stylesheet',
-				href: 'https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500&display=swap',
+				href: 'https://fonts.googleapis.com/css2?family=Outfit:wght@200..500&display=swap',
 			},
 			{ rel: 'stylesheet', href: appCss },
 			{ rel: 'stylesheet', href: reactPhotoViewCss },
@@ -105,17 +100,32 @@ export const Route = createRootRouteWithContext<RootContext>()({
 
 function RootDocument() {
 	return (
-		<html lang="en">
+		<html lang="pt-PT" className="bg-background" suppressHydrationWarning>
 			<head>
 				<HeadContent />
 			</head>
-			<body>
-				<PhotoProvider>
-					<Outlet />
-					<Toaster position="top-center" />
-					<TanStackRouterDevtools position="bottom-right" />
-					<Scripts />
-				</PhotoProvider>
+			<body className="antialiased">
+				<ThemeProvider
+					attribute="class"
+					defaultTheme="system"
+					enableSystem
+					disableTransitionOnChange
+					storageKey="theme"
+				>
+					<HeroUIProvider>
+						<PhotoProvider>
+							<Outlet />
+							<Toaster position="top-center" />
+						</PhotoProvider>
+						<ToastProvider
+							toastOffset={20}
+							toastProps={{}}
+							placement="top-center"
+						/>
+					</HeroUIProvider>
+				</ThemeProvider>
+				<TanStackRouterDevtools position="bottom-right" />
+				<Scripts />
 			</body>
 		</html>
 	);

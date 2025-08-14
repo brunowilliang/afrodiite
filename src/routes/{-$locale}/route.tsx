@@ -1,8 +1,24 @@
 import { createFileRoute, Outlet } from '@tanstack/react-router';
 import { useMemo } from 'react';
+import z from 'zod';
 import { NotFound } from '@/components/NotFound';
 import i18n from '@/i18n';
-import { localeSchema, validateLocale } from '@/schemas/routes/locale';
+
+export const localeSchema = z.object({
+	locale: z
+		.enum(['pt', 'en', 'es'], {
+			message: 'Invalid locale',
+		})
+		.optional(),
+});
+
+export type Locale = z.infer<typeof localeSchema>['locale'];
+
+export const validateLocale = (
+	locale: string | null | undefined,
+): locale is Locale => {
+	return localeSchema.safeParse({ locale }).success;
+};
 
 export const Route = createFileRoute('/{-$locale}')({
 	params: localeSchema,

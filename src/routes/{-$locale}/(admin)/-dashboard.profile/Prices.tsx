@@ -1,40 +1,46 @@
+import { Form, NumberInput, Switch } from '@heroui/react';
+import { useMutation } from '@tanstack/react-query';
+import { useRouteContext, useRouter } from '@tanstack/react-router';
 import { useForm } from 'react-hook-form';
-import type { Prices } from '@/api/db/schemas/escort';
+import { toast } from 'sonner';
+import { ProfileUpdate } from '@/api/utils/types/escort';
 import { Badge } from '@/components/core/Badge';
-import { Button } from '@/components/core/Button';
-import { FormInput } from '@/components/core/Inputs/FormInput';
 import { Stack } from '@/components/core/Stack';
-import type { profile } from '@/queries/profile';
-import type { EscortProfile } from '@/schemas/forms/profile';
+import { api } from '@/lib/api';
 
-interface Props {
-	id: string;
-	data?: EscortProfile['prices'];
-	onSubmit: ReturnType<typeof profile.update.useMutation>;
-}
+export const PricesTab = () => {
+	const router = useRouter();
+	const { session, profile } = useRouteContext({ from: '/{-$locale}' });
 
-const dayDefs: { key: keyof Prices; label: string }[] = [
-	{ key: '30m', label: '30m' },
-	{ key: '1h', label: '1h' },
-	{ key: '2h', label: '2h' },
-	{ key: '4h', label: '4h' },
-	{ key: 'overnight', label: 'Pernoite' },
-	{ key: 'daily', label: 'Diária' },
-	{ key: 'travel_daily', label: 'Diária (Viagem)' },
-];
+	const updateProfile = useMutation(
+		api.queries.profile.update.mutationOptions(),
+	);
 
-export const PricesTab = ({ id, data, onSubmit }: Props) => {
+	const handleSubmit = (values: ProfileUpdate) => {
+		updateProfile.mutateAsync(
+			{
+				id: session?.user.id,
+				...values,
+			},
+			{
+				onSuccess: () => {
+					toast.success('Profile updated');
+					router.invalidate();
+				},
+				onError: (error) => {
+					console.error(error);
+					toast.error('Error updating profile', {
+						description: error.message,
+					});
+				},
+			},
+		);
+	};
+
 	const form = useForm({
 		mode: 'onChange',
-		values: { prices: data?.prices },
+		values: (profile ?? {}) as Partial<ProfileUpdate>,
 	});
-
-	const handleSubmit = async (values: typeof data) => {
-		await onSubmit.mutateAsync({
-			id,
-			prices: values?.prices,
-		});
-	};
 
 	return (
 		<Stack className="gap-5">
@@ -42,41 +48,31 @@ export const PricesTab = ({ id, data, onSubmit }: Props) => {
 				<Badge.Text>Preços</Badge.Text>
 			</Badge>
 
-			<form onSubmit={form.handleSubmit(handleSubmit)}>
-				<Stack className="gap-4">
-					<Stack className="gap-3">
-						{dayDefs.map(({ key, label }) => {
-							const isAvailable = form.watch(`prices.${key}.is_available`);
-							return (
-								<Stack key={key} direction="row" className="centered gap-4">
-									<FormInput
-										control={form.control}
-										name={`prices.${key}.is_available`}
-										type="checkbox"
-										className="size-10"
-									/>
-									<FormInput
-										control={form.control}
-										name={`prices.${key}.amount`}
-										label={`Preço por ${label}`}
-										iconName="Euro"
-										type="number"
-										className="w-full"
-										placeholder="0"
-										disabled={isAvailable === false}
-									/>
-								</Stack>
-							);
-						})}
-					</Stack>
-
-					<Button type="submit" disabled={form.formState.isSubmitting}>
-						<Button.Text>
-							{form.formState.isSubmitting ? 'Salvando...' : 'Salvar'}
-						</Button.Text>
-					</Button>
+			<Form onSubmit={form.handleSubmit(handleSubmit)}>
+				<Stack className="w-full gap-4">
+					{[
+						'30 minutos',
+						'1 hora',
+						'2 horas',
+						'4 horas',
+						'Pernoite',
+						'Fim de semana',
+						'Viagem',
+					].map((_, index) => (
+						<Stack direction="row" className="w-full gap-4" key={index}>
+							<NumberInput
+								size="md"
+								label={_}
+								placeholder={'€ 0,00'}
+								className="w-full"
+							/>
+							<Switch size="md" defaultSelected>
+								Ativado
+							</Switch>
+						</Stack>
+					))}
 				</Stack>
-			</form>
+			</Form>
 		</Stack>
 	);
 };

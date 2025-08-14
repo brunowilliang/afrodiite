@@ -4,13 +4,12 @@ import { Card } from '@/components/core/Card';
 import { Navigation } from '@/components/core/Navigation';
 import { Container, Stack } from '@/components/core/Stack';
 import { EscortCard } from '@/components/escorts/Card';
-import type { EscortParams } from '@/schemas/routes/escort';
 import { NavigationMenu } from '@/utils/data';
 
 export const Route = createFileRoute('/{-$locale}/(public)/escorts/$country/')({
 	component: RouteComponent,
 	beforeLoad: ({ params }) => {
-		const { country } = params as EscortParams;
+		const { country } = params as any;
 
 		if (country !== 'portugal') {
 			throw notFound();
