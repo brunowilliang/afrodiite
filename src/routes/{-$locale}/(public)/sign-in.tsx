@@ -208,7 +208,11 @@ function RouteComponent() {
 				</Link>
 			</Stack>
 
-			<Modal ref={forgotModalRef} onClose={() => forgotForm.reset()}>
+			<Modal
+				ref={forgotModalRef}
+				onClose={() => forgotForm.reset()}
+				placement="top-center"
+			>
 				<Modal.Content>
 					<Modal.Header>Recuperar Senha</Modal.Header>
 					<Modal.Body>
@@ -263,7 +267,11 @@ function RouteComponent() {
 				</Modal.Content>
 			</Modal>
 
-			<Modal ref={signUpModalRef} onClose={() => signUpForm.reset()}>
+			<Modal
+				ref={signUpModalRef}
+				onClose={() => signUpForm.reset()}
+				placement="top-center"
+			>
 				<Modal.Content>
 					<Modal.Header>Criar Conta</Modal.Header>
 					<Modal.Body>
