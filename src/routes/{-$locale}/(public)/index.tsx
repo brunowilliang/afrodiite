@@ -21,7 +21,7 @@ function RouteComponent() {
 	return (
 		<Container className="mt-20 gap-12 overflow-hidden py-16">
 			<Stack className="centered mx-auto max-w-2xl gap-4 py-40">
-				<Link to="/{-$locale}/login">
+				<Link to="/{-$locale}/sign-in">
 					<Text>Login</Text>
 				</Link>
 				<Badge>
