@@ -53,5 +53,5 @@ function RouteComponent() {
 				</div>
 			</Stack>
 		</Container>
-	);
+	)
 }

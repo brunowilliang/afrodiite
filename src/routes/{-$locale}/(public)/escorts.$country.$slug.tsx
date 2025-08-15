@@ -16,7 +16,7 @@ import {
 } from '@/utils/data';
 
 export const Route = createFileRoute(
-	'/{-$locale}/(public)/escorts/$country/$slug/',
+	'/{-$locale}/(public)/escorts/$country/$slug',
 )({
 	beforeLoad: ({ params }) => {
 		const { country } = params as any;
@@ -38,17 +38,17 @@ function RouteComponent() {
 							images={DATA_IMAGES}
 							drag
 							openPreview
-							width="85%"
-							gap="2"
-							dotSize="medium"
+							width='85%'
+							gap='2'
+							dotSize='medium'
 						/>
 						<Stack className="w-full items-start gap-3 p-3">
 							<Stack className="items-start">
 								<Text
-									as="h5"
-									weight="light"
-									align="center"
-									color="textSecondary"
+									as='h5'
+									weight='light'
+									align='center'
+									color='textSecondary'
 								>
 									Acompanhante
 								</Text>
@@ -60,7 +60,7 @@ function RouteComponent() {
 								</Stack>
 							</Stack>
 							<Stack
-								direction="row"
+								direction='row'
 								className="w-full items-center justify-between"
 							>
 								<Rating number={3.7} />
@@ -73,7 +73,7 @@ function RouteComponent() {
 
 					<Card className="lg:hidden">
 						<Stack
-							direction="row"
+							direction='row'
 							className="items-center justify-between gap-2"
 						>
 							<Text as="h3" weight="bold">
@@ -154,8 +154,8 @@ function RouteComponent() {
 							{Fetishes.map((fetish) => (
 								<Card.Badge
 									key={fetish.id}
-									className="w-fit"
-									colorScheme="primary"
+									className='w-fit'
+									colorScheme='primary'
 								>
 									<Card.Badge.Text>{fetish.value}</Card.Badge.Text>
 									<Card.Badge.Icon name="ArrowRight" size="24" />
@@ -202,7 +202,7 @@ function RouteComponent() {
 					<Stack className="gap-4 lg:sticky lg:top-[100px]">
 						<Card className="hidden lg:flex">
 							<Stack
-								direction="row"
+								direction='row'
 								className="items-center justify-between gap-2"
 							>
 								<Text as="h3" weight="bold">
@@ -241,5 +241,5 @@ function RouteComponent() {
 				</div>
 			</div>
 		</Container>
-	);
+	)
 }

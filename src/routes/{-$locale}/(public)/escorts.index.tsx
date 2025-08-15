@@ -7,6 +7,6 @@ export const Route = createFileRoute('/{-$locale}/(public)/escorts/')({
 			to: '/{-$locale}/escorts/$country',
 			params: { country: 'portugal' },
 			statusCode: 302,
-		});
+		})
 	},
 });

@@ -8,27 +8,32 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
+import { createFileRoute } from '@tanstack/react-router'
 import { createServerRootRoute } from '@tanstack/react-start/server'
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as Char123LocaleChar125RouteRouteImport } from './routes/{-$locale}/route'
-import { Route as Char123LocaleChar125publicRouteRouteImport } from './routes/{-$locale}/(public)/route'
-import { Route as Char123LocaleChar125publicIndexRouteImport } from './routes/{-$locale}/(public)/index'
-import { Route as Char123LocaleChar125publicSignInRouteImport } from './routes/{-$locale}/(public)/sign-in'
-import { Route as Char123LocaleChar125publicResetPasswordRouteImport } from './routes/{-$locale}/(public)/reset-password'
-import { Route as Char123LocaleChar125publicActivateRouteImport } from './routes/{-$locale}/(public)/activate'
+import { Route as Char123LocaleChar125publicEscortsRouteImport } from './routes/{-$locale}/(public)/escorts'
+import { Route as Char123LocaleChar125publicAppRouteImport } from './routes/{-$locale}/(public)/_app'
 import { Route as Char123LocaleChar125adminDashboardRouteImport } from './routes/{-$locale}/(admin)/dashboard'
 import { Route as Char123LocaleChar125publicEscortsIndexRouteImport } from './routes/{-$locale}/(public)/escorts.index'
+import { Route as Char123LocaleChar125publicAppIndexRouteImport } from './routes/{-$locale}/(public)/_app.index'
 import { Route as Char123LocaleChar125adminDashboardIndexRouteImport } from './routes/{-$locale}/(admin)/dashboard.index'
+import { Route as Char123LocaleChar125publicAppSignInRouteImport } from './routes/{-$locale}/(public)/_app.sign-in'
+import { Route as Char123LocaleChar125publicAppResetPasswordRouteImport } from './routes/{-$locale}/(public)/_app.reset-password'
+import { Route as Char123LocaleChar125publicAppActivateRouteImport } from './routes/{-$locale}/(public)/_app.activate'
 import { Route as Char123LocaleChar125adminDashboardSettingsRouteImport } from './routes/{-$locale}/(admin)/dashboard.settings'
 import { Route as Char123LocaleChar125adminDashboardProfileRouteImport } from './routes/{-$locale}/(admin)/dashboard.profile'
 import { Route as Char123LocaleChar125adminDashboardMyAccountRouteImport } from './routes/{-$locale}/(admin)/dashboard.my-account'
 import { Route as Char123LocaleChar125adminDashboardAdvertsRouteImport } from './routes/{-$locale}/(admin)/dashboard.adverts'
 import { Route as Char123LocaleChar125publicEscortsCountryIndexRouteImport } from './routes/{-$locale}/(public)/escorts.$country.index'
-import { Route as Char123LocaleChar125publicEscortsCountrySlugIndexRouteImport } from './routes/{-$locale}/(public)/escorts.$country.$slug.index'
+import { Route as Char123LocaleChar125publicEscortsCountrySlugRouteImport } from './routes/{-$locale}/(public)/escorts.$country.$slug'
 import { ServerRoute as ApiRpcSplatServerRouteImport } from './routes/api/rpc.$'
 import { ServerRoute as ApiAuthSplatServerRouteImport } from './routes/api/auth.$'
 
+const Char123LocaleChar125publicRouteImport = createFileRoute(
+  '/{-$locale}/(public)',
+)()
 const rootServerRouteImport = createServerRootRoute()
 
 const Char123LocaleChar125RouteRoute =
@@ -37,34 +42,21 @@ const Char123LocaleChar125RouteRoute =
     path: '/{-$locale}',
     getParentRoute: () => rootRouteImport,
   } as any)
-const Char123LocaleChar125publicRouteRoute =
-  Char123LocaleChar125publicRouteRouteImport.update({
+const Char123LocaleChar125publicRoute =
+  Char123LocaleChar125publicRouteImport.update({
     id: '/(public)',
     getParentRoute: () => Char123LocaleChar125RouteRoute,
   } as any)
-const Char123LocaleChar125publicIndexRoute =
-  Char123LocaleChar125publicIndexRouteImport.update({
-    id: '/',
-    path: '/',
-    getParentRoute: () => Char123LocaleChar125publicRouteRoute,
+const Char123LocaleChar125publicEscortsRoute =
+  Char123LocaleChar125publicEscortsRouteImport.update({
+    id: '/escorts',
+    path: '/escorts',
+    getParentRoute: () => Char123LocaleChar125publicRoute,
   } as any)
-const Char123LocaleChar125publicSignInRoute =
-  Char123LocaleChar125publicSignInRouteImport.update({
-    id: '/sign-in',
-    path: '/sign-in',
-    getParentRoute: () => Char123LocaleChar125publicRouteRoute,
-  } as any)
-const Char123LocaleChar125publicResetPasswordRoute =
-  Char123LocaleChar125publicResetPasswordRouteImport.update({
-    id: '/reset-password',
-    path: '/reset-password',
-    getParentRoute: () => Char123LocaleChar125publicRouteRoute,
-  } as any)
-const Char123LocaleChar125publicActivateRoute =
-  Char123LocaleChar125publicActivateRouteImport.update({
-    id: '/activate',
-    path: '/activate',
-    getParentRoute: () => Char123LocaleChar125publicRouteRoute,
+const Char123LocaleChar125publicAppRoute =
+  Char123LocaleChar125publicAppRouteImport.update({
+    id: '/_app',
+    getParentRoute: () => Char123LocaleChar125publicRoute,
   } as any)
 const Char123LocaleChar125adminDashboardRoute =
   Char123LocaleChar125adminDashboardRouteImport.update({
@@ -74,15 +66,39 @@ const Char123LocaleChar125adminDashboardRoute =
   } as any)
 const Char123LocaleChar125publicEscortsIndexRoute =
   Char123LocaleChar125publicEscortsIndexRouteImport.update({
-    id: '/escorts/',
-    path: '/escorts/',
-    getParentRoute: () => Char123LocaleChar125publicRouteRoute,
+    id: '/',
+    path: '/',
+    getParentRoute: () => Char123LocaleChar125publicEscortsRoute,
+  } as any)
+const Char123LocaleChar125publicAppIndexRoute =
+  Char123LocaleChar125publicAppIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => Char123LocaleChar125publicAppRoute,
   } as any)
 const Char123LocaleChar125adminDashboardIndexRoute =
   Char123LocaleChar125adminDashboardIndexRouteImport.update({
     id: '/',
     path: '/',
     getParentRoute: () => Char123LocaleChar125adminDashboardRoute,
+  } as any)
+const Char123LocaleChar125publicAppSignInRoute =
+  Char123LocaleChar125publicAppSignInRouteImport.update({
+    id: '/sign-in',
+    path: '/sign-in',
+    getParentRoute: () => Char123LocaleChar125publicAppRoute,
+  } as any)
+const Char123LocaleChar125publicAppResetPasswordRoute =
+  Char123LocaleChar125publicAppResetPasswordRouteImport.update({
+    id: '/reset-password',
+    path: '/reset-password',
+    getParentRoute: () => Char123LocaleChar125publicAppRoute,
+  } as any)
+const Char123LocaleChar125publicAppActivateRoute =
+  Char123LocaleChar125publicAppActivateRouteImport.update({
+    id: '/activate',
+    path: '/activate',
+    getParentRoute: () => Char123LocaleChar125publicAppRoute,
   } as any)
 const Char123LocaleChar125adminDashboardSettingsRoute =
   Char123LocaleChar125adminDashboardSettingsRouteImport.update({
@@ -110,15 +126,15 @@ const Char123LocaleChar125adminDashboardAdvertsRoute =
   } as any)
 const Char123LocaleChar125publicEscortsCountryIndexRoute =
   Char123LocaleChar125publicEscortsCountryIndexRouteImport.update({
-    id: '/escorts/$country/',
-    path: '/escorts/$country/',
-    getParentRoute: () => Char123LocaleChar125publicRouteRoute,
+    id: '/$country/',
+    path: '/$country/',
+    getParentRoute: () => Char123LocaleChar125publicEscortsRoute,
   } as any)
-const Char123LocaleChar125publicEscortsCountrySlugIndexRoute =
-  Char123LocaleChar125publicEscortsCountrySlugIndexRouteImport.update({
-    id: '/escorts/$country/$slug/',
-    path: '/escorts/$country/$slug/',
-    getParentRoute: () => Char123LocaleChar125publicRouteRoute,
+const Char123LocaleChar125publicEscortsCountrySlugRoute =
+  Char123LocaleChar125publicEscortsCountrySlugRouteImport.update({
+    id: '/$country/$slug',
+    path: '/$country/$slug',
+    getParentRoute: () => Char123LocaleChar125publicEscortsRoute,
   } as any)
 const ApiRpcSplatServerRoute = ApiRpcSplatServerRouteImport.update({
   id: '/api/rpc/$',
@@ -133,100 +149,106 @@ const ApiAuthSplatServerRoute = ApiAuthSplatServerRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/{-$locale}': typeof Char123LocaleChar125RouteRouteWithChildren
-  '/{-$locale}/': typeof Char123LocaleChar125publicIndexRoute
   '/{-$locale}/dashboard': typeof Char123LocaleChar125adminDashboardRouteWithChildren
-  '/{-$locale}/activate': typeof Char123LocaleChar125publicActivateRoute
-  '/{-$locale}/reset-password': typeof Char123LocaleChar125publicResetPasswordRoute
-  '/{-$locale}/sign-in': typeof Char123LocaleChar125publicSignInRoute
+  '/{-$locale}/': typeof Char123LocaleChar125publicAppIndexRoute
+  '/{-$locale}/escorts': typeof Char123LocaleChar125publicEscortsRouteWithChildren
   '/{-$locale}/dashboard/adverts': typeof Char123LocaleChar125adminDashboardAdvertsRoute
   '/{-$locale}/dashboard/my-account': typeof Char123LocaleChar125adminDashboardMyAccountRoute
   '/{-$locale}/dashboard/profile': typeof Char123LocaleChar125adminDashboardProfileRoute
   '/{-$locale}/dashboard/settings': typeof Char123LocaleChar125adminDashboardSettingsRoute
+  '/{-$locale}/activate': typeof Char123LocaleChar125publicAppActivateRoute
+  '/{-$locale}/reset-password': typeof Char123LocaleChar125publicAppResetPasswordRoute
+  '/{-$locale}/sign-in': typeof Char123LocaleChar125publicAppSignInRoute
   '/{-$locale}/dashboard/': typeof Char123LocaleChar125adminDashboardIndexRoute
-  '/{-$locale}/escorts': typeof Char123LocaleChar125publicEscortsIndexRoute
+  '/{-$locale}/escorts/': typeof Char123LocaleChar125publicEscortsIndexRoute
+  '/{-$locale}/escorts/$country/$slug': typeof Char123LocaleChar125publicEscortsCountrySlugRoute
   '/{-$locale}/escorts/$country': typeof Char123LocaleChar125publicEscortsCountryIndexRoute
-  '/{-$locale}/escorts/$country/$slug': typeof Char123LocaleChar125publicEscortsCountrySlugIndexRoute
 }
 export interface FileRoutesByTo {
-  '/{-$locale}/activate': typeof Char123LocaleChar125publicActivateRoute
-  '/{-$locale}/reset-password': typeof Char123LocaleChar125publicResetPasswordRoute
-  '/{-$locale}/sign-in': typeof Char123LocaleChar125publicSignInRoute
-  '/{-$locale}': typeof Char123LocaleChar125publicIndexRoute
   '/{-$locale}/dashboard/adverts': typeof Char123LocaleChar125adminDashboardAdvertsRoute
   '/{-$locale}/dashboard/my-account': typeof Char123LocaleChar125adminDashboardMyAccountRoute
   '/{-$locale}/dashboard/profile': typeof Char123LocaleChar125adminDashboardProfileRoute
   '/{-$locale}/dashboard/settings': typeof Char123LocaleChar125adminDashboardSettingsRoute
+  '/{-$locale}/activate': typeof Char123LocaleChar125publicAppActivateRoute
+  '/{-$locale}/reset-password': typeof Char123LocaleChar125publicAppResetPasswordRoute
+  '/{-$locale}/sign-in': typeof Char123LocaleChar125publicAppSignInRoute
   '/{-$locale}/dashboard': typeof Char123LocaleChar125adminDashboardIndexRoute
+  '/{-$locale}': typeof Char123LocaleChar125publicAppIndexRoute
   '/{-$locale}/escorts': typeof Char123LocaleChar125publicEscortsIndexRoute
+  '/{-$locale}/escorts/$country/$slug': typeof Char123LocaleChar125publicEscortsCountrySlugRoute
   '/{-$locale}/escorts/$country': typeof Char123LocaleChar125publicEscortsCountryIndexRoute
-  '/{-$locale}/escorts/$country/$slug': typeof Char123LocaleChar125publicEscortsCountrySlugIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/{-$locale}': typeof Char123LocaleChar125RouteRouteWithChildren
-  '/{-$locale}/(public)': typeof Char123LocaleChar125publicRouteRouteWithChildren
   '/{-$locale}/(admin)/dashboard': typeof Char123LocaleChar125adminDashboardRouteWithChildren
-  '/{-$locale}/(public)/activate': typeof Char123LocaleChar125publicActivateRoute
-  '/{-$locale}/(public)/reset-password': typeof Char123LocaleChar125publicResetPasswordRoute
-  '/{-$locale}/(public)/sign-in': typeof Char123LocaleChar125publicSignInRoute
-  '/{-$locale}/(public)/': typeof Char123LocaleChar125publicIndexRoute
+  '/{-$locale}/(public)': typeof Char123LocaleChar125publicRouteWithChildren
+  '/{-$locale}/(public)/_app': typeof Char123LocaleChar125publicAppRouteWithChildren
+  '/{-$locale}/(public)/escorts': typeof Char123LocaleChar125publicEscortsRouteWithChildren
   '/{-$locale}/(admin)/dashboard/adverts': typeof Char123LocaleChar125adminDashboardAdvertsRoute
   '/{-$locale}/(admin)/dashboard/my-account': typeof Char123LocaleChar125adminDashboardMyAccountRoute
   '/{-$locale}/(admin)/dashboard/profile': typeof Char123LocaleChar125adminDashboardProfileRoute
   '/{-$locale}/(admin)/dashboard/settings': typeof Char123LocaleChar125adminDashboardSettingsRoute
+  '/{-$locale}/(public)/_app/activate': typeof Char123LocaleChar125publicAppActivateRoute
+  '/{-$locale}/(public)/_app/reset-password': typeof Char123LocaleChar125publicAppResetPasswordRoute
+  '/{-$locale}/(public)/_app/sign-in': typeof Char123LocaleChar125publicAppSignInRoute
   '/{-$locale}/(admin)/dashboard/': typeof Char123LocaleChar125adminDashboardIndexRoute
+  '/{-$locale}/(public)/_app/': typeof Char123LocaleChar125publicAppIndexRoute
   '/{-$locale}/(public)/escorts/': typeof Char123LocaleChar125publicEscortsIndexRoute
+  '/{-$locale}/(public)/escorts/$country/$slug': typeof Char123LocaleChar125publicEscortsCountrySlugRoute
   '/{-$locale}/(public)/escorts/$country/': typeof Char123LocaleChar125publicEscortsCountryIndexRoute
-  '/{-$locale}/(public)/escorts/$country/$slug/': typeof Char123LocaleChar125publicEscortsCountrySlugIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/{-$locale}'
-    | '/{-$locale}/'
     | '/{-$locale}/dashboard'
-    | '/{-$locale}/activate'
-    | '/{-$locale}/reset-password'
-    | '/{-$locale}/sign-in'
+    | '/{-$locale}/'
+    | '/{-$locale}/escorts'
     | '/{-$locale}/dashboard/adverts'
     | '/{-$locale}/dashboard/my-account'
     | '/{-$locale}/dashboard/profile'
     | '/{-$locale}/dashboard/settings'
+    | '/{-$locale}/activate'
+    | '/{-$locale}/reset-password'
+    | '/{-$locale}/sign-in'
     | '/{-$locale}/dashboard/'
-    | '/{-$locale}/escorts'
-    | '/{-$locale}/escorts/$country'
+    | '/{-$locale}/escorts/'
     | '/{-$locale}/escorts/$country/$slug'
+    | '/{-$locale}/escorts/$country'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/{-$locale}/activate'
-    | '/{-$locale}/reset-password'
-    | '/{-$locale}/sign-in'
-    | '/{-$locale}'
     | '/{-$locale}/dashboard/adverts'
     | '/{-$locale}/dashboard/my-account'
     | '/{-$locale}/dashboard/profile'
     | '/{-$locale}/dashboard/settings'
+    | '/{-$locale}/activate'
+    | '/{-$locale}/reset-password'
+    | '/{-$locale}/sign-in'
     | '/{-$locale}/dashboard'
+    | '/{-$locale}'
     | '/{-$locale}/escorts'
-    | '/{-$locale}/escorts/$country'
     | '/{-$locale}/escorts/$country/$slug'
+    | '/{-$locale}/escorts/$country'
   id:
     | '__root__'
     | '/{-$locale}'
-    | '/{-$locale}/(public)'
     | '/{-$locale}/(admin)/dashboard'
-    | '/{-$locale}/(public)/activate'
-    | '/{-$locale}/(public)/reset-password'
-    | '/{-$locale}/(public)/sign-in'
-    | '/{-$locale}/(public)/'
+    | '/{-$locale}/(public)'
+    | '/{-$locale}/(public)/_app'
+    | '/{-$locale}/(public)/escorts'
     | '/{-$locale}/(admin)/dashboard/adverts'
     | '/{-$locale}/(admin)/dashboard/my-account'
     | '/{-$locale}/(admin)/dashboard/profile'
     | '/{-$locale}/(admin)/dashboard/settings'
+    | '/{-$locale}/(public)/_app/activate'
+    | '/{-$locale}/(public)/_app/reset-password'
+    | '/{-$locale}/(public)/_app/sign-in'
     | '/{-$locale}/(admin)/dashboard/'
+    | '/{-$locale}/(public)/_app/'
     | '/{-$locale}/(public)/escorts/'
+    | '/{-$locale}/(public)/escorts/$country/$slug'
     | '/{-$locale}/(public)/escorts/$country/'
-    | '/{-$locale}/(public)/escorts/$country/$slug/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -271,36 +293,22 @@ declare module '@tanstack/react-router' {
       id: '/{-$locale}/(public)'
       path: '/'
       fullPath: '/{-$locale}/'
-      preLoaderRoute: typeof Char123LocaleChar125publicRouteRouteImport
+      preLoaderRoute: typeof Char123LocaleChar125publicRouteImport
       parentRoute: typeof Char123LocaleChar125RouteRoute
     }
-    '/{-$locale}/(public)/': {
-      id: '/{-$locale}/(public)/'
+    '/{-$locale}/(public)/escorts': {
+      id: '/{-$locale}/(public)/escorts'
+      path: '/escorts'
+      fullPath: '/{-$locale}/escorts'
+      preLoaderRoute: typeof Char123LocaleChar125publicEscortsRouteImport
+      parentRoute: typeof Char123LocaleChar125publicRoute
+    }
+    '/{-$locale}/(public)/_app': {
+      id: '/{-$locale}/(public)/_app'
       path: '/'
       fullPath: '/{-$locale}/'
-      preLoaderRoute: typeof Char123LocaleChar125publicIndexRouteImport
-      parentRoute: typeof Char123LocaleChar125publicRouteRoute
-    }
-    '/{-$locale}/(public)/sign-in': {
-      id: '/{-$locale}/(public)/sign-in'
-      path: '/sign-in'
-      fullPath: '/{-$locale}/sign-in'
-      preLoaderRoute: typeof Char123LocaleChar125publicSignInRouteImport
-      parentRoute: typeof Char123LocaleChar125publicRouteRoute
-    }
-    '/{-$locale}/(public)/reset-password': {
-      id: '/{-$locale}/(public)/reset-password'
-      path: '/reset-password'
-      fullPath: '/{-$locale}/reset-password'
-      preLoaderRoute: typeof Char123LocaleChar125publicResetPasswordRouteImport
-      parentRoute: typeof Char123LocaleChar125publicRouteRoute
-    }
-    '/{-$locale}/(public)/activate': {
-      id: '/{-$locale}/(public)/activate'
-      path: '/activate'
-      fullPath: '/{-$locale}/activate'
-      preLoaderRoute: typeof Char123LocaleChar125publicActivateRouteImport
-      parentRoute: typeof Char123LocaleChar125publicRouteRoute
+      preLoaderRoute: typeof Char123LocaleChar125publicAppRouteImport
+      parentRoute: typeof Char123LocaleChar125publicRoute
     }
     '/{-$locale}/(admin)/dashboard': {
       id: '/{-$locale}/(admin)/dashboard'
@@ -311,10 +319,17 @@ declare module '@tanstack/react-router' {
     }
     '/{-$locale}/(public)/escorts/': {
       id: '/{-$locale}/(public)/escorts/'
-      path: '/escorts'
-      fullPath: '/{-$locale}/escorts'
+      path: '/'
+      fullPath: '/{-$locale}/escorts/'
       preLoaderRoute: typeof Char123LocaleChar125publicEscortsIndexRouteImport
-      parentRoute: typeof Char123LocaleChar125publicRouteRoute
+      parentRoute: typeof Char123LocaleChar125publicEscortsRoute
+    }
+    '/{-$locale}/(public)/_app/': {
+      id: '/{-$locale}/(public)/_app/'
+      path: '/'
+      fullPath: '/{-$locale}/'
+      preLoaderRoute: typeof Char123LocaleChar125publicAppIndexRouteImport
+      parentRoute: typeof Char123LocaleChar125publicAppRoute
     }
     '/{-$locale}/(admin)/dashboard/': {
       id: '/{-$locale}/(admin)/dashboard/'
@@ -322,6 +337,27 @@ declare module '@tanstack/react-router' {
       fullPath: '/{-$locale}/dashboard/'
       preLoaderRoute: typeof Char123LocaleChar125adminDashboardIndexRouteImport
       parentRoute: typeof Char123LocaleChar125adminDashboardRoute
+    }
+    '/{-$locale}/(public)/_app/sign-in': {
+      id: '/{-$locale}/(public)/_app/sign-in'
+      path: '/sign-in'
+      fullPath: '/{-$locale}/sign-in'
+      preLoaderRoute: typeof Char123LocaleChar125publicAppSignInRouteImport
+      parentRoute: typeof Char123LocaleChar125publicAppRoute
+    }
+    '/{-$locale}/(public)/_app/reset-password': {
+      id: '/{-$locale}/(public)/_app/reset-password'
+      path: '/reset-password'
+      fullPath: '/{-$locale}/reset-password'
+      preLoaderRoute: typeof Char123LocaleChar125publicAppResetPasswordRouteImport
+      parentRoute: typeof Char123LocaleChar125publicAppRoute
+    }
+    '/{-$locale}/(public)/_app/activate': {
+      id: '/{-$locale}/(public)/_app/activate'
+      path: '/activate'
+      fullPath: '/{-$locale}/activate'
+      preLoaderRoute: typeof Char123LocaleChar125publicAppActivateRouteImport
+      parentRoute: typeof Char123LocaleChar125publicAppRoute
     }
     '/{-$locale}/(admin)/dashboard/settings': {
       id: '/{-$locale}/(admin)/dashboard/settings'
@@ -353,17 +389,17 @@ declare module '@tanstack/react-router' {
     }
     '/{-$locale}/(public)/escorts/$country/': {
       id: '/{-$locale}/(public)/escorts/$country/'
-      path: '/escorts/$country'
+      path: '/$country'
       fullPath: '/{-$locale}/escorts/$country'
       preLoaderRoute: typeof Char123LocaleChar125publicEscortsCountryIndexRouteImport
-      parentRoute: typeof Char123LocaleChar125publicRouteRoute
+      parentRoute: typeof Char123LocaleChar125publicEscortsRoute
     }
-    '/{-$locale}/(public)/escorts/$country/$slug/': {
-      id: '/{-$locale}/(public)/escorts/$country/$slug/'
-      path: '/escorts/$country/$slug'
+    '/{-$locale}/(public)/escorts/$country/$slug': {
+      id: '/{-$locale}/(public)/escorts/$country/$slug'
+      path: '/$country/$slug'
       fullPath: '/{-$locale}/escorts/$country/$slug'
-      preLoaderRoute: typeof Char123LocaleChar125publicEscortsCountrySlugIndexRouteImport
-      parentRoute: typeof Char123LocaleChar125publicRouteRoute
+      preLoaderRoute: typeof Char123LocaleChar125publicEscortsCountrySlugRouteImport
+      parentRoute: typeof Char123LocaleChar125publicEscortsRoute
     }
   }
 }
@@ -385,38 +421,6 @@ declare module '@tanstack/react-start/server' {
     }
   }
 }
-
-interface Char123LocaleChar125publicRouteRouteChildren {
-  Char123LocaleChar125publicActivateRoute: typeof Char123LocaleChar125publicActivateRoute
-  Char123LocaleChar125publicResetPasswordRoute: typeof Char123LocaleChar125publicResetPasswordRoute
-  Char123LocaleChar125publicSignInRoute: typeof Char123LocaleChar125publicSignInRoute
-  Char123LocaleChar125publicIndexRoute: typeof Char123LocaleChar125publicIndexRoute
-  Char123LocaleChar125publicEscortsIndexRoute: typeof Char123LocaleChar125publicEscortsIndexRoute
-  Char123LocaleChar125publicEscortsCountryIndexRoute: typeof Char123LocaleChar125publicEscortsCountryIndexRoute
-  Char123LocaleChar125publicEscortsCountrySlugIndexRoute: typeof Char123LocaleChar125publicEscortsCountrySlugIndexRoute
-}
-
-const Char123LocaleChar125publicRouteRouteChildren: Char123LocaleChar125publicRouteRouteChildren =
-  {
-    Char123LocaleChar125publicActivateRoute:
-      Char123LocaleChar125publicActivateRoute,
-    Char123LocaleChar125publicResetPasswordRoute:
-      Char123LocaleChar125publicResetPasswordRoute,
-    Char123LocaleChar125publicSignInRoute:
-      Char123LocaleChar125publicSignInRoute,
-    Char123LocaleChar125publicIndexRoute: Char123LocaleChar125publicIndexRoute,
-    Char123LocaleChar125publicEscortsIndexRoute:
-      Char123LocaleChar125publicEscortsIndexRoute,
-    Char123LocaleChar125publicEscortsCountryIndexRoute:
-      Char123LocaleChar125publicEscortsCountryIndexRoute,
-    Char123LocaleChar125publicEscortsCountrySlugIndexRoute:
-      Char123LocaleChar125publicEscortsCountrySlugIndexRoute,
-  }
-
-const Char123LocaleChar125publicRouteRouteWithChildren =
-  Char123LocaleChar125publicRouteRoute._addFileChildren(
-    Char123LocaleChar125publicRouteRouteChildren,
-  )
 
 interface Char123LocaleChar125adminDashboardRouteChildren {
   Char123LocaleChar125adminDashboardAdvertsRoute: typeof Char123LocaleChar125adminDashboardAdvertsRoute
@@ -445,17 +449,80 @@ const Char123LocaleChar125adminDashboardRouteWithChildren =
     Char123LocaleChar125adminDashboardRouteChildren,
   )
 
+interface Char123LocaleChar125publicAppRouteChildren {
+  Char123LocaleChar125publicAppActivateRoute: typeof Char123LocaleChar125publicAppActivateRoute
+  Char123LocaleChar125publicAppResetPasswordRoute: typeof Char123LocaleChar125publicAppResetPasswordRoute
+  Char123LocaleChar125publicAppSignInRoute: typeof Char123LocaleChar125publicAppSignInRoute
+  Char123LocaleChar125publicAppIndexRoute: typeof Char123LocaleChar125publicAppIndexRoute
+}
+
+const Char123LocaleChar125publicAppRouteChildren: Char123LocaleChar125publicAppRouteChildren =
+  {
+    Char123LocaleChar125publicAppActivateRoute:
+      Char123LocaleChar125publicAppActivateRoute,
+    Char123LocaleChar125publicAppResetPasswordRoute:
+      Char123LocaleChar125publicAppResetPasswordRoute,
+    Char123LocaleChar125publicAppSignInRoute:
+      Char123LocaleChar125publicAppSignInRoute,
+    Char123LocaleChar125publicAppIndexRoute:
+      Char123LocaleChar125publicAppIndexRoute,
+  }
+
+const Char123LocaleChar125publicAppRouteWithChildren =
+  Char123LocaleChar125publicAppRoute._addFileChildren(
+    Char123LocaleChar125publicAppRouteChildren,
+  )
+
+interface Char123LocaleChar125publicEscortsRouteChildren {
+  Char123LocaleChar125publicEscortsIndexRoute: typeof Char123LocaleChar125publicEscortsIndexRoute
+  Char123LocaleChar125publicEscortsCountrySlugRoute: typeof Char123LocaleChar125publicEscortsCountrySlugRoute
+  Char123LocaleChar125publicEscortsCountryIndexRoute: typeof Char123LocaleChar125publicEscortsCountryIndexRoute
+}
+
+const Char123LocaleChar125publicEscortsRouteChildren: Char123LocaleChar125publicEscortsRouteChildren =
+  {
+    Char123LocaleChar125publicEscortsIndexRoute:
+      Char123LocaleChar125publicEscortsIndexRoute,
+    Char123LocaleChar125publicEscortsCountrySlugRoute:
+      Char123LocaleChar125publicEscortsCountrySlugRoute,
+    Char123LocaleChar125publicEscortsCountryIndexRoute:
+      Char123LocaleChar125publicEscortsCountryIndexRoute,
+  }
+
+const Char123LocaleChar125publicEscortsRouteWithChildren =
+  Char123LocaleChar125publicEscortsRoute._addFileChildren(
+    Char123LocaleChar125publicEscortsRouteChildren,
+  )
+
+interface Char123LocaleChar125publicRouteChildren {
+  Char123LocaleChar125publicAppRoute: typeof Char123LocaleChar125publicAppRouteWithChildren
+  Char123LocaleChar125publicEscortsRoute: typeof Char123LocaleChar125publicEscortsRouteWithChildren
+}
+
+const Char123LocaleChar125publicRouteChildren: Char123LocaleChar125publicRouteChildren =
+  {
+    Char123LocaleChar125publicAppRoute:
+      Char123LocaleChar125publicAppRouteWithChildren,
+    Char123LocaleChar125publicEscortsRoute:
+      Char123LocaleChar125publicEscortsRouteWithChildren,
+  }
+
+const Char123LocaleChar125publicRouteWithChildren =
+  Char123LocaleChar125publicRoute._addFileChildren(
+    Char123LocaleChar125publicRouteChildren,
+  )
+
 interface Char123LocaleChar125RouteRouteChildren {
-  Char123LocaleChar125publicRouteRoute: typeof Char123LocaleChar125publicRouteRouteWithChildren
   Char123LocaleChar125adminDashboardRoute: typeof Char123LocaleChar125adminDashboardRouteWithChildren
+  Char123LocaleChar125publicRoute: typeof Char123LocaleChar125publicRouteWithChildren
 }
 
 const Char123LocaleChar125RouteRouteChildren: Char123LocaleChar125RouteRouteChildren =
   {
-    Char123LocaleChar125publicRouteRoute:
-      Char123LocaleChar125publicRouteRouteWithChildren,
     Char123LocaleChar125adminDashboardRoute:
       Char123LocaleChar125adminDashboardRouteWithChildren,
+    Char123LocaleChar125publicRoute:
+      Char123LocaleChar125publicRouteWithChildren,
   }
 
 const Char123LocaleChar125RouteRouteWithChildren =

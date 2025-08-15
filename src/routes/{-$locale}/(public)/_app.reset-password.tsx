@@ -3,7 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { createFileRoute, redirect } from '@tanstack/react-router';
 import { Controller, useForm } from 'react-hook-form';
 import z from 'zod';
-import { Container, Stack } from '@/components/core/Stack';
+import { Stack } from '@/components/core/Stack';
 import { Text } from '@/components/core/Text';
 import { Input } from '@/components/heroui/Input';
 import { toast } from '@/components/heroui/Toast';
@@ -31,7 +31,7 @@ const resetPasswordSchema = z.object({
 		}),
 });
 
-export const Route = createFileRoute('/{-$locale}/(public)/reset-password')({
+export const Route = createFileRoute('/{-$locale}/(public)/_app/reset-password')({
 	validateSearch: Schema,
 	component: RouteComponent,
 	beforeLoad: ({ search }) => {
@@ -47,7 +47,7 @@ function RouteComponent() {
 	const form = useForm({
 		resolver: zodResolver(resetPasswordSchema),
 		defaultValues: { password: '', confirm: '' },
-	});
+	})
 
 	const onSubmit = async (values: z.infer<typeof resetPasswordSchema>) => {
 		if (values.password !== values.confirm) {
@@ -57,7 +57,7 @@ function RouteComponent() {
 		const { error: err } = await api.auth.resetPassword({
 			token: token,
 			newPassword: values.password,
-		});
+		})
 
 		if (err) {
 			return toast.error(err.message ?? 'Erro ao redefinir senha');
@@ -66,10 +66,10 @@ function RouteComponent() {
 		toast.success('Senha redefinida com sucesso');
 
 		await navigate({ to: '/{-$locale}/sign-in' });
-	};
+	}
 
 	return (
-		<Container className="centered h-screen">
+		<div className="mt-20 gap-12 overflow-hidden py-16">
 			<Stack className="centered w-full space-y-10">
 				{error && (
 					<Text align="center" as="h4" className="text-danger">
@@ -86,12 +86,12 @@ function RouteComponent() {
 				>
 					<Controller
 						control={form.control}
-						name="password"
+						name='password'
 						render={({ field, fieldState }) => (
 							<Input
-								label="Nova senha"
-								size="md"
-								type="password"
+								label='Nova senha'
+								size='md'
+								type='password'
 								value={field.value ?? ''}
 								onValueChange={field.onChange}
 								onBlur={field.onBlur}
@@ -106,11 +106,11 @@ function RouteComponent() {
 
 					<Controller
 						control={form.control}
-						name="confirm"
+						name='confirm'
 						render={({ field, fieldState }) => (
 							<Input
-								label="Confirmar senha"
-								type="password"
+								label='Confirmar senha'
+								type='password'
 								value={field.value ?? ''}
 								onValueChange={field.onChange}
 								onBlur={field.onBlur}
@@ -124,11 +124,11 @@ function RouteComponent() {
 					/>
 
 					<Button
-						size="lg"
-						className="mt-4"
-						color="primary"
+						size='lg'
+						className='mt-4'
+						color='primary'
 						fullWidth
-						type="submit"
+						type='submit'
 						disabled={!!error}
 						isLoading={form.formState.isSubmitting}
 					>
@@ -136,6 +136,6 @@ function RouteComponent() {
 					</Button>
 				</Form>
 			</Stack>
-		</Container>
-	);
+		</div>
+	)
 }

@@ -9,7 +9,7 @@ import {
 import { useRef } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Icon } from '@/components/core/Icon';
-import { Container, Stack } from '@/components/core/Stack';
+import { Stack } from '@/components/core/Stack';
 import { Text } from '@/components/core/Text';
 import { Input } from '@/components/heroui/Input';
 import { Modal, ModalRef } from '@/components/heroui/Modal';
@@ -21,7 +21,7 @@ import {
 	signUpSchema,
 } from '@/lib/auth/auth.client';
 
-export const Route = createFileRoute('/{-$locale}/(public)/sign-in')({
+export const Route = createFileRoute('/{-$locale}/(public)/_app/sign-in')({
 	component: RouteComponent,
 	beforeLoad: async ({ context }) => {
 		if (context.session) {
@@ -116,97 +116,95 @@ function RouteComponent() {
 	};
 
 	return (
-		<Container className="centered h-screen">
-			<Stack className="centered w-full space-y-10">
-				<img src="/assets/logo.svg" className="w-32" alt="Afrodiite" />
+		<div className="centered mx-auto flex min-h-[100dvh] max-w-lg flex-col gap-14 overflow-hidden px-4">
+			<img src="/assets/logo.svg" className="w-32" alt="Afrodiite" />
 
-				<Stack className="w-full max-w-md items-center space-y-4">
-					<Text align="center" as="h4">
-						Fazer Login
-					</Text>
-					<Form
-						validationBehavior="aria"
-						onSubmit={signInForm.handleSubmit(onSubmitSignIn)}
-						className="w-full space-y-3"
-					>
-						<Controller
-							control={signInForm.control}
-							name="email"
-							render={({ field, fieldState }) => (
-								<Input
-									label="Email"
-									size="md"
-									type="email"
-									value={field.value ?? ''}
-									onValueChange={field.onChange}
-									onBlur={field.onBlur}
-									ref={field.ref}
-									name={field.name}
-									autoComplete="email"
-									isInvalid={!!fieldState.error}
-									errorMessage={fieldState.error?.message}
-								/>
-							)}
-						/>
-						<Controller
-							control={signInForm.control}
-							name="password"
-							render={({ field, fieldState }) => (
-								<Input
-									label="Senha"
-									size="md"
-									type="password"
-									value={field.value ?? ''}
-									onValueChange={field.onChange}
-									onBlur={field.onBlur}
-									ref={field.ref}
-									name={field.name}
-									autoComplete="current-password"
-									isInvalid={!!fieldState.error}
-									errorMessage={fieldState.error?.message}
-								/>
-							)}
-						/>
-						<div className="w-full space-y-3">
-							<Button
-								size="lg"
-								color="primary"
-								fullWidth
-								type="submit"
-								isLoading={signInForm.formState.isSubmitting}
-							>
-								Entrar
-							</Button>
-							<Button
-								size="lg"
-								color="primary"
-								fullWidth
-								variant="flat"
-								onPress={() => signUpModalRef.current?.open()}
-							>
-								Criar Conta
-							</Button>
-						</div>
-						<div className="centered flex w-full flex-col gap-2 py-1 text-center sm:flex-row">
-							<span>Precisa recuperar sua senha?</span>
-							<Link size="sm" onPress={() => forgotModalRef.current?.open()}>
-								Clique aqui
-							</Link>
-						</div>
-					</Form>
-				</Stack>
-
-				<Link
-					onPress={() =>
-						router.navigate({
-							to: '/{-$locale}',
-						})
-					}
+			<Stack className="w-full max-w-md items-center space-y-4">
+				<Text align="center" as="h4">
+					Fazer Login
+				</Text>
+				<Form
+					validationBehavior="aria"
+					onSubmit={signInForm.handleSubmit(onSubmitSignIn)}
+					className="w-full space-y-3"
 				>
-					<Icon name="ArrowLeft" className="mr-1" />
-					Voltar para a página inicial
-				</Link>
+					<Controller
+						control={signInForm.control}
+						name="email"
+						render={({ field, fieldState }) => (
+							<Input
+								label="Email"
+								size="md"
+								type="email"
+								value={field.value ?? ''}
+								onValueChange={field.onChange}
+								onBlur={field.onBlur}
+								ref={field.ref}
+								name={field.name}
+								autoComplete="email"
+								isInvalid={!!fieldState.error}
+								errorMessage={fieldState.error?.message}
+							/>
+						)}
+					/>
+					<Controller
+						control={signInForm.control}
+						name="password"
+						render={({ field, fieldState }) => (
+							<Input
+								label="Senha"
+								size="md"
+								type="password"
+								value={field.value ?? ''}
+								onValueChange={field.onChange}
+								onBlur={field.onBlur}
+								ref={field.ref}
+								name={field.name}
+								autoComplete="current-password"
+								isInvalid={!!fieldState.error}
+								errorMessage={fieldState.error?.message}
+							/>
+						)}
+					/>
+					<div className="w-full space-y-3">
+						<Button
+							size="lg"
+							color="primary"
+							fullWidth
+							type="submit"
+							isLoading={signInForm.formState.isSubmitting}
+						>
+							Entrar
+						</Button>
+						<Button
+							size="lg"
+							color="primary"
+							fullWidth
+							variant="flat"
+							onPress={() => signUpModalRef.current?.open()}
+						>
+							Criar Conta
+						</Button>
+					</div>
+					<div className="centered flex w-full flex-col gap-2 py-1 text-center sm:flex-row">
+						<span>Precisa recuperar sua senha?</span>
+						<Link size="sm" onPress={() => forgotModalRef.current?.open()}>
+							Clique aqui
+						</Link>
+					</div>
+				</Form>
 			</Stack>
+
+			<Link
+				onPress={() =>
+					router.navigate({
+						to: '/{-$locale}',
+					})
+				}
+			>
+				<Icon name="ArrowLeft" className="mr-1" />
+				Voltar para a página inicial
+			</Link>
 
 			<Modal
 				ref={forgotModalRef}
@@ -230,7 +228,6 @@ function RouteComponent() {
 								render={({ field, fieldState }) => (
 									<Input
 										label="Email"
-										placeholder="Email"
 										size="md"
 										type="email"
 										value={field.value ?? ''}
@@ -289,7 +286,6 @@ function RouteComponent() {
 								render={({ field, fieldState }) => (
 									<Input
 										label="Nome"
-										placeholder="Nome"
 										size="md"
 										value={field.value ?? ''}
 										onValueChange={field.onChange}
@@ -307,7 +303,6 @@ function RouteComponent() {
 								render={({ field, fieldState }) => (
 									<Input
 										label="Email"
-										placeholder="Email"
 										size="md"
 										type="email"
 										value={field.value ?? ''}
@@ -327,7 +322,6 @@ function RouteComponent() {
 								render={({ field, fieldState }) => (
 									<Input
 										label="Senha"
-										placeholder="Senha"
 										size="md"
 										type="password"
 										value={field.value ?? ''}
@@ -364,13 +358,6 @@ function RouteComponent() {
 					</Modal.Body>
 				</Modal.Content>
 			</Modal>
-
-			<Text
-				as="span"
-				className="absolute bottom-4 text-center text-foreground/30"
-			>
-				Afrodiite.com - Todos os direitos reservados
-			</Text>
-		</Container>
+		</div>
 	);
 }

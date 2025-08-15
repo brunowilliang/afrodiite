@@ -8,7 +8,7 @@ const ActivateSchema = z.object({
 	error: z.string().optional(),
 });
 
-export const Route = createFileRoute('/{-$locale}/(public)/activate')({
+export const Route = createFileRoute('/{-$locale}/(public)/_app/activate')({
 	validateSearch: ActivateSchema,
 	component: RouteComponent,
 	beforeLoad: ({ context }) => {
@@ -37,5 +37,5 @@ function RouteComponent() {
 				</Stack>
 			</Stack>
 		</Container>
-	);
+	)
 }
