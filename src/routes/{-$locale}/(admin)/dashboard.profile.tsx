@@ -11,15 +11,6 @@ import { LocationTab } from './-dashboard.profile/Location';
 import { OfficeHoursTab } from './-dashboard.profile/OfficeHours';
 import { PricesTab } from './-dashboard.profile/Prices';
 import { ServicesTab } from './-dashboard.profile/Services';
-// import { toast } from 'sonner';
-// import { profile } from '@/queries/profile';
-// import { CharacteristicsTab } from './-dashboard.profile/Characteristics';
-// import { GalleryTab } from './-dashboard.profile/Gallery';
-// import { InformationTab } from './-dashboard.profile/Information';
-// import { LocationTab } from './-dashboard.profile/Location';
-// import { OfficeHoursTab } from './-dashboard.profile/OfficeHours';
-// import { PricesTab } from './-dashboard.profile/Prices';
-// import { ServicesTab } from './-dashboard.profile/Services';
 
 export const Route = createFileRoute('/{-$locale}/(admin)/dashboard/profile')({
 	component: RouteComponent,
@@ -40,33 +31,6 @@ export const Route = createFileRoute('/{-$locale}/(admin)/dashboard/profile')({
 
 function RouteComponent() {
 	const { tab } = Route.useSearch();
-	// const router = useRouter();
-	// const { session } = Route.useRouteContext();
-
-	// const updateProfile = useMutation(
-	// 	api.queries.profile.update.mutationOptions(),
-	// );
-
-	// const handleSubmit = (values: Partial<ProfileUpdate>) => {
-	// 	updateProfile.mutateAsync(
-	// 		{
-	// 			id: session?.user.id,
-	// 			...values,
-	// 		},
-	// 		{
-	// 			onSuccess: () => {
-	// 				toast.success('Profile updated');
-	// 				router.invalidate();
-	// 			},
-	// 			onError: (error) => {
-	// 				console.error(error);
-	// 				toast.error('Error updating profile', {
-	// 					description: error.message,
-	// 				});
-	// 			},
-	// 		},
-	// 	);
-	// };
 
 	return (
 		<Container>

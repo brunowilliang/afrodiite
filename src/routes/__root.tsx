@@ -28,7 +28,6 @@ export const Route = createRootRouteWithContext<RootContext>()({
 		const session = await api.client.session();
 		if (session) {
 			const profile = await api.client.profile.get();
-			console.log(profile);
 			return { session, profile };
 		}
 		return { session: null };

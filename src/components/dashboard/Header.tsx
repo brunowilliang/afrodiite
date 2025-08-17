@@ -1,6 +1,5 @@
 import {
 	Avatar,
-	Button,
 	Dropdown,
 	DropdownItem,
 	DropdownMenu,
@@ -16,9 +15,7 @@ import { useRouteContext, useRouter } from '@tanstack/react-router';
 import { useThemeController } from '@/hooks/useThemeController';
 import { api } from '@/lib/api';
 import { links } from '@/utils/navigation';
-import { Icon } from '../core/Icon';
 import { Logo } from '../core/Logo';
-import { Drawer } from '../heroui/Drawer';
 
 export function Header() {
 	const router = useRouter();
@@ -47,7 +44,10 @@ export function Header() {
 				}}
 			>
 				<NavbarBrand>
-					<Logo onClick={onOpen} />
+					<Logo
+						className="cursor-pointer"
+						onClick={() => router.navigate({ to: '/{-$locale}/dashboard' })}
+					/>
 				</NavbarBrand>
 
 				<NavbarContent justify="end">
@@ -64,9 +64,23 @@ export function Header() {
 								/>
 							</DropdownTrigger>
 
-							<DropdownMenu aria-label="Profile Actions" variant="flat">
+							<DropdownMenu
+								aria-label="Profile Actions"
+								variant="flat"
+								selectedKeys={['2']}
+							>
+								<DropdownItem
+									showDivider
+									aria-label="Dashboard"
+									key="dashboard"
+									onPress={() =>
+										router.navigate({ to: '/{-$locale}/dashboard' })
+									}
+								>
+									Dashboard
+								</DropdownItem>
 								<DropdownSection
-									title="Profile"
+									title="Perfil"
 									showDivider
 									className="font-light text-foreground/50"
 								>
@@ -85,7 +99,7 @@ export function Header() {
 										</DropdownItem>
 									))}
 								</DropdownSection>
-								<DropdownSection
+								{/* <DropdownSection
 									title="Theme"
 									showDivider
 									className="font-light text-foreground/50"
@@ -118,7 +132,7 @@ export function Header() {
 										<Icon name="Moon" size="20" />
 										<span>Dark</span>
 									</DropdownItem>
-								</DropdownSection>
+								</DropdownSection> */}
 								<DropdownSection
 									title="Ações"
 									className="font-light text-foreground/50"
@@ -138,7 +152,7 @@ export function Header() {
 					</NavbarItem>
 				</NavbarContent>
 			</Navbar>
-			<Drawer
+			{/* <Drawer
 				isOpen={isOpen}
 				onOpenChange={onOpenChange}
 				size="xs"
@@ -181,7 +195,7 @@ export function Header() {
 						</>
 					)}
 				</Drawer.Content>
-			</Drawer>
+			</Drawer> */}
 		</>
 	);
 }
