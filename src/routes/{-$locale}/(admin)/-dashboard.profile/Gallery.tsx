@@ -14,6 +14,7 @@ import { Stack } from '@/components/core/Stack';
 import { SortableGallery } from '@/components/dashboard/SortableGallery';
 import { Input } from '@/components/heroui/Input';
 import { api } from '@/lib/api';
+import { tryCatch } from '@/utils/tryCatch';
 
 export const GalleryTab = () => {
 	const { control } = useUploadFiles({ route: 'gallery' });
@@ -33,17 +34,22 @@ export const GalleryTab = () => {
 
 	const [items, setItems] = useState<GalleryItem[]>([]);
 
-	const display = items
-		.filter((it) => typeof it.url === 'string' && it.url.length > 0)
-		.map((it) => ({
-			kind: 'saved' as const,
-			key: String(it.id),
-			id: String(it.id),
-			url: it.url,
-		}));
+	const display = useMemo(
+		() =>
+			items
+				.filter((it) => typeof it.url === 'string' && it.url.length > 0)
+				.map((it) => ({
+					kind: 'saved' as const,
+					key: String(it.id),
+					id: String(it.id),
+					url: it.url,
+				})),
+		[items],
+	);
 
 	const order = useMemo(() => items.map((i) => String(i.id)), [items]);
 	const localFilesRef = useRef<Map<string, File>>(new Map());
+	const reorderTimerRef = useRef<number | undefined>(undefined);
 
 	const reindex = (arr: GalleryItem[]): GalleryItem[] =>
 		arr.map((it, idx) => ({ ...it, order: idx }));
@@ -56,7 +62,6 @@ export const GalleryTab = () => {
 			const normalized = serverItems.slice().sort((a, b) => a.order - b.order);
 			setItems(normalized);
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [id]);
 
 	const preloadImage = (url: string) =>
@@ -73,7 +78,12 @@ export const GalleryTab = () => {
 				!!it.path && typeof it.url === 'string' && !it.url.startsWith('blob:'),
 		);
 		if (toPersist.length) {
-			await updateProfile.mutateAsync({ id, gallery: toPersist } as any);
+			const [err] = await tryCatch(
+				updateProfile.mutateAsync({ id, gallery: toPersist } as any),
+			);
+			if (!err) {
+				await tryCatch(router.invalidate());
+			}
 		}
 	};
 
@@ -116,74 +126,68 @@ export const GalleryTab = () => {
 			return map;
 		});
 
-		try {
-			setIsSaving(true);
-			const files = newIds
-				.map((id) => localFilesRef.current.get(id))
-				.filter((f): f is File => !!f);
-			const successes: Array<{ lid: string; meta: any }> = [];
+		setIsSaving(true);
+		const successes: Array<{ lid: string; meta: any }> = [];
 
-			await Promise.all(
-				newIds.map(async (lid, i) => {
-					const file = files[i];
-					if (!file) return;
-					try {
-						const meta = await uploadFile(id, file);
-						setProgress((prev) => {
-							const map = new Map(prev);
-							map.set(lid, 0.8);
-							return map;
-						});
-						successes.push({ lid, meta });
-					} catch {}
-				}),
-			);
-
-			const uploaded = toGalleryItems(successes.map((s) => s.meta));
-			const idToUploaded = new Map<string, GalleryItem>();
-			uploaded.forEach((u, i) => {
-				const pair = successes[i];
-				if (pair) idToUploaded.set(pair.lid, u);
-			});
-
-			const baseItems = [...items, ...newItems];
-			const final: GalleryItem[] = [];
-			for (let i = 0; i < nextOrder.length; i++) {
-				const oid = nextOrder[i];
-				const up = idToUploaded.get(oid);
-				if (up) final.push({ ...up, id: oid, order: i });
-				else {
-					const ex = baseItems.find((it) => it.id === oid);
-					if (ex) final.push({ ...ex, order: i });
+		await Promise.all(
+			newIds.map(async (lid) => {
+				const file = localFilesRef.current.get(lid);
+				if (!file) return;
+				const [err, meta] = await tryCatch(uploadFile(id, file));
+				if (!err && meta) {
+					setProgress((prev) => {
+						const map = new Map(prev);
+						map.set(lid, 0.8);
+						return map;
+					});
+					successes.push({ lid, meta });
 				}
+			}),
+		);
+
+		const uploaded = toGalleryItems(successes.map((s) => s.meta));
+		const idToUploaded = new Map<string, GalleryItem>();
+		uploaded.forEach((u, i) => {
+			const pair = successes[i];
+			if (pair) idToUploaded.set(pair.lid, u);
+		});
+
+		const baseItems = [...items, ...newItems];
+		const final: GalleryItem[] = [];
+		for (let i = 0; i < nextOrder.length; i++) {
+			const oid = nextOrder[i];
+			const up = idToUploaded.get(oid);
+			if (up) final.push({ ...up, id: oid, order: i });
+			else {
+				const ex = baseItems.find((it) => it.id === oid);
+				if (ex) final.push({ ...ex, order: i });
 			}
-
-			await Promise.all(uploaded.map((it) => preloadImage(it.url)));
-			setProgress((prev) => {
-				const map = new Map(prev);
-				successes.forEach(({ lid }) => map.set(lid, 0.95));
-				return map;
-			});
-
-			newItems.forEach((ni) => {
-				if (ni.url.startsWith('blob:')) {
-					try {
-						URL.revokeObjectURL(ni.url);
-					} catch {}
-				}
-				localFilesRef.current.delete(ni.id);
-			});
-
-			setItems(reindex(final));
-			await persistProfileSafe(final);
-			setProgress((prev) => {
-				const map = new Map(prev);
-				newIds.forEach((lid) => map.delete(lid));
-				return map;
-			});
-		} finally {
-			setIsSaving(false);
 		}
+
+		await Promise.all(uploaded.map((it) => preloadImage(it.url)));
+		setProgress((prev) => {
+			const map = new Map(prev);
+			successes.forEach(({ lid }) => map.set(lid, 0.95));
+			return map;
+		});
+
+		newItems.forEach((ni) => {
+			if (ni.url.startsWith('blob:')) {
+				try {
+					URL.revokeObjectURL(ni.url);
+				} catch {}
+			}
+			localFilesRef.current.delete(ni.id);
+		});
+
+		setItems(reindex(final));
+		await persistProfileSafe(final);
+		setProgress((prev) => {
+			const map = new Map(prev);
+			newIds.forEach((lid) => map.delete(lid));
+			return map;
+		});
+		setIsSaving(false);
 	};
 
 	const handleRemove = async (key: string) => {
@@ -198,16 +202,17 @@ export const GalleryTab = () => {
 			} catch {}
 		}
 		if (target?.path && !target?.url?.startsWith('blob:')) {
-			try {
-				await deleteFile(target.path);
-			} catch {}
+			await tryCatch(deleteFile(target.path));
 		}
 		localFilesRef.current.delete(key);
 		const nextItems = reindex(items.filter((it) => it.id !== key));
 		setItems(nextItems);
-		try {
-			await updateProfile.mutateAsync({ id, gallery: nextItems } as any);
-		} catch {}
+		const [err] = await tryCatch(
+			updateProfile.mutateAsync({ id, gallery: nextItems } as any),
+		);
+		if (!err) {
+			await tryCatch(router.invalidate());
+		}
 	};
 
 	return (
@@ -243,12 +248,24 @@ export const GalleryTab = () => {
 							typeof it.url === 'string' &&
 							!it.url.startsWith('blob:'),
 					);
-					try {
-						await updateProfile.mutateAsync({
-							id,
-							gallery: toPersist,
-						} as any);
-					} catch {}
+					// debounce persist to avoid multiple sequential updates
+					if (!reorderTimerRef.current) {
+						reorderTimerRef.current = undefined;
+					}
+					if (reorderTimerRef.current) {
+						clearTimeout(reorderTimerRef.current);
+					}
+					reorderTimerRef.current = setTimeout(async () => {
+						const [err] = await tryCatch(
+							updateProfile.mutateAsync({
+								id,
+								gallery: toPersist,
+							} as any),
+						);
+						if (!err) {
+							await tryCatch(router.invalidate());
+						}
+					}, 400) as unknown as number;
 				}}
 				onDelete={handleRemove}
 			/>

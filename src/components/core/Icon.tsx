@@ -59,6 +59,7 @@ export const Icon = useStyled('i', {
 			Stars: { className: 'hgi-stars' },
 			Idea: { className: 'hgi-ai-idea' },
 			Info: { className: 'hgi-information-circle' },
+			Refresh: { className: 'hgi-arrow-reload-horizontal' },
 		},
 	},
 	defaultVariants: {

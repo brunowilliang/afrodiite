@@ -9,6 +9,7 @@ import {
 import { rectSortingStrategy, SortableContext } from '@dnd-kit/sortable';
 import { AnimatePresence } from 'motion/react';
 import { useMemo, useState } from 'react';
+import { PhotoSlider } from 'react-photo-view';
 import { type DisplayItem, DragCard } from './DragCard';
 
 type Props = {
@@ -32,12 +33,19 @@ export const SortableGallery = ({
 		useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
 	);
 	const [activeId, setActiveId] = useState<string | null>(null);
+	const [isOpen, setIsOpen] = useState(false);
+	const [index, setIndex] = useState(0);
 
 	const keyToItem = useMemo(() => {
 		const map = new Map<string, DisplayItem>();
 		items.forEach((it) => map.set(it.key, it));
 		return map;
 	}, [items]);
+
+	const urls = useMemo(
+		() => order.map((k) => keyToItem.get(k)?.url || ''),
+		[order, keyToItem],
+	);
 
 	const onDragStart = (e: any) => setActiveId(String(e.active.id));
 	const onDragEnd = (e: any) => {
@@ -58,38 +66,55 @@ export const SortableGallery = ({
 	};
 
 	return (
-		<DndContext
-			sensors={sensors}
-			collisionDetection={closestCenter}
-			onDragStart={onDragStart}
-			onDragEnd={onDragEnd}
-		>
-			<SortableContext items={order} strategy={rectSortingStrategy}>
-				<div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-					<AnimatePresence initial>
-						{order.map((k) => (
-							<DragCard
-								key={k}
-								id={k}
-								item={keyToItem.get(k) as DisplayItem}
-								onDelete={() => onDelete(k)}
-								onError={() => onDelete(k)}
-								progress={progress?.get(k) ?? 0}
-								disabled={!!disabled}
-								isPrimary={order[0] === k}
-							/>
-						))}
-					</AnimatePresence>
-				</div>
-			</SortableContext>
+		<>
+			<DndContext
+				sensors={sensors}
+				collisionDetection={closestCenter}
+				onDragStart={onDragStart}
+				onDragEnd={onDragEnd}
+			>
+				<SortableContext items={order} strategy={rectSortingStrategy}>
+					<div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+						<AnimatePresence initial>
+							{order.map((k, i) => (
+								<DragCard
+									key={k}
+									id={k}
+									item={keyToItem.get(k) as DisplayItem}
+									onDelete={() => onDelete(k)}
+									onError={() => onDelete(k)}
+									progress={progress?.get(k) ?? 0}
+									disabled={!!disabled}
+									isPrimary={order[0] === k}
+									onPreview={() => {
+										setIndex(i);
+										setIsOpen(true);
+									}}
+								/>
+							))}
+						</AnimatePresence>
+					</div>
+				</SortableContext>
 
-			<DragOverlay>
-				<DragCard
-					id={activeId ?? ''}
-					item={keyToItem.get(activeId ?? '') as DisplayItem}
-				/>
-			</DragOverlay>
-		</DndContext>
+				<DragOverlay>
+					{activeId ? (
+						<DragCard
+							id={activeId}
+							item={keyToItem.get(activeId) as DisplayItem}
+						/>
+					) : null}
+				</DragOverlay>
+			</DndContext>
+
+			<PhotoSlider
+				images={urls.map((u) => ({ src: u, key: u }))}
+				visible={isOpen}
+				index={index}
+				onIndexChange={setIndex}
+				onClose={() => setIsOpen(false)}
+				maskOpacity={0.5}
+			/>
+		</>
 	);
 };
 

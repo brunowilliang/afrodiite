@@ -3,16 +3,24 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { parseDate, toCalendarDate } from '@internationalized/date';
 import { useMutation } from '@tanstack/react-query';
 import { useRouteContext, useRouter } from '@tanstack/react-router';
+import { useRef } from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import slugify from 'slugify';
 import { toast } from 'sonner';
 import z from 'zod';
+import { Icon } from '@/components/core/Icon';
 import { Button } from '@/components/heroui/Button';
 import { Input } from '@/components/heroui/Input';
 import { api } from '@/lib/api';
 
 const schema = z.object({
 	artist_name: z.string().min(1, { message: 'Nome Artístico é obrigatório' }),
-	slug: z.string().min(1, { message: 'Slug é obrigatório' }),
+	slug: z
+		.string()
+		.min(1, { message: 'Slug é obrigatório' })
+		.regex(/^[a-z0-9-]+$/, {
+			message: 'Use apenas letras minúsculas, números e hífen',
+		}),
 	description: z.string().min(1, { message: 'Descrição é obrigatória' }),
 	birthday: z
 		.string()
@@ -46,9 +54,17 @@ export const InformationTab = () => {
 					router.invalidate();
 				},
 				onError: (error) => {
+					const message =
+						error instanceof Error ? error.message : String(error);
 					console.error(error);
+					if (/slug/i.test(message) && /(unique|duplic)/i.test(message)) {
+						toast.error('Slug já em uso', {
+							description: 'Escolha outro slug, ele precisa ser único.',
+						});
+						return;
+					}
 					toast.error('Error updating profile', {
-						description: error.message,
+						description: message,
 					});
 				},
 			},
@@ -69,6 +85,9 @@ export const InformationTab = () => {
 		},
 	});
 
+	const slugOptions = { lower: true, strict: true, locale: 'pt' as const };
+	const isSlugManualRef = useRef<boolean>(Boolean(profile?.slug));
+
 	return (
 		<Form
 			validationBehavior="aria"
@@ -83,7 +102,13 @@ export const InformationTab = () => {
 						label="Nome Artístico"
 						isRequired
 						value={field.value ?? ''}
-						onValueChange={field.onChange}
+						onValueChange={(v) => {
+							field.onChange(v);
+							if (!isSlugManualRef.current) {
+								const auto = slugify(v ?? '', slugOptions);
+								form.setValue('slug', auto, { shouldValidate: true });
+							}
+						}}
 						onBlur={field.onBlur}
 						ref={field.ref}
 						name={field.name}
@@ -107,8 +132,30 @@ export const InformationTab = () => {
 								</span>
 							</div>
 						}
+						endContent={
+							<Button
+								type="button"
+								size="sm"
+								isIconOnly
+								variant="flat"
+								color="default"
+								className="h-full px-5"
+								onClick={() => {
+									isSlugManualRef.current = false;
+									const fromName = form.getValues('artist_name') ?? '';
+									const auto = slugify(fromName, slugOptions);
+									form.setValue('slug', auto, { shouldValidate: true });
+								}}
+							>
+								<Icon name="Refresh" size="18" />
+							</Button>
+						}
 						value={field.value ?? ''}
-						onValueChange={field.onChange}
+						onValueChange={(v) => {
+							isSlugManualRef.current = true;
+							const sanitized = slugify(v ?? '', slugOptions);
+							field.onChange(sanitized);
+						}}
 						onBlur={field.onBlur}
 						ref={field.ref}
 						name={field.name}
