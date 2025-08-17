@@ -1,9 +1,0 @@
-ALTER TABLE "subscriptions" DISABLE ROW LEVEL SECURITY;--> statement-breakpoint
-DROP TABLE "subscriptions" CASCADE;--> statement-breakpoint
-ALTER TABLE "escort_profiles" ALTER COLUMN "characteristics" SET DEFAULT '{"gender":"","age":"","height":"","weight":"","hair_color":"","eye_color":"","sexual_preference":"","ethnicity":"","silicone":false,"tattoos":false,"piercings":false,"smoker":false,"languages":""}'::jsonb;--> statement-breakpoint
-ALTER TABLE "escort_profiles" ALTER COLUMN "office_hours" SET DEFAULT '[{"day":"monday","is_available":true,"start":"00:00","end":"23:59"},{"day":"tuesday","is_available":true,"start":"00:00","end":"23:59"},{"day":"wednesday","is_available":true,"start":"00:00","end":"23:59"},{"day":"thursday","is_available":true,"start":"00:00","end":"23:59"},{"day":"friday","is_available":true,"start":"00:00","end":"23:59"},{"day":"saturday","is_available":true,"start":"00:00","end":"23:59"},{"day":"sunday","is_available":true,"start":"00:00","end":"23:59"}]'::jsonb;--> statement-breakpoint
-ALTER TABLE "escort_profiles" ALTER COLUMN "prices" SET DEFAULT '[{"slot":"30m","is_available":true,"amount":0,"currency":"EUR"},{"slot":"1h","is_available":true,"amount":0,"currency":"EUR"},{"slot":"2h","is_available":true,"amount":0,"currency":"EUR"},{"slot":"4h","is_available":true,"amount":0,"currency":"EUR"},{"slot":"overnight","is_available":true,"amount":0,"currency":"EUR"},{"slot":"daily","is_available":true,"amount":0,"currency":"EUR"},{"slot":"travel_daily","is_available":true,"amount":0,"currency":"EUR"}]'::jsonb;--> statement-breakpoint
-ALTER TABLE "escort_profiles" ALTER COLUMN "gallery" SET DEFAULT '[]'::jsonb;--> statement-breakpoint
-ALTER TABLE "escort_profiles" DROP COLUMN "fetishes";--> statement-breakpoint
-ALTER TABLE "users" DROP COLUMN "stripe_customer_id";--> statement-breakpoint
-ALTER TABLE "users" DROP COLUMN "role";

@@ -24,7 +24,7 @@ function RouteComponent() {
 			</div>
 			<Text
 				as="span"
-				className="absolute bottom-4 px-4 text-center text-primary/70"
+				className="absolute bottom-4 w-full px-4 text-center text-primary/70"
 			>
 				Afrodiite.com - Todos os direitos reservados
 			</Text>

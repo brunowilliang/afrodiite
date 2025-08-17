@@ -57,7 +57,7 @@ export const escortProfiles = pgTable('escort_profiles', {
 		.$type<Characteristics>()
 		.default(DEFAULT_CHARACTERISTICS),
 
-	services: jsonb('services').default({}),
+	services: jsonb('services').$type<number[]>().default([]),
 
 	gallery: jsonb('gallery').$type<GalleryItem[]>().default([]),
 

@@ -9,7 +9,9 @@ export const profileRoutes = {
 		return await db
 			.select()
 			.from(escortProfiles)
-			.where(eq(escortProfiles.id, context.session.user.id));
+			.where(eq(escortProfiles.id, context.session.user.id))
+			.limit(1)
+			.then(([profile]) => profile);
 	}),
 	update: authProcedure
 		.input(profileUpdateSchema)

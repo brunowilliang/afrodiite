@@ -1,12 +1,29 @@
-import { Button, Chip, DateInput, Form, Input, Textarea } from '@heroui/react';
+import { Form } from '@heroui/react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { parseDate, toCalendarDate } from '@internationalized/date';
 import { useMutation } from '@tanstack/react-query';
 import { useRouteContext, useRouter } from '@tanstack/react-router';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
-import { ProfileUpdate } from '@/api/utils/types/escort';
-import { Stack } from '@/components/core/Stack';
-import { PhoneInput } from '@/components/heroui/NumberInput';
+import z from 'zod';
+import { Button } from '@/components/heroui/Button';
+import { Input } from '@/components/heroui/Input';
 import { api } from '@/lib/api';
+
+const schema = z.object({
+	artist_name: z.string().min(1, { message: 'Nome Artístico é obrigatório' }),
+	slug: z.string().min(1, { message: 'Slug é obrigatório' }),
+	description: z.string().min(1, { message: 'Descrição é obrigatória' }),
+	birthday: z
+		.string()
+		.regex(/^\d{4}-\d{2}-\d{2}$/, {
+			message: 'Data de Nascimento é obrigatória',
+		})
+		.nonempty({ message: 'Data de Nascimento é obrigatória' }),
+	nationality: z.string().min(1, { message: 'Nacionalidade é obrigatória' }),
+	phone: z.string().min(1, { message: 'Telefone é obrigatório' }),
+	whatsapp: z.string().min(1, { message: 'WhatsApp é obrigatório' }),
+});
 
 export const InformationTab = () => {
 	const router = useRouter();
@@ -16,7 +33,8 @@ export const InformationTab = () => {
 		api.queries.profile.update.mutationOptions(),
 	);
 
-	const handleSubmit = (values: ProfileUpdate) => {
+	const handleSubmit = (values: z.infer<typeof schema>) => {
+		console.log(values);
 		updateProfile.mutateAsync(
 			{
 				id: session?.user.id,
@@ -38,84 +56,165 @@ export const InformationTab = () => {
 	};
 
 	const form = useForm({
+		resolver: zodResolver(schema),
 		mode: 'onChange',
-		values: (profile ?? {}) as Partial<ProfileUpdate>,
+		defaultValues: {
+			artist_name: profile?.artist_name ?? '',
+			slug: profile?.slug ?? '',
+			description: profile?.description ?? '',
+			birthday: profile?.birthday ?? '',
+			nationality: profile?.nationality ?? '',
+			phone: profile?.phone ?? '',
+			whatsapp: profile?.whatsapp ?? '',
+		},
 	});
 
 	return (
-		<Stack className="gap-5">
-			<Chip color="default" size="lg" variant="flat" radius="sm">
-				Informações
-			</Chip>
-
-			<Form
-				validationBehavior="aria"
-				onSubmit={form.handleSubmit(handleSubmit)}
-			>
-				<Stack className="w-full gap-4">
+		<Form
+			validationBehavior="aria"
+			onSubmit={form.handleSubmit(handleSubmit)}
+			className="w-full space-y-3"
+		>
+			<Controller
+				control={form.control}
+				name="artist_name"
+				render={({ field, fieldState }) => (
 					<Input
-						isRequired
 						label="Nome Artístico"
-						placeholder="Digite seu nome artístico"
-						size="md"
-						className="w-full"
-					/>
-					<Input
 						isRequired
+						value={field.value ?? ''}
+						onValueChange={field.onChange}
+						onBlur={field.onBlur}
+						ref={field.ref}
+						name={field.name}
+						isInvalid={!!fieldState.error}
+						errorMessage={fieldState.error?.message}
+					/>
+				)}
+			/>
+
+			<Controller
+				control={form.control}
+				name="slug"
+				render={({ field, fieldState }) => (
+					<Input
 						label="Slug"
-						placeholder="Sua URL personalizada"
-						size="md"
-						className="w-full"
-					/>
-
-					<Textarea
 						isRequired
+						startContent={
+							<div className="pointer-events-none flex items-center">
+								<span className="text-default text-small">
+									https://afrodiite.com/escort/
+								</span>
+							</div>
+						}
+						value={field.value ?? ''}
+						onValueChange={field.onChange}
+						onBlur={field.onBlur}
+						ref={field.ref}
+						name={field.name}
+						isInvalid={!!fieldState.error}
+						errorMessage={fieldState.error?.message}
+					/>
+				)}
+			/>
+
+			<Controller
+				control={form.control}
+				name="description"
+				render={({ field, fieldState }) => (
+					<Input.TextArea
 						label="Descrição"
-						placeholder="Digite uma descrição sobre você"
-						size="md"
-						className="w-full"
-						minRows={10}
-						maxRows={15}
 						description={'Máximo de 1000 caracteres'}
-					/>
-
-					<DateInput
 						isRequired
+						value={field.value ?? ''}
+						onValueChange={field.onChange}
+						onBlur={field.onBlur}
+						ref={field.ref}
+						name={field.name}
+						isInvalid={!!fieldState.error}
+						errorMessage={fieldState.error?.message}
+					/>
+				)}
+			/>
+
+			<Controller
+				control={form.control}
+				name="birthday"
+				render={({ field, fieldState }) => (
+					<Input.DateInput
 						label="Data de Nascimento"
-						size="md"
-						className="w-full"
-						granularity="day"
-					/>
-
-					<Input
 						isRequired
-						label="Nacionalidade"
-						placeholder="Digite a sua nacionalidade"
-						size="md"
-						className="w-full"
+						value={field.value ? parseDate(field.value) : null}
+						onChange={(date) => {
+							const v = date ? toCalendarDate(date).toString() : null;
+							field.onChange(v);
+						}}
+						onBlur={field.onBlur}
+						ref={field.ref}
+						name={field.name}
+						isInvalid={!!fieldState.error}
+						errorMessage={fieldState.error?.message}
 					/>
+				)}
+			/>
 
-					<PhoneInput
+			<Controller
+				control={form.control}
+				name="nationality"
+				render={({ field, fieldState }) => (
+					<Input
+						label="Nacionalidade"
+						isRequired
+						value={field.value ?? ''}
+						onValueChange={field.onChange}
+						onBlur={field.onBlur}
+						ref={field.ref}
+						name={field.name}
+						isInvalid={!!fieldState.error}
+						errorMessage={fieldState.error?.message}
+					/>
+				)}
+			/>
+
+			<Controller
+				control={form.control}
+				name="phone"
+				render={({ field, fieldState }) => (
+					<Input.PhoneInput
 						label="Telefone"
 						defaultCountry="PT"
-						onChange={(v) => console.log(v)}
+						onChange={field.onChange}
+						onBlur={field.onBlur}
+						name={field.name}
+						value={field.value ?? ''}
+						isRequired
+						isInvalid={!!fieldState.error}
+						errorMessage={fieldState.error?.message}
 					/>
-					<PhoneInput
+				)}
+			/>
+
+			<Controller
+				control={form.control}
+				name="whatsapp"
+				render={({ field, fieldState }) => (
+					<Input.PhoneInput
 						label="WhatsApp"
 						defaultCountry="PT"
-						onChange={(v) => console.log(v)}
+						onChange={field.onChange}
+						onBlur={field.onBlur}
+						name={field.name}
+						value={field.value ?? ''}
+						isRequired
+						isInvalid={!!fieldState.error}
+						errorMessage={fieldState.error?.message}
 					/>
+				)}
+			/>
 
-					<Button
-						color="primary"
-						isLoading={updateProfile.isPending}
-						size="md"
-						type="submit"
-					>
-						Salvar
-					</Button>
-				</Stack>
-			</Form>
-		</Stack>
+			<Button isLoading={updateProfile.isPending} type="submit">
+				Salvar
+			</Button>
+		</Form>
 	);
 };

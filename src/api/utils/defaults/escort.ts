@@ -129,17 +129,17 @@ export const DEFAULT_PRICES: Price[] = [
 
 export const DEFAULT_CHARACTERISTICS = {
 	gender: '',
-	age: '',
-	height: '',
-	weight: '',
+	age: 0,
+	height: 0,
+	weight: 0,
 	hair_color: '',
 	eye_color: '',
 	sexual_preference: '',
 	ethnicity: '',
-	silicone: false,
-	tattoos: false,
-	piercings: false,
-	smoker: false,
+	silicone: '' as 'yes' | 'no',
+	tattoos: '' as 'yes' | 'no',
+	piercings: '' as 'yes' | 'no',
+	smoker: '' as 'yes' | 'no',
 	languages: '',
 };
 

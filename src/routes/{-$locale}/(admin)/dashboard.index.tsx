@@ -1,9 +1,9 @@
-import { Button, Input, Select, SelectItem } from '@heroui/react';
+import { Button, Select, SelectItem } from '@heroui/react';
 import { createFileRoute } from '@tanstack/react-router';
 import { Container } from '@/components/core/Stack';
 import { Text } from '@/components/core/Text';
-import { PhoneInput } from '@/components/heroui/NumberInput';
-import ThemeToggleButton from '@/components/ui/theme-toggle-button';
+import { Input } from '@/components/heroui/Input';
+import { PhoneInput } from '@/components/heroui/PhoneInput';
 
 export const Route = createFileRoute('/{-$locale}/(admin)/dashboard/')({
 	component: RouteComponent,
@@ -28,13 +28,10 @@ function RouteComponent() {
 	// }
 
 	return (
-		<Container hasHeader>
-			<Text size="2xl" weight="bold">
-				Dashboard
-			</Text>
-			<ThemeToggleButton />
-			<Input label="Search" size="lg" placeholder="Search..." type="search" />
-			<PhoneInput label="Phone" placeholder="Phone" />
+		<Container>
+			<Text size="2xl">Dashboard</Text>
+			<Input label="Search" type="search" />
+			<PhoneInput label="Phone" defaultCountry="PT" />
 			<Select aria-label="Search">
 				<SelectItem>teste</SelectItem>
 				<SelectItem>teste</SelectItem>

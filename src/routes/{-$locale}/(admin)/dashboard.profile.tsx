@@ -1,8 +1,11 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { z } from 'zod';
+import { Icon } from '@/components/core/Icon';
 import { Container, Stack } from '@/components/core/Stack';
 import { Text } from '@/components/core/Text';
+import { Badge } from '@/components/heroui/Badge';
 import { CharacteristicsTab } from './-dashboard.profile/Characteristics';
+import { GalleryTab } from './-dashboard.profile/Gallery';
 import { InformationTab } from './-dashboard.profile/Information';
 import { LocationTab } from './-dashboard.profile/Location';
 import { OfficeHoursTab } from './-dashboard.profile/OfficeHours';
@@ -38,91 +41,102 @@ export const Route = createFileRoute('/{-$locale}/(admin)/dashboard/profile')({
 function RouteComponent() {
 	const { tab } = Route.useSearch();
 	// const router = useRouter();
-	// const { session, profile } = Route.useRouteContext();
+	// const { session } = Route.useRouteContext();
 
 	// const updateProfile = useMutation(
-	// 	api.queries.profile.update.mutationOptions({
-	// 		onSuccess: () => {
-	// 			toast.success('Profile updated');
-	// 			router.invalidate();
-	// 		},
-	// 		onError: (error) => {
-	// 			console.error(error);
-	// 			toast.error('Error updating profile', {
-	// 				description: error.message,
-	// 			});
-	// 		},
-	// 	}),
+	// 	api.queries.profile.update.mutationOptions(),
 	// );
 
+	// const handleSubmit = (values: Partial<ProfileUpdate>) => {
+	// 	updateProfile.mutateAsync(
+	// 		{
+	// 			id: session?.user.id,
+	// 			...values,
+	// 		},
+	// 		{
+	// 			onSuccess: () => {
+	// 				toast.success('Profile updated');
+	// 				router.invalidate();
+	// 			},
+	// 			onError: (error) => {
+	// 				console.error(error);
+	// 				toast.error('Error updating profile', {
+	// 					description: error.message,
+	// 				});
+	// 			},
+	// 		},
+	// 	);
+	// };
+
 	return (
-		<Container hasHeader>
+		<Container>
 			<Stack className="gap-10">
 				<Text size="2xl" weight="bold">
 					Meu Perfil
 				</Text>
-				{tab === 'information' && <InformationTab />}
-				{tab === 'location' && <LocationTab />}
-				{tab === 'characteristics' && <CharacteristicsTab />}
-				{tab === 'schedule' && <OfficeHoursTab />}
-				{tab === 'prices' && <PricesTab />}
-				{tab === 'services' && <ServicesTab />}
-
-				{/* {tab === 'information' && (
-					<InformationTab
-						id={session?.user.id!}
-						data={profileData}
-						onSubmit={updateProfile}
-					/>
+				{tab === 'information' && (
+					<Stack className="gap-5">
+						<Badge>
+							<Icon name="Stars" variant="bulk" size="20" />
+							Informações
+						</Badge>
+						<InformationTab />
+					</Stack>
 				)}
-
 				{tab === 'location' && (
-					<LocationTab
-						id={session?.user.id!}
-						data={profileData}
-						onSubmit={updateProfile}
-					/>
+					<Stack className="gap-5">
+						<Badge>
+							<Icon name="Stars" variant="bulk" size="20" />
+							Localização
+						</Badge>
+						<LocationTab />
+					</Stack>
 				)}
-
 				{tab === 'characteristics' && (
-					<CharacteristicsTab
-						id={session?.user.id!}
-						data={profileData}
-						onSubmit={updateProfile}
-					/>
+					<Stack className="gap-5">
+						<Badge>
+							<Icon name="Stars" variant="bulk" size="20" />
+							Características
+						</Badge>
+						<CharacteristicsTab />
+					</Stack>
 				)}
-
 				{tab === 'schedule' && (
-					<OfficeHoursTab
-						id={session?.user.id!}
-						data={profileData}
-						onSubmit={updateProfile}
-					/>
+					<Stack className="gap-5">
+						<Badge>
+							<Icon name="Stars" variant="bulk" size="20" />
+							Horários
+						</Badge>
+						<OfficeHoursTab />
+					</Stack>
 				)}
-
 				{tab === 'prices' && (
-					<PricesTab
-						id={session?.user.id!}
-						data={profileData}
-						onSubmit={updateProfile}
-					/>
+					<Stack className="gap-5">
+						<Badge>
+							<Icon name="Stars" variant="bulk" size="20" />
+							Preços
+						</Badge>
+						<PricesTab />
+					</Stack>
 				)}
-
 				{tab === 'services' && (
-					<ServicesTab
-						id={session?.user.id!}
-						data={profileData}
-						onSubmit={updateProfile}
-					/>
+					<Stack className="gap-5">
+						<Badge>
+							<Icon name="Stars" variant="bulk" size="20" />
+							Serviços
+						</Badge>
+						<ServicesTab />
+					</Stack>
 				)}
-
 				{tab === 'gallery' && (
-					<GalleryTab
-						id={session?.user.id!}
-						data={profileData}
-						onSubmit={updateProfile}
-					/>
-				)} */}
+					<Stack className="gap-5">
+						<Badge>
+							<Icon name="Stars" variant="bulk" size="20" />
+							Galeria
+						</Badge>
+						<GalleryTab />
+					</Stack>
+				)}
 			</Stack>
 		</Container>
 	);

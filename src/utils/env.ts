@@ -12,7 +12,6 @@ const envSchema = z.object({
 	// Server variables
 	BETTER_AUTH_SECRET: z.string(),
 	DATABASE_URL: z.url().startsWith('postgresql://'),
-	DATABASE_POOL_URL: z.url().startsWith('postgresql://'),
 	STRIPE_SECRET_KEY: z.string().startsWith('sk_'),
 	STRIPE_WEBHOOK_SECRET: z.string().startsWith('whsec_'),
 	STRIPE_WEBHOOK_SECRET_2: z.string().startsWith('whsec_'),

@@ -1,6 +1,7 @@
 /// <reference types="vite/client" />
 
 import { HeroUIProvider, ToastProvider } from '@heroui/react';
+import { I18nProvider } from '@react-aria/i18n';
 import type { QueryClient } from '@tanstack/react-query';
 import {
 	createRootRouteWithContext,
@@ -27,6 +28,7 @@ export const Route = createRootRouteWithContext<RootContext>()({
 		const session = await api.client.session();
 		if (session) {
 			const profile = await api.client.profile.get();
+			console.log(profile);
 			return { session, profile };
 		}
 		return { session: null };
@@ -113,15 +115,17 @@ function RootDocument() {
 					storageKey="theme"
 				>
 					<HeroUIProvider>
-						<PhotoProvider>
-							<Outlet />
-							<Toaster position="top-center" />
-						</PhotoProvider>
-						<ToastProvider
-							toastOffset={20}
-							toastProps={{}}
-							placement="top-center"
-						/>
+						<I18nProvider locale="pt-PT">
+							<PhotoProvider>
+								<Outlet />
+								<Toaster position="top-center" />
+							</PhotoProvider>
+							<ToastProvider
+								toastOffset={20}
+								toastProps={{}}
+								placement="top-center"
+							/>
+						</I18nProvider>
 					</HeroUIProvider>
 				</ThemeProvider>
 				<TanStackRouterDevtools position="bottom-right" />

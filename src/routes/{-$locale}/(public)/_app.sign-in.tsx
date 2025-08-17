@@ -1,4 +1,4 @@
-import { Button, Form, Link } from '@heroui/react';
+import { Form, Link } from '@heroui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
 	createFileRoute,
@@ -11,6 +11,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { Icon } from '@/components/core/Icon';
 import { Stack } from '@/components/core/Stack';
 import { Text } from '@/components/core/Text';
+import { Button } from '@/components/heroui/Button';
 import { Input } from '@/components/heroui/Input';
 import { Modal, ModalRef } from '@/components/heroui/Modal';
 import { toast } from '@/components/heroui/Toast';
@@ -133,9 +134,10 @@ function RouteComponent() {
 						name="email"
 						render={({ field, fieldState }) => (
 							<Input
-								label="Email"
+								label="E-mail"
 								size="md"
 								type="email"
+								customVariant="transparent"
 								value={field.value ?? ''}
 								onValueChange={field.onChange}
 								onBlur={field.onBlur}
@@ -155,6 +157,7 @@ function RouteComponent() {
 								label="Senha"
 								size="md"
 								type="password"
+								customVariant="transparent"
 								value={field.value ?? ''}
 								onValueChange={field.onChange}
 								onBlur={field.onBlur}
@@ -168,8 +171,6 @@ function RouteComponent() {
 					/>
 					<div className="w-full space-y-3">
 						<Button
-							size="lg"
-							color="primary"
 							fullWidth
 							type="submit"
 							isLoading={signInForm.formState.isSubmitting}
@@ -177,8 +178,6 @@ function RouteComponent() {
 							Entrar
 						</Button>
 						<Button
-							size="lg"
-							color="primary"
 							fullWidth
 							variant="flat"
 							onPress={() => signUpModalRef.current?.open()}
@@ -227,7 +226,7 @@ function RouteComponent() {
 								name="email"
 								render={({ field, fieldState }) => (
 									<Input
-										label="Email"
+										label="E-mail"
 										size="md"
 										type="email"
 										value={field.value ?? ''}
@@ -251,7 +250,6 @@ function RouteComponent() {
 									Cancelar
 								</Button>
 								<Button
-									color="primary"
 									fullWidth
 									type="submit"
 									isLoading={forgotForm.formState.isSubmitting}
@@ -302,7 +300,7 @@ function RouteComponent() {
 								name="email"
 								render={({ field, fieldState }) => (
 									<Input
-										label="Email"
+										label="E-mail"
 										size="md"
 										type="email"
 										value={field.value ?? ''}
@@ -346,7 +344,6 @@ function RouteComponent() {
 									Cancelar
 								</Button>
 								<Button
-									color="primary"
 									fullWidth
 									type="submit"
 									isLoading={signUpForm.formState.isSubmitting}

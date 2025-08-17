@@ -1,1 +1,0 @@
-ALTER TABLE "escort_profiles" ALTER COLUMN "characteristics" SET DEFAULT '{"age":"","height":"","weight":"","hair_color":"","eye_color":""}'::jsonb;

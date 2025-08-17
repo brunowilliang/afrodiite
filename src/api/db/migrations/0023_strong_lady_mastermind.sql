@@ -1,5 +1,0 @@
-ALTER TABLE "escort_profiles" ALTER COLUMN "characteristics" SET DEFAULT '{"age":"","height":"","weight":"","hair_color":"","eye_color":"","sexual_preference":"","ethnicity":"","silicone":false,"tattoos":false,"piercings":false,"smoker":false,"languages":""}'::jsonb;--> statement-breakpoint
-ALTER TABLE "escort_profiles" ALTER COLUMN "prices" SET DEFAULT '{"30m":{"is_available":true,"amount":0,"currency":"EUR"},"1h":{"is_available":true,"amount":0,"currency":"EUR"},"2h":{"is_available":true,"amount":0,"currency":"EUR"},"4h":{"is_available":true,"amount":0,"currency":"EUR"},"overnight":{"is_available":true,"amount":0,"currency":"EUR"},"daily":{"is_available":true,"amount":0,"currency":"EUR"},"travel_daily":{"is_available":true,"amount":0,"currency":"EUR"}}'::jsonb;--> statement-breakpoint
-ALTER TABLE "escort_profiles" ALTER COLUMN "services" SET DEFAULT '{}'::jsonb;--> statement-breakpoint
-ALTER TABLE "escort_profiles" ALTER COLUMN "fetishes" SET DEFAULT '{}'::jsonb;--> statement-breakpoint
-ALTER TABLE "escort_profiles" ALTER COLUMN "gallery" SET DEFAULT '{}'::jsonb;

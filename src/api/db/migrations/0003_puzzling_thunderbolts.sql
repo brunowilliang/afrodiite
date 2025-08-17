@@ -1,1 +1,0 @@
-ALTER TABLE "escort_profiles" ADD COLUMN "polar_customer_id" text;

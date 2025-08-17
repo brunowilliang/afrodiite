@@ -67,6 +67,7 @@
         "noDangerouslySetInnerHtml": "off"
       },
       "a11y": {
+        "useKeyWithClickEvents": "off",
         "useSemanticElements": "off",
         "noStaticElementInteractions": "off",
         "useButtonType": "off",
@@ -74,6 +75,7 @@
         "noLabelWithoutControl": "off"
       },
       "suspicious": {
+        "noShadowRestrictedNames": "off",
         "noArrayIndexKey": "off",
         "noExplicitAny": "off"
       },

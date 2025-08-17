@@ -7,6 +7,7 @@ export const Route = createFileRoute('/{-$locale}/(public)/_app/')({
 });
 
 function RouteComponent() {
+	const { session } = Route.useRouteContext();
 	const router = useRouter();
 	return (
 		<div className="centered mx-auto flex min-h-[100dvh] max-w-lg flex-col gap-4 overflow-hidden px-4">
@@ -20,17 +21,27 @@ function RouteComponent() {
 				</Text>
 			</div>
 
-			<Button
-				onPress={() =>
-					router.navigate({
-						to: '/{-$locale}/sign-in',
-					})
-				}
-				color="primary"
-				variant="flat"
-			>
-				Realize seu cadastro
-			</Button>
+			{session ? (
+				<Button
+					onPress={() => router.navigate({ to: '/{-$locale}/dashboard' })}
+					color="primary"
+					variant="flat"
+				>
+					Ir para o dashboard
+				</Button>
+			) : (
+				<Button
+					onPress={() =>
+						router.navigate({
+							to: '/{-$locale}/sign-in',
+						})
+					}
+					color="primary"
+					variant="flat"
+				>
+					Realize seu cadastro
+				</Button>
+			)}
 
 			{/* <Input
 				isClearable
