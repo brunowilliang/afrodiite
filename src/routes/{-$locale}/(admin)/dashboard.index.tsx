@@ -6,6 +6,7 @@ import { Text } from '@/components/core/Text';
 import { Button } from '@/components/heroui/Button';
 import { Modal, ModalRef } from '@/components/heroui/Modal';
 import { useOnboardingStep } from '@/hooks/useOnboardingStep';
+import { computeOnboardingCompletion } from './-dashboard.profile/schemas';
 
 const steps = [
 	{
@@ -72,112 +73,7 @@ function RouteComponent() {
 	const { profile } = Route.useRouteContext();
 	const modalRef = useRef<ModalRef>(null);
 
-	const isNonEmpty = (v: unknown): boolean =>
-		typeof v === 'string' ? v.trim().length > 0 : Boolean(v);
-
-	// 1) Information
-	const informationDone = useMemo(() => {
-		return (
-			isNonEmpty(profile?.artist_name) &&
-			isNonEmpty(profile?.slug) &&
-			isNonEmpty(profile?.description) &&
-			isNonEmpty(profile?.birthday) &&
-			isNonEmpty(profile?.nationality) &&
-			isNonEmpty(profile?.phone) &&
-			isNonEmpty(profile?.whatsapp)
-		);
-	}, [profile]);
-
-	// 2) Location (country não conta)
-	const locationDone = useMemo(() => {
-		return (
-			isNonEmpty(profile?.state) &&
-			isNonEmpty(profile?.city) &&
-			isNonEmpty(profile?.neighborhood)
-		);
-	}, [profile]);
-
-	// 3) Characteristics
-	const characteristicsDone = useMemo(() => {
-		const c = profile?.characteristics as Record<string, unknown> | undefined;
-		if (!c) return false;
-		const requiredKeys = [
-			'gender',
-			'age',
-			'height',
-			'weight',
-			'eye_color',
-			'hair_color',
-			'ethnicity',
-			'languages',
-			'sexual_preference',
-			'silicone',
-			'tattoos',
-			'piercings',
-			'smoker',
-		];
-		return requiredKeys.every((k) => isNonEmpty((c as any)[k]));
-	}, [profile]);
-
-	// 4) Office hours: pelo menos 1 dia ativo válido (start < end)
-	const officeDone = useMemo(() => {
-		const hours = Array.isArray(profile?.office_hours)
-			? (profile?.office_hours as Array<{ is_available?: boolean; start?: string; end?: string }>)
-			: [];
-		return hours.some((h) => {
-			if (!h?.is_available) return false;
-			if (!isNonEmpty(h.start) || !isNonEmpty(h.end)) return false;
-			const s = String(h.start);
-			const e = String(h.end);
-			return s < e;
-		});
-	}, [profile]);
-
-	// 5) Prices: pelo menos 1 slot ativo com amount > 0
-	const pricesDone = useMemo(() => {
-		const prices = Array.isArray(profile?.prices)
-			? (profile?.prices as Array<{ is_available?: boolean; amount?: number }>)
-			: [];
-		return prices.some((p) => Boolean(p?.is_available) && (p?.amount ?? 0) > 0);
-	}, [profile]);
-
-	// 6) Services: pelo menos 1
-	const servicesDone = useMemo(() => {
-		const sv = (profile as any)?.services as unknown;
-		if (!Array.isArray(sv)) return false;
-		if (sv.length === 0) return false;
-		if (typeof sv[0] === 'number') return (sv as number[]).length > 0;
-		return (sv as Array<{ id: number; is_available?: boolean }>).some((s) => !!s?.is_available);
-	}, [profile]);
-
-	// 7) Gallery: pelo menos 5 fotos
-	const galleryDone = useMemo(() => {
-		const gallery = Array.isArray(profile?.gallery) ? (profile?.gallery as Array<{ url?: string }>) : [];
-		const valid = gallery.filter((g) => typeof g?.url === 'string' && g.url.length > 0);
-		return valid.length >= 5;
-	}, [profile]);
-
-	const completedSteps = useMemo(
-		() => [
-			informationDone,
-			locationDone,
-			characteristicsDone,
-			officeDone,
-			pricesDone,
-			servicesDone,
-			galleryDone,
-		],
-		[
-			informationDone,
-			locationDone,
-			characteristicsDone,
-			officeDone,
-			pricesDone,
-			servicesDone,
-			galleryDone,
-		],
-	);
-
+	const completedSteps = useMemo(() => computeOnboardingCompletion(profile as any), [profile]);
 	const { stepsState } = useOnboardingStep(steps.length, completedSteps);
 
 	return (
