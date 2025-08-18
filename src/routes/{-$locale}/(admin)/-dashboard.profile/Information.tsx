@@ -12,28 +12,13 @@ import { Icon } from '@/components/core/Icon';
 import { Button } from '@/components/heroui/Button';
 import { Input } from '@/components/heroui/Input';
 import { api } from '@/lib/api';
+import { informationSchema } from './schema';
 
-const schema = z.object({
-	artist_name: z.string().min(1, { message: 'Nome Artístico é obrigatório' }),
-	slug: z
-		.string()
-		.min(1, { message: 'Slug é obrigatório' })
-		.regex(/^[a-z0-9-]+$/, {
-			message: 'Use apenas letras minúsculas, números e hífen',
-		}),
-	description: z.string().min(1, { message: 'Descrição é obrigatória' }),
-	birthday: z
-		.string()
-		.regex(/^\d{4}-\d{2}-\d{2}$/, {
-			message: 'Data de Nascimento é obrigatória',
-		})
-		.nonempty({ message: 'Data de Nascimento é obrigatória' }),
-	nationality: z.string().min(1, { message: 'Nacionalidade é obrigatória' }),
-	phone: z.string().min(1, { message: 'Telefone é obrigatório' }),
-	whatsapp: z.string().min(1, { message: 'WhatsApp é obrigatório' }),
-});
+const schema = informationSchema;
 
-export const InformationTab = () => {
+type InformationTabProps = { onClose?: () => void };
+
+export const InformationTab = ({ onClose }: InformationTabProps) => {
 	const router = useRouter();
 	const { session, profile } = useRouteContext({ from: '/{-$locale}' });
 
@@ -52,6 +37,7 @@ export const InformationTab = () => {
 				onSuccess: () => {
 					toast.success('Profile updated');
 					router.invalidate();
+					onClose?.();
 				},
 				onError: (error) => {
 					const message =

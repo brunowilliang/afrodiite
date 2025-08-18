@@ -12,7 +12,9 @@ import { api } from '@/lib/api';
 import { cn } from '@/lib/utils';
 import { DATA_SERVICES } from '@/utils/services';
 
-export const ServicesTab = () => {
+type ServicesTabProps = { onClose?: () => void };
+
+export const ServicesTab = ({ onClose }: ServicesTabProps) => {
 	const router = useRouter();
 	const modalRef = useRef<ModalRef>(null);
 	const [modalService, setModalService] = useState<{
@@ -59,6 +61,7 @@ export const ServicesTab = () => {
 						// rollback
 						setSelected(prev);
 						toast.error('Falha ao salvar serviços');
+						onClose?.();
 					},
 					onSuccess: () => {
 						router.invalidate();

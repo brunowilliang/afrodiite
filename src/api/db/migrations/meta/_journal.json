@@ -15,6 +15,20 @@
       "when": 1755418875933,
       "tag": "0001_square_riptide",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1755541530700,
+      "tag": "0002_kind_madrox",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1755541701549,
+      "tag": "0003_fluffy_morph",
+      "breakpoints": true
     }
   ]
 }

@@ -7,14 +7,16 @@ import {
 	timestamp,
 } from 'drizzle-orm/pg-core';
 import {
-	type Characteristics,
 	DEFAULT_CHARACTERISTICS,
 	DEFAULT_OFFICE_HOURS,
 	DEFAULT_PRICES,
-	type GalleryItem,
-	type OfficeHour,
-	type Price,
 } from '@/api/utils/defaults/escort';
+import type {
+	Characteristics,
+	GalleryItem,
+	OfficeHour,
+	Price,
+} from '@/api/utils/types/escort';
 import { users } from './auth';
 
 export const escortProfiles = pgTable('escort_profiles', {

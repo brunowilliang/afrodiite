@@ -6,54 +6,19 @@ import { useRouteContext, useRouter } from '@tanstack/react-router';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import z from 'zod';
-import {
-	DAYS,
-	type Day,
-	DEFAULT_OFFICE_HOURS,
-} from '@/api/utils/defaults/escort';
+import { DAYS, DEFAULT_OFFICE_HOURS } from '@/api/utils/defaults/escort';
+import type { Day } from '@/api/utils/types/escort';
 import { Stack } from '@/components/core/Stack';
 import { Button } from '@/components/heroui/Button';
 import { Input } from '@/components/heroui/Input';
 import { api } from '@/lib/api';
+import { officeHoursSchema } from './schema';
 
-const timeRegex = /^([01]\d|2[0-3]):([0-5]\d)$/;
+const schema = officeHoursSchema;
 
-const daySchema = z
-	.object({
-		is_available: z.boolean(),
-		start: z.string().regex(timeRegex, {
-			error: 'Hora de início deve estar no formato HH:MM',
-		}),
-		end: z.string().regex(timeRegex, {
-			error: 'Hora de fim deve estar no formato HH:MM',
-		}),
-	})
-	.superRefine((val, ctx) => {
-		if (!val.is_available) return; // não valida se o dia não estiver ativo
-		try {
-			const s = parseTime(val.start);
-			const e = parseTime(val.end);
-			const startsBeforeEnd =
-				s.hour < e.hour || (s.hour === e.hour && s.minute < e.minute);
-			if (!startsBeforeEnd) {
-				ctx.addIssue({
-					code: 'custom',
-					message: 'Hora de início deve ser menor que a hora de fim',
-					path: ['end'],
-				});
-			}
-		} catch {
-			// parse error será pego pelos regex acima
-		}
-	});
+type OfficeHoursTabProps = { onClose?: () => void };
 
-const schema = z.object(
-	Object.fromEntries(
-		(DAYS as readonly Day[]).map((d) => [d, daySchema]),
-	) as Record<Day, typeof daySchema>,
-);
-
-export const OfficeHoursTab = () => {
+export const OfficeHoursTab = ({ onClose }: OfficeHoursTabProps) => {
 	const router = useRouter();
 	const { session, profile } = useRouteContext({ from: '/{-$locale}' });
 
@@ -75,6 +40,7 @@ export const OfficeHoursTab = () => {
 				onSuccess: () => {
 					toast.success('Profile updated');
 					router.invalidate();
+					onClose?.();
 				},
 				onError: (error) => {
 					console.error(error);
@@ -104,10 +70,19 @@ export const OfficeHoursTab = () => {
 				)) as z.infer<typeof schema>,
 	});
 
+	const onInvalid = () => {
+		const anySelected = (DAYS as readonly Day[]).some((d) =>
+			form.getValues(`${d}.is_available` as const),
+		);
+		if (!anySelected) {
+			toast.error('Ative pelo menos um dia para salvar os horários.');
+		}
+	};
+
 	return (
 		<Form
 			validationBehavior="aria"
-			onSubmit={form.handleSubmit(handleSubmit)}
+			onSubmit={form.handleSubmit(handleSubmit, onInvalid)}
 			className="w-full space-y-6"
 		>
 			{(

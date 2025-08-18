@@ -8,6 +8,7 @@ import { createRouter as createTanStackRouter } from '@tanstack/react-router';
 import { DefaultCatchBoundary } from './components/DefaultCatchBoundary';
 import { NotFound } from './components/NotFound';
 import { routeTree } from './routeTree.gen';
+import './utils/zod.config';
 
 const queryClient = new QueryClient();
 

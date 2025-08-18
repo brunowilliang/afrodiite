@@ -8,46 +8,13 @@ import z from 'zod';
 import { Button } from '@/components/heroui/Button';
 import { Input } from '@/components/heroui/Input';
 import { api } from '@/lib/api';
+import { characteristicsSchema } from './schema';
 
-const schema = z.object({
-	gender: z.string().min(1, { error: 'Gênero é obrigatório' }),
-	age: z.coerce
-		.number({
-			error: 'Idade deve ser um número',
-		})
-		.min(18, { error: 'Idade mínima é 18 anos' })
-		.max(100, { error: 'Idade máxima é 100 anos' }),
-	height: z.coerce
-		.number({
-			error: 'Altura deve ser um número',
-		})
-		.min(1, { error: 'Altura é obrigatória' })
-		.max(250, { error: 'Altura máxima é 250cm' }),
-	weight: z.coerce
-		.number({
-			error: 'Peso deve ser um número',
-		})
-		.min(1, { error: 'Peso é obrigatório' }),
-	eye_color: z.string().min(1, { error: 'Cor dos olhos é obrigatória' }),
-	hair_color: z.string().min(1, { error: 'Cor do cabelo é obrigatória' }),
-	ethnicity: z.string().min(1, { error: 'Etnia é obrigatória' }),
-	languages: z.string().min(1, { error: 'Idioma é obrigatório' }),
-	sexual_preference: z
-		.string()
-		.min(1, { error: 'Preferência sexual é obrigatória' }),
-	silicone: z.enum(['yes', 'no'], {
-		error: 'Silicone é obrigatório',
-	}),
-	tattoos: z.enum(['yes', 'no'], {
-		error: 'Tatuagens é obrigatório',
-	}),
-	piercings: z.enum(['yes', 'no'], {
-		error: 'Piercings é obrigatório',
-	}),
-	smoker: z.enum(['yes', 'no'], { error: 'Fumante é obrigatório' }),
-});
+const schema = characteristicsSchema;
 
-export const CharacteristicsTab = () => {
+type CharacteristicsTabProps = { onClose?: () => void };
+
+export const CharacteristicsTab = ({ onClose }: CharacteristicsTabProps) => {
 	const router = useRouter();
 	const { session, profile } = useRouteContext({ from: '/{-$locale}' });
 
@@ -68,6 +35,7 @@ export const CharacteristicsTab = () => {
 				onSuccess: () => {
 					toast.success('Profile updated');
 					router.invalidate();
+					onClose?.();
 				},
 				onError: (error) => {
 					console.error(error);
@@ -92,10 +60,10 @@ export const CharacteristicsTab = () => {
 			ethnicity: profile?.characteristics?.ethnicity ?? '',
 			languages: profile?.characteristics?.languages ?? '',
 			sexual_preference: profile?.characteristics?.sexual_preference ?? '',
-			silicone: profile?.characteristics?.silicone ?? 'no',
-			tattoos: profile?.characteristics?.tattoos ?? 'no',
-			piercings: profile?.characteristics?.piercings ?? 'no',
-			smoker: profile?.characteristics?.smoker ?? 'no',
+			silicone: profile?.characteristics?.silicone ?? false,
+			tattoos: profile?.characteristics?.tattoos ?? false,
+			piercings: profile?.characteristics?.piercings ?? false,
+			smoker: profile?.characteristics?.smoker ?? false,
 		},
 	});
 
@@ -284,15 +252,17 @@ export const CharacteristicsTab = () => {
 					<Input.Select
 						isRequired
 						label="Tem silicone?"
-						value={field.value}
-						onChange={field.onChange}
-						selectedKeys={[field.value]}
+						selectedKeys={[field.value ? 'true' : 'false']}
+						onChange={(v) => {
+							const val = typeof v === 'string' ? v : (v as any)?.target?.value;
+							field.onChange(val === 'true');
+						}}
 						onBlur={field.onBlur}
 						isInvalid={!!fieldState.error}
 						errorMessage={fieldState.error?.message}
 					>
-						<Input.Select.Item key="yes">Sim</Input.Select.Item>
-						<Input.Select.Item key="no">Não</Input.Select.Item>
+						<Input.Select.Item key="true">Sim</Input.Select.Item>
+						<Input.Select.Item key="false">Não</Input.Select.Item>
 					</Input.Select>
 				)}
 			/>
@@ -304,15 +274,17 @@ export const CharacteristicsTab = () => {
 					<Input.Select
 						isRequired
 						label="Tem tatuagens?"
-						value={field.value}
-						onChange={field.onChange}
-						selectedKeys={[field.value]}
+						selectedKeys={[field.value ? 'true' : 'false']}
+						onChange={(v) => {
+							const val = typeof v === 'string' ? v : (v as any)?.target?.value;
+							field.onChange(val === 'true');
+						}}
 						onBlur={field.onBlur}
 						isInvalid={!!fieldState.error}
 						errorMessage={fieldState.error?.message}
 					>
-						<Input.Select.Item key="yes">Sim</Input.Select.Item>
-						<Input.Select.Item key="no">Não</Input.Select.Item>
+						<Input.Select.Item key="true">Sim</Input.Select.Item>
+						<Input.Select.Item key="false">Não</Input.Select.Item>
 					</Input.Select>
 				)}
 			/>
@@ -324,15 +296,17 @@ export const CharacteristicsTab = () => {
 					<Input.Select
 						isRequired
 						label="Tem piercing?"
-						value={field.value}
-						onChange={field.onChange}
-						selectedKeys={[field.value]}
+						selectedKeys={[field.value ? 'true' : 'false']}
+						onChange={(v) => {
+							const val = typeof v === 'string' ? v : (v as any)?.target?.value;
+							field.onChange(val === 'true');
+						}}
 						onBlur={field.onBlur}
 						isInvalid={!!fieldState.error}
 						errorMessage={fieldState.error?.message}
 					>
-						<Input.Select.Item key="yes">Sim</Input.Select.Item>
-						<Input.Select.Item key="no">Não</Input.Select.Item>
+						<Input.Select.Item key="true">Sim</Input.Select.Item>
+						<Input.Select.Item key="false">Não</Input.Select.Item>
 					</Input.Select>
 				)}
 			/>
@@ -344,15 +318,17 @@ export const CharacteristicsTab = () => {
 					<Input.Select
 						isRequired
 						label="Fumante?"
-						value={field.value}
-						onChange={field.onChange}
-						selectedKeys={[field.value]}
+						selectedKeys={[field.value ? 'true' : 'false']}
+						onChange={(v) => {
+							const val = typeof v === 'string' ? v : (v as any)?.target?.value;
+							field.onChange(val === 'true');
+						}}
 						onBlur={field.onBlur}
 						isInvalid={!!fieldState.error}
 						errorMessage={fieldState.error?.message}
 					>
-						<Input.Select.Item key="yes">Sim</Input.Select.Item>
-						<Input.Select.Item key="no">Não</Input.Select.Item>
+						<Input.Select.Item key="true">Sim</Input.Select.Item>
+						<Input.Select.Item key="false">Não</Input.Select.Item>
 					</Input.Select>
 				)}
 			/>

@@ -6,23 +6,17 @@ import { useRouteContext, useRouter } from '@tanstack/react-router';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import z from 'zod';
-import { DEFAULT_PRICES, SLOTS, type Slot } from '@/api/utils/defaults/escort';
+import { DEFAULT_PRICES, SLOTS } from '@/api/utils/defaults/escort';
+import type { Slot } from '@/api/utils/types/escort';
 import { Stack } from '@/components/core/Stack';
 import { Button } from '@/components/heroui/Button';
 import { Input } from '@/components/heroui/Input';
 import { api } from '@/lib/api';
+import { pricesSchema } from './schema';
 
-const slotSchema = z.object({
-	is_available: z.boolean(),
-	amount: z.number().min(0, { message: 'Valor deve ser maior ou igual a 0' }),
-	currency: z.literal('EUR'),
-});
+const schema = pricesSchema;
 
-const schema = z.object(
-	Object.fromEntries(
-		(SLOTS as readonly Slot[]).map((s) => [s, slotSchema]),
-	) as Record<Slot, typeof slotSchema>,
-);
+type PricesTabProps = { onClose?: () => void };
 
 const slotLabels: Record<Slot, string> = {
 	'30m': '30 minutos',
@@ -34,7 +28,7 @@ const slotLabels: Record<Slot, string> = {
 	travel_daily: 'Viagem',
 };
 
-export const PricesTab = () => {
+export const PricesTab = ({ onClose }: PricesTabProps) => {
 	const router = useRouter();
 	const { session, profile } = useRouteContext({ from: '/{-$locale}' });
 
@@ -56,6 +50,7 @@ export const PricesTab = () => {
 				onSuccess: () => {
 					toast.success('Profile updated');
 					router.invalidate();
+					onClose?.();
 				},
 				onError: (error) => {
 					console.error(error);
@@ -89,11 +84,21 @@ export const PricesTab = () => {
 				)) as z.infer<typeof schema>,
 	});
 
+	const onInvalid = () => {
+		// Show toast only when no slot is active; otherwise, let field errors guide the user
+		const anyActive = (SLOTS as readonly Slot[]).some((slot) =>
+			form.getValues(`${slot}.is_available` as const),
+		);
+		if (!anyActive) {
+			toast.error('Ative pelo menos um item para salvar.');
+		}
+	};
+
 	return (
 		<I18nProvider locale="en-US">
 			<Form
 				validationBehavior="aria"
-				onSubmit={form.handleSubmit(handleSubmit)}
+				onSubmit={form.handleSubmit(handleSubmit, onInvalid)}
 				className="w-full space-y-6"
 			>
 				<Stack direction="column" className="w-full gap-6">
@@ -132,8 +137,10 @@ export const PricesTab = () => {
 											value={field.value as number}
 											onValueChange={field.onChange}
 											onBlur={field.onBlur}
-											isInvalid={!!fieldState.error}
-											errorMessage={fieldState.error?.message}
+											isInvalid={active ? !!fieldState.error : false}
+											errorMessage={
+												active ? fieldState.error?.message : undefined
+											}
 										/>
 									)}
 								/>

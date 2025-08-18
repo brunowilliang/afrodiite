@@ -8,18 +8,13 @@ import z from 'zod';
 import { Button } from '@/components/heroui/Button';
 import { Input } from '@/components/heroui/Input';
 import { api } from '@/lib/api';
+import { locationSchema } from './schema';
 
-const schema = z.object({
-	country: z
-		.string()
-		.min(1, { message: 'País é obrigatório' })
-		.default('Portugal'),
-	state: z.string().min(1, { message: 'Estado é obrigatório' }),
-	city: z.string().min(1, { message: 'Cidade é obrigatório' }),
-	neighborhood: z.string().min(1, { message: 'Bairro é obrigatório' }),
-});
+const schema = locationSchema;
 
-export const LocationTab = () => {
+type LocationTabProps = { onClose?: () => void };
+
+export const LocationTab = ({ onClose }: LocationTabProps) => {
 	const router = useRouter();
 	const { session, profile } = useRouteContext({ from: '/{-$locale}' });
 
@@ -38,6 +33,7 @@ export const LocationTab = () => {
 				onSuccess: () => {
 					toast.success('Profile updated');
 					router.invalidate();
+					onClose?.();
 				},
 				onError: (error) => {
 					console.error(error);
