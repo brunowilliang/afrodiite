@@ -7,6 +7,7 @@ import { Badge } from '@/components/heroui/Badge';
 import { Button } from '@/components/heroui/Button';
 import { Modal, ModalRef } from '@/components/heroui/Modal';
 import { useOnboardingStep } from '@/hooks/useOnboardingStep';
+import { cn } from '@/utils/cn';
 import { CharacteristicsTab } from './Characteristics';
 import { GalleryTab } from './Gallery';
 import { InformationTab } from './Information';
@@ -128,10 +129,12 @@ export const Onboarding = ({ profile }: OnboardingProps) => {
 							title={step.title}
 							description={step.description}
 							variant="faded"
-							className={
-								s.isCompleted || s.isActive ? 'opacity-100' : 'opacity-35'
-							}
+							className={cn(
+								'flex bg-red-500',
+								s.isCompleted || s.isActive ? 'opacity-100' : 'opacity-35',
+							)}
 							classNames={{
+								base: 'flex flex-col gap-2 text-center md:text-left md:flex-row',
 								description: 'text-sm font-light',
 								title: 'text-lg font-medium',
 							}}
@@ -159,7 +162,7 @@ export const Onboarding = ({ profile }: OnboardingProps) => {
 			<Modal
 				ref={modalRef}
 				title={selectedIdx !== null ? steps[selectedIdx].title : 'Onboarding'}
-				placement="center"
+				placement="top-center"
 				size="3xl"
 				scrollBehavior="outside"
 			>
