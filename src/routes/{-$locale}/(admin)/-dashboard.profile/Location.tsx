@@ -5,19 +5,12 @@ import { useRouteContext, useRouter } from '@tanstack/react-router';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import z from 'zod';
+import { locationSchema } from './schema';
 import { Button } from '@/components/heroui/Button';
 import { Input } from '@/components/heroui/Input';
 import { api } from '@/lib/api';
 
-const schema = z.object({
-	country: z
-		.string()
-		.min(1, { message: 'País é obrigatório' })
-		.default('Portugal'),
-	state: z.string().min(1, { message: 'Estado é obrigatório' }),
-	city: z.string().min(1, { message: 'Cidade é obrigatório' }),
-	neighborhood: z.string().min(1, { message: 'Bairro é obrigatório' }),
-});
+const schema = locationSchema;
 
 export const LocationTab = () => {
 	const router = useRouter();

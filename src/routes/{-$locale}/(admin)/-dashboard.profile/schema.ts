@@ -1,6 +1,7 @@
 import z from 'zod';
 import { DAYS, type Day, SLOTS, type Slot } from '@/api/utils/defaults/escort';
 
+// Information
 export const informationSchema = z.object({
 	artist_name: z.string().min(1),
 	slug: z
@@ -17,6 +18,7 @@ export const informationSchema = z.object({
 	whatsapp: z.string().min(1),
 });
 
+// Location
 export const locationSchema = z.object({
 	country: z.string().min(1).default('Portugal'),
 	state: z.string().min(1),
@@ -24,6 +26,7 @@ export const locationSchema = z.object({
 	neighborhood: z.string().min(1),
 });
 
+// Characteristics
 export const characteristicsSchema = z.object({
 	gender: z.string().min(1),
 	age: z.coerce.number().min(18).max(100),
@@ -42,12 +45,43 @@ export const characteristicsSchema = z.object({
 
 export type Characteristics = z.infer<typeof characteristicsSchema>;
 
+// Office Hours
+const timeRegex = /^([01]\d|2[0-3]):([0-5]\d)$/;
+const officeDaySchema = z
+	.object({
+		is_available: z.boolean(),
+		start: z.string().regex(timeRegex),
+		end: z.string().regex(timeRegex),
+	})
+	.superRefine((val, ctx) => {
+		if (!val.is_available) return;
+		// Simple HH:MM lexicographic comparison
+		if ((val.start ?? '') >= (val.end ?? '')) {
+			ctx.addIssue({ code: 'custom', message: 'Hora de início deve ser menor que a hora de fim', path: ['end'] });
+		}
+	});
+
+export const officeHoursSchema = z.object(
+	Object.fromEntries((DAYS as readonly Day[]).map((d) => [d, officeDaySchema])) as Record<Day, typeof officeDaySchema>,
+);
+
 export type OfficeHourItem = {
 	day: Day;
 	is_available: boolean;
 	start: string;
 	end: string;
 };
+
+// Prices
+const priceSlotSchema = z.object({
+	is_available: z.boolean(),
+	amount: z.number().min(0),
+	currency: z.literal('EUR'),
+});
+
+export const pricesSchema = z.object(
+	Object.fromEntries((SLOTS as readonly Slot[]).map((s) => [s, priceSlotSchema])) as Record<Slot, typeof priceSlotSchema>,
+);
 
 export type PriceItem = {
 	slot: Slot;
@@ -56,8 +90,8 @@ export type PriceItem = {
 	currency: 'EUR';
 };
 
+// Services & Gallery helpers (validation-only)
 export type ServiceItem = number | { id: number; is_available?: boolean };
-
 export type GalleryItem = { url?: string };
 
 export type ProfileLike = {
@@ -93,13 +127,12 @@ export function isCharacteristicsComplete(profile: ProfileLike): boolean {
 
 export function isOfficeHoursComplete(profile: ProfileLike): boolean {
 	const items = Array.isArray(profile.office_hours) ? profile.office_hours : [];
-	// Pelo menos 1 dia ativo com horários válidos HH:MM e start < end
 	return items.some((it) => {
 		if (!it?.is_available) return false;
 		const s = (it?.start ?? '').trim();
 		const e = (it?.end ?? '').trim();
 		if (!/^\d{2}:\d{2}$/.test(s) || !/^\d{2}:\d{2}$/.test(e)) return false;
-		return s < e; // lexicográfico para HH:MM
+		return s < e;
 	});
 }
 

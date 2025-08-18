@@ -6,7 +6,7 @@ import { Text } from '@/components/core/Text';
 import { Button } from '@/components/heroui/Button';
 import { Modal, ModalRef } from '@/components/heroui/Modal';
 import { useOnboardingStep } from '@/hooks/useOnboardingStep';
-import { computeOnboardingCompletion } from './-dashboard.profile/schemas';
+import { computeOnboardingCompletion } from './-dashboard.profile/schema';
 
 const steps = [
 	{
