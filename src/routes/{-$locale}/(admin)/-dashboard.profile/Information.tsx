@@ -8,7 +8,7 @@ import { Controller, useForm } from 'react-hook-form';
 import slugify from 'slugify';
 import { toast } from 'sonner';
 import z from 'zod';
-import { informationSchema } from './schemas';
+import { informationSchema } from './schema';
 import { Icon } from '@/components/core/Icon';
 import { Button } from '@/components/heroui/Button';
 import { Input } from '@/components/heroui/Input';
