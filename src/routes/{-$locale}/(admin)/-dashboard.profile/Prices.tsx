@@ -11,18 +11,9 @@ import { Stack } from '@/components/core/Stack';
 import { Button } from '@/components/heroui/Button';
 import { Input } from '@/components/heroui/Input';
 import { api } from '@/lib/api';
+import { pricesSchema } from './schema';
 
-const slotSchema = z.object({
-	is_available: z.boolean(),
-	amount: z.number().min(0, { message: 'Valor deve ser maior ou igual a 0' }),
-	currency: z.literal('EUR'),
-});
-
-const schema = z.object(
-	Object.fromEntries(
-		(SLOTS as readonly Slot[]).map((s) => [s, slotSchema]),
-	) as Record<Slot, typeof slotSchema>,
-);
+const schema = pricesSchema;
 
 const slotLabels: Record<Slot, string> = {
 	'30m': '30 minutos',
