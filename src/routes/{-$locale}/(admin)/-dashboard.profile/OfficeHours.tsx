@@ -15,43 +15,9 @@ import { Stack } from '@/components/core/Stack';
 import { Button } from '@/components/heroui/Button';
 import { Input } from '@/components/heroui/Input';
 import { api } from '@/lib/api';
+import { officeHoursSchema } from './schema';
 
-const timeRegex = /^([01]\d|2[0-3]):([0-5]\d)$/;
-
-const daySchema = z
-	.object({
-		is_available: z.boolean(),
-		start: z.string().regex(timeRegex, {
-			error: 'Hora de início deve estar no formato HH:MM',
-		}),
-		end: z.string().regex(timeRegex, {
-			error: 'Hora de fim deve estar no formato HH:MM',
-		}),
-	})
-	.superRefine((val, ctx) => {
-		if (!val.is_available) return; // não valida se o dia não estiver ativo
-		try {
-			const s = parseTime(val.start);
-			const e = parseTime(val.end);
-			const startsBeforeEnd =
-				s.hour < e.hour || (s.hour === e.hour && s.minute < e.minute);
-			if (!startsBeforeEnd) {
-				ctx.addIssue({
-					code: 'custom',
-					message: 'Hora de início deve ser menor que a hora de fim',
-					path: ['end'],
-				});
-			}
-		} catch {
-			// parse error será pego pelos regex acima
-		}
-	});
-
-const schema = z.object(
-	Object.fromEntries(
-		(DAYS as readonly Day[]).map((d) => [d, daySchema]),
-	) as Record<Day, typeof daySchema>,
-);
+const schema = officeHoursSchema;
 
 export const OfficeHoursTab = () => {
 	const router = useRouter();

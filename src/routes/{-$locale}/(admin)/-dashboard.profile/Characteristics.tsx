@@ -5,47 +5,12 @@ import { useRouteContext, useRouter } from '@tanstack/react-router';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import z from 'zod';
+import { characteristicsSchema } from './schema';
 import { Button } from '@/components/heroui/Button';
 import { Input } from '@/components/heroui/Input';
 import { api } from '@/lib/api';
 
-const schema = z.object({
-	gender: z.string().min(1, { error: 'Gênero é obrigatório' }),
-	age: z.coerce
-		.number({
-			error: 'Idade deve ser um número',
-		})
-		.min(18, { error: 'Idade mínima é 18 anos' })
-		.max(100, { error: 'Idade máxima é 100 anos' }),
-	height: z.coerce
-		.number({
-			error: 'Altura deve ser um número',
-		})
-		.min(1, { error: 'Altura é obrigatória' })
-		.max(250, { error: 'Altura máxima é 250cm' }),
-	weight: z.coerce
-		.number({
-			error: 'Peso deve ser um número',
-		})
-		.min(1, { error: 'Peso é obrigatório' }),
-	eye_color: z.string().min(1, { error: 'Cor dos olhos é obrigatória' }),
-	hair_color: z.string().min(1, { error: 'Cor do cabelo é obrigatória' }),
-	ethnicity: z.string().min(1, { error: 'Etnia é obrigatória' }),
-	languages: z.string().min(1, { error: 'Idioma é obrigatório' }),
-	sexual_preference: z
-		.string()
-		.min(1, { error: 'Preferência sexual é obrigatória' }),
-	silicone: z.enum(['yes', 'no'], {
-		error: 'Silicone é obrigatório',
-	}),
-	tattoos: z.enum(['yes', 'no'], {
-		error: 'Tatuagens é obrigatório',
-	}),
-	piercings: z.enum(['yes', 'no'], {
-		error: 'Piercings é obrigatório',
-	}),
-	smoker: z.enum(['yes', 'no'], { error: 'Fumante é obrigatório' }),
-});
+const schema = characteristicsSchema;
 
 export const CharacteristicsTab = () => {
 	const router = useRouter();

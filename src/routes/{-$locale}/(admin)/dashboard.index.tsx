@@ -1,10 +1,12 @@
 import { Alert } from '@heroui/react';
 import { createFileRoute } from '@tanstack/react-router';
-import { useRef } from 'react';
+import { useMemo, useRef } from 'react';
 import { Container, Stack } from '@/components/core/Stack';
 import { Text } from '@/components/core/Text';
 import { Button } from '@/components/heroui/Button';
 import { Modal, ModalRef } from '@/components/heroui/Modal';
+import { useOnboardingStep } from '@/hooks/useOnboardingStep';
+import { computeOnboardingCompletion } from './-dashboard.profile/schema';
 
 const steps = [
 	{
@@ -14,8 +16,6 @@ const steps = [
 			'Seu nome, telefone, slug e data de nascimento são a base do seu perfil. Escolha detalhes que marquem presença e criem uma conexão instantânea com quem te encontra.',
 		buttonText: 'Criar Identidade',
 		buttonLink: '/{-$locale}/dashboard/profile',
-		completed: true,
-		active: false,
 	},
 	{
 		id: 2,
@@ -24,8 +24,6 @@ const steps = [
 			'Defina a cidade e a região onde você atua. Mostre onde seu brenho acontece e facilite que o público certo chegue até você com apenas um clique.',
 		buttonText: 'Definir Localização',
 		buttonLink: '/{-$locale}/dashboard/profile',
-		completed: false,
-		active: true,
 	},
 	{
 		id: 3,
@@ -34,8 +32,6 @@ const steps = [
 			'Gênero, idade, altura, peso — cada detalhe conta uma história. Adicione características que destacam o que te torna único e fazem seu perfil vibrar.',
 		buttonText: 'Adicionar Características',
 		buttonLink: '/{-$locale}/dashboard/profile',
-		completed: false,
-		active: false,
 	},
 	{
 		id: 4,
@@ -44,8 +40,6 @@ const steps = [
 			'Horários claros mostram quando você está pronta para brilhar. Configure sua agenda para garantir encontros que fluem no ritmo certo, sem desencontros.',
 		buttonText: 'Configurar Horários',
 		buttonLink: '/{-$locale}/dashboard/profile',
-		completed: false,
-		active: false,
 	},
 	{
 		id: 5,
@@ -54,8 +48,6 @@ const steps = [
 			'Seja transparente com seus valores. Uma tabela de preços clara reflete confiança e deixa evidente que cada momento com você vale cada centavo.',
 		buttonText: 'Definir Preços',
 		buttonLink: '/{-$locale}/dashboard/profile',
-		completed: false,
-		active: false,
 	},
 	{
 		id: 6,
@@ -64,8 +56,6 @@ const steps = [
 			'Liste os serviços que você oferece com detalhes que despertam interesse. Mostre o que torna cada experiência única e deixe todos curiosos pelo próximo passo.',
 		buttonText: 'Listar Serviços',
 		buttonLink: '/{-$locale}/dashboard/profile',
-		completed: false,
-		active: false,
 	},
 	{
 		id: 7,
@@ -74,8 +64,6 @@ const steps = [
 			'Fotos são seu cartão de visita. Escolha imagens que param o scroll, provocam um segundo olhar e transformam curiosidade em decisão imediata.',
 		buttonText: 'Fazer Upload de Fotos',
 		buttonLink: '/{-$locale}/dashboard/profile',
-		completed: false,
-		active: false,
 	},
 ];
 export const Route = createFileRoute('/{-$locale}/(admin)/dashboard/')({
@@ -84,6 +72,9 @@ export const Route = createFileRoute('/{-$locale}/(admin)/dashboard/')({
 function RouteComponent() {
 	const { profile } = Route.useRouteContext();
 	const modalRef = useRef<ModalRef>(null);
+
+	const completedSteps = useMemo(() => computeOnboardingCompletion(profile as any), [profile]);
+	const { stepsState } = useOnboardingStep(steps.length, completedSteps);
 
 	return (
 		<Container>
@@ -101,46 +92,39 @@ function RouteComponent() {
 					</Text>
 				</Stack>
 				<Stack className="gap-5">
-					{steps.map((step) => (
-						<Alert
-							key={step.id}
-							color={
-								step.completed ? 'success' : step.active ? 'primary' : 'default'
-							}
-							title={step.title}
-							description={step.description}
-							variant="faded"
-							className={
-								step.completed || step.active ? 'opacity-100' : 'opacity-35'
-							}
-							classNames={{
-								description: 'text-sm font-light',
-								title: 'text-lg font-medium',
-							}}
-							endContent={
-								<Button
-									color={
-										step.completed
-											? 'success'
-											: step.active
-												? 'primary'
-												: 'default'
-									}
-									size="sm"
-									variant="flat"
-									className="px-10"
-									disabled={step.completed || !step.active}
-									onPress={() => {
-										if (step.active) {
-											modalRef.current?.open();
-										}
-									}}
-								>
-									{step.buttonText}
-								</Button>
-							}
-						/>
-					))}
+					{steps.map((step, idx) => {
+						const s = stepsState[idx];
+						return (
+							<Alert
+								key={step.id}
+								color={s.color}
+								title={step.title}
+								description={step.description}
+								variant="faded"
+								className={s.isCompleted || s.isActive ? 'opacity-100' : 'opacity-35'}
+								classNames={{
+									description: 'text-sm font-light',
+									title: 'text-lg font-medium',
+								}}
+								endContent={
+									<Button
+										color={s.color}
+										size="sm"
+										variant="flat"
+										className="px-10"
+										disabled={!s.isActive}
+										onPress={() => {
+											if (s.isActive) {
+												modalRef.current?.open();
+											}
+										}}
+									>
+										{step.buttonText}
+									</Button>
+								}
+							/>
+						);
+					})}
 				</Stack>
 			</Stack>
 			<Modal
