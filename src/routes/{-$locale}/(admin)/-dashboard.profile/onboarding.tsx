@@ -158,7 +158,7 @@ export const Onboarding = ({ profile }: OnboardingProps) => {
 				placement="top"
 				size="full"
 				scrollBehavior="outside"
-				shouldBlockScroll={false}
+				shouldBlockScroll={true}
 			>
 				<Modal.Content>
 					<Modal.Body className="overflow-y-auto px-5 py-6">
