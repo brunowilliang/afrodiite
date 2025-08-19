@@ -122,13 +122,7 @@ export const InformationTab = ({ onClose }: InformationTabProps) => {
 					<Input
 						label="Slug"
 						isRequired
-						startContent={
-							<div className="pointer-events-none flex items-center">
-								<span className="text-default text-small">
-									https://afrodiite.com/escort/
-								</span>
-							</div>
-						}
+						description={`https://afrodiite.com/escort/${form.getValues('slug')}`}
 						endContent={
 							<Button
 								type="button"
