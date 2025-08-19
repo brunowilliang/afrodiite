@@ -157,11 +157,11 @@ export const Onboarding = ({ profile }: OnboardingProps) => {
 				title={selectedIdx !== null ? steps[selectedIdx].title : 'Onboarding'}
 				placement="top"
 				size="full"
-				scrollBehavior="outside"
-				shouldBlockScroll={true}
+				scrollBehavior="inside"
+				shouldBlockScroll={false}
 			>
 				<Modal.Content>
-					<Modal.Body className="overflow-y-auto px-5 py-6">
+					<Modal.Body className="px-5 py-6 pb-20">
 						<Stack className="gap-5">
 							<Badge>
 								<Icon name="Stars" variant="bulk" size="20" />
