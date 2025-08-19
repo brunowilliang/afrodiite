@@ -155,8 +155,8 @@ export const Onboarding = ({ profile }: OnboardingProps) => {
 			<Modal
 				ref={modalRef}
 				title={selectedIdx !== null ? steps[selectedIdx].title : 'Onboarding'}
-				placement="top"
-				size="full"
+				placement="top-center"
+				size="3xl"
 				scrollBehavior="inside"
 				shouldBlockScroll={false}
 			>
