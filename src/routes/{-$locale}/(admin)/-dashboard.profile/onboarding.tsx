@@ -155,13 +155,38 @@ export const Onboarding = ({ profile }: OnboardingProps) => {
 			<Modal
 				ref={modalRef}
 				title={selectedIdx !== null ? steps[selectedIdx].title : 'Onboarding'}
-				placement="center"
+				placement="top"
 				size="3xl"
-				scrollBehavior="inside"
+				scrollBehavior="outside"
 				shouldBlockScroll={true}
+				motionProps={{
+					variants: {
+						enter: {
+							y: 0,
+							opacity: 1,
+							transition: {
+								duration: 0.3,
+								ease: 'easeOut',
+							},
+						},
+						exit: {
+							y: -20,
+							opacity: 0,
+							transition: {
+								duration: 0.2,
+								ease: 'easeIn',
+							},
+						},
+					},
+				}}
+				classNames={{
+					backdrop: 'bg-black/20',
+					base: 'h-full max-h-[100dvh] m-0 sm:h-auto sm:max-h-[90vh] sm:m-6',
+					wrapper: 'items-center justify-center p-0 sm:p-6',
+				}}
 			>
 				<Modal.Content>
-					<Modal.Body className="px-5 py-6 pb-10">
+					<Modal.Body className="max-h-[70vh] overflow-y-auto px-5 py-6 pb-20">
 						<Stack className="gap-5">
 							<Badge>
 								<Icon name="Stars" variant="bulk" size="20" />
