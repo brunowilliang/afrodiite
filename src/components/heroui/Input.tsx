@@ -10,6 +10,7 @@ import { useMemo, useState } from 'react';
 import { useSlot, useStyled } from 'use-styled';
 import { Icon, type IconProps } from '@/components/core/Icon';
 import { cn } from '@/utils/cn';
+import { AutoComplete } from './AutoComplete';
 import { DateInput as HeroDateInput } from './DateInput';
 import { PhoneInput as HeroPhoneInput } from './PhoneInput';
 import { Select } from './Select';
@@ -251,6 +252,7 @@ export const Input = useSlot(InputRoot, {
 	PhoneInput,
 	Number,
 	Select,
+	AutoComplete,
 	Time,
 	Switch,
 	File: UploadDropzone,

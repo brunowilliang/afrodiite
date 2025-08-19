@@ -16,7 +16,9 @@ import { Input } from '@/components/heroui/Input';
 import { api } from '@/lib/api';
 import { tryCatch } from '@/utils/tryCatch';
 
-export const GalleryTab = () => {
+type GalleryTabProps = { onClose?: () => void };
+
+export const GalleryTab = ({ onClose }: GalleryTabProps) => {
 	const { control } = useUploadFiles({ route: 'gallery' });
 
 	const router = useRouter();

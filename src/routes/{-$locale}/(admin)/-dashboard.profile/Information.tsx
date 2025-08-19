@@ -3,7 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { parseDate, toCalendarDate } from '@internationalized/date';
 import { useMutation } from '@tanstack/react-query';
 import { useRouteContext, useRouter } from '@tanstack/react-router';
-import { useRef } from 'react';
+import { useMemo, useRef } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import slugify from 'slugify';
 import { toast } from 'sonner';
@@ -12,6 +12,7 @@ import { Icon } from '@/components/core/Icon';
 import { Button } from '@/components/heroui/Button';
 import { Input } from '@/components/heroui/Input';
 import { api } from '@/lib/api';
+import { Countries } from '@/utils/lists/Countries';
 import { informationSchema } from './schema';
 
 const schema = informationSchema;
@@ -21,6 +22,16 @@ type InformationTabProps = { onClose?: () => void };
 export const InformationTab = ({ onClose }: InformationTabProps) => {
 	const router = useRouter();
 	const { session, profile } = useRouteContext({ from: '/{-$locale}' });
+
+	// Lista de nacionalidades usando o JSON local (gentílicos!)
+	const nationalityOptions = useMemo(() => {
+		return Countries.map((country) => {
+			const gentilico = country.gentilico;
+			return gentilico.charAt(0).toUpperCase() + gentilico.slice(1);
+		})
+			.filter((item, index, arr) => arr.indexOf(item) === index) // Remove duplicatas
+			.sort();
+	}, []);
 
 	const updateProfile = useMutation(
 		api.queries.profile.update.mutationOptions(),
@@ -195,17 +206,24 @@ export const InformationTab = ({ onClose }: InformationTabProps) => {
 				control={form.control}
 				name="nationality"
 				render={({ field, fieldState }) => (
-					<Input
+					<Input.AutoComplete
 						label="Nacionalidade"
 						isRequired
-						value={field.value ?? ''}
-						onValueChange={field.onChange}
+						inputValue={field.value ?? ''}
+						onInputChange={field.onChange}
+						onSelectionChange={(key) => {
+							field.onChange(key);
+						}}
 						onBlur={field.onBlur}
-						ref={field.ref}
-						name={field.name}
 						isInvalid={!!fieldState.error}
 						errorMessage={fieldState.error?.message}
-					/>
+					>
+						{nationalityOptions.map((nationality) => (
+							<Input.AutoComplete.Item key={nationality}>
+								{nationality}
+							</Input.AutoComplete.Item>
+						))}
+					</Input.AutoComplete>
 				)}
 			/>
 

@@ -24,7 +24,6 @@ const steps = [
 		description:
 			'Seu nome, telefone, slug e data de nascimento são a base do seu perfil. Escolha detalhes que marquem presença e criem uma conexão instantânea com quem te encontra.',
 		buttonText: 'Criar Identidade',
-		buttonLink: '/{-$locale}/dashboard/profile?',
 	},
 	{
 		id: 2,
@@ -32,7 +31,6 @@ const steps = [
 		description:
 			'Defina a cidade e a região onde você atua. Mostre onde seu brenho acontece e facilite que o público certo chegue até você com apenas um clique.',
 		buttonText: 'Definir Localização',
-		buttonLink: '/{-$locale}/dashboard/profile',
 	},
 	{
 		id: 3,
@@ -40,7 +38,6 @@ const steps = [
 		description:
 			'Gênero, idade, altura, peso — cada detalhe conta uma história. Adicione características que destacam o que te torna único e fazem seu perfil vibrar.',
 		buttonText: 'Adicionar Características',
-		buttonLink: '/{-$locale}/dashboard/profile',
 	},
 	{
 		id: 4,
@@ -48,7 +45,6 @@ const steps = [
 		description:
 			'Horários claros mostram quando você está pronta para brilhar. Configure sua agenda para garantir encontros que fluem no ritmo certo, sem desencontros.',
 		buttonText: 'Configurar Horários',
-		buttonLink: '/{-$locale}/dashboard/profile',
 	},
 	{
 		id: 5,
@@ -56,7 +52,6 @@ const steps = [
 		description:
 			'Seja transparente com seus valores. Uma tabela de preços clara reflete confiança e deixa evidente que cada momento com você vale cada centavo.',
 		buttonText: 'Definir Preços',
-		buttonLink: '/{-$locale}/dashboard/profile',
 	},
 	{
 		id: 6,
@@ -64,7 +59,6 @@ const steps = [
 		description:
 			'Liste os serviços que você oferece com detalhes que despertam interesse. Mostre o que torna cada experiência única e deixe todos curiosos pelo próximo passo.',
 		buttonText: 'Listar Serviços',
-		buttonLink: '/{-$locale}/dashboard/profile',
 	},
 	{
 		id: 7,
@@ -72,7 +66,6 @@ const steps = [
 		description:
 			'Fotos são seu cartão de visita. Escolha imagens que param o scroll, provocam um segundo olhar e transformam curiosidade em decisão imediata.',
 		buttonText: 'Fazer Upload de Fotos',
-		buttonLink: '/{-$locale}/dashboard/profile',
 	},
 ] as const;
 
@@ -109,9 +102,9 @@ export const Onboarding = ({ profile }: OnboardingProps) => {
 			case 4:
 				return <PricesTab onClose={closeModal} />;
 			case 5:
-				return <ServicesTab />;
+				return <ServicesTab onClose={closeModal} />;
 			case 6:
-				return <GalleryTab />;
+				return <GalleryTab onClose={closeModal} />;
 			default:
 				return null;
 		}
@@ -130,7 +123,7 @@ export const Onboarding = ({ profile }: OnboardingProps) => {
 							description={step.description}
 							variant="faded"
 							className={cn(
-								'flex bg-red-500',
+								'flex',
 								s.isCompleted || s.isActive ? 'opacity-100' : 'opacity-35',
 							)}
 							classNames={{
@@ -144,15 +137,15 @@ export const Onboarding = ({ profile }: OnboardingProps) => {
 									size="sm"
 									variant="flat"
 									className="px-10"
-									disabled={!s.isActive}
+									disabled={!s.isActive && !s.isCompleted}
 									onPress={() => {
-										if (s.isActive) {
+										if (s.isActive || s.isCompleted) {
 											setSelectedIdx(idx);
 											modalRef.current?.open();
 										}
 									}}
 								>
-									{step.buttonText}
+									{s.isCompleted ? 'Editar' : step.buttonText}
 								</Button>
 							}
 						/>
@@ -162,12 +155,13 @@ export const Onboarding = ({ profile }: OnboardingProps) => {
 			<Modal
 				ref={modalRef}
 				title={selectedIdx !== null ? steps[selectedIdx].title : 'Onboarding'}
-				placement="top-center"
+				placement="center"
 				size="3xl"
-				scrollBehavior="outside"
+				scrollBehavior="inside"
+				shouldBlockScroll={true}
 			>
 				<Modal.Content>
-					<Modal.Body className="px-5 py-6">
+					<Modal.Body className="px-5 py-6 pb-10">
 						<Stack className="gap-5">
 							<Badge>
 								<Icon name="Stars" variant="bulk" size="20" />

@@ -15,6 +15,7 @@ import { useRouteContext, useRouter } from '@tanstack/react-router';
 import { useThemeController } from '@/hooks/useThemeController';
 import { api } from '@/lib/api';
 import { links } from '@/utils/navigation';
+import { Icon } from '../core/Icon';
 import { Logo } from '../core/Logo';
 
 export function Header() {
@@ -99,7 +100,7 @@ export function Header() {
 										</DropdownItem>
 									))}
 								</DropdownSection>
-								{/* <DropdownSection
+								<DropdownSection
 									title="Theme"
 									showDivider
 									className="font-light text-foreground/50"
@@ -132,7 +133,7 @@ export function Header() {
 										<Icon name="Moon" size="20" />
 										<span>Dark</span>
 									</DropdownItem>
-								</DropdownSection> */}
+								</DropdownSection>
 								<DropdownSection
 									title="Ações"
 									className="font-light text-foreground/50"

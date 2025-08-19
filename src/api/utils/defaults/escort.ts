@@ -83,7 +83,13 @@ export const DEFAULT_PRICES: Price[] = [
 		currency: 'EUR',
 	},
 	{
-		slot: 'travel_daily',
+		slot: 'travel',
+		is_available: false,
+		amount: 0,
+		currency: 'EUR',
+	},
+	{
+		slot: 'outcall',
 		is_available: false,
 		amount: 0,
 		currency: 'EUR',
@@ -123,5 +129,6 @@ export const SLOTS = [
 	'4h',
 	'overnight',
 	'daily',
-	'travel_daily',
+	'travel',
+	'outcall',
 ] as const;

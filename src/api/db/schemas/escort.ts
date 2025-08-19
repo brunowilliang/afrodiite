@@ -33,16 +33,15 @@ export const escortProfiles = pgTable('escort_profiles', {
 	phone: text('phone'),
 	whatsapp: text('whatsapp'),
 	email: text('email'),
+	nationality: text('nationality'),
 
 	// Links
 	links: jsonb('links').default({}),
 
 	// Location
-	city: text('city'),
-	state: text('state'),
+	district: text('district'),
+	zone: text('zone'),
 	country: text('country'),
-	neighborhood: text('neighborhood'),
-	nationality: text('nationality'),
 
 	// Status
 	is_active: boolean('is_active').default(false),

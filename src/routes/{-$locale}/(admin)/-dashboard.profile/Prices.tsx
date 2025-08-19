@@ -25,7 +25,8 @@ const slotLabels: Record<Slot, string> = {
 	'4h': '4 horas',
 	daily: 'Diária',
 	overnight: 'Pernoite',
-	travel_daily: 'Viagem',
+	travel: 'Viagem',
+	outcall: 'Outcall',
 };
 
 export const PricesTab = ({ onClose }: PricesTabProps) => {
@@ -39,7 +40,9 @@ export const PricesTab = ({ onClose }: PricesTabProps) => {
 	const handleSubmit = (values: z.infer<typeof schema>) => {
 		const prices = (SLOTS as readonly Slot[]).map((slot) => ({
 			slot,
-			...values[slot],
+			is_available: values[slot].is_available as boolean,
+			amount: (values[slot].amount as number) || 0,
+			currency: (values[slot].currency as 'EUR') || 'EUR',
 		}));
 		updateProfile.mutateAsync(
 			{
@@ -63,9 +66,9 @@ export const PricesTab = ({ onClose }: PricesTabProps) => {
 	};
 
 	const form = useForm({
-		resolver: zodResolver(schema),
+		resolver: zodResolver(schema) as any,
 		mode: 'onChange',
-		defaultValues: (profile?.prices?.length
+		defaultValues: profile?.prices?.length
 			? Object.fromEntries(
 					profile.prices.map(
 						({ slot, is_available, amount = 0, currency = 'EUR' }) => [
@@ -81,7 +84,7 @@ export const PricesTab = ({ onClose }: PricesTabProps) => {
 							{ is_available, amount, currency },
 						],
 					),
-				)) as z.infer<typeof schema>,
+				),
 	});
 
 	const onInvalid = () => {
@@ -98,7 +101,7 @@ export const PricesTab = ({ onClose }: PricesTabProps) => {
 		<I18nProvider locale="en-US">
 			<Form
 				validationBehavior="aria"
-				onSubmit={form.handleSubmit(handleSubmit, onInvalid)}
+				onSubmit={form.handleSubmit(handleSubmit as any, onInvalid)}
 				className="w-full space-y-6"
 			>
 				<Stack direction="column" className="w-full gap-6">
@@ -121,7 +124,6 @@ export const PricesTab = ({ onClose }: PricesTabProps) => {
 								<Controller
 									control={form.control}
 									name={`${slot}.amount` as const}
-									rules={{ required: active }}
 									render={({ field, fieldState }) => (
 										<Input.Number
 											isRequired={active}

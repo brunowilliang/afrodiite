@@ -29,7 +29,9 @@ export const OfficeHoursTab = ({ onClose }: OfficeHoursTabProps) => {
 	const handleSubmit = (values: z.infer<typeof schema>) => {
 		const office_hours = (DAYS as readonly Day[]).map((day) => ({
 			day,
-			...values[day],
+			is_available: values[day].is_available as boolean,
+			start: values[day].start as string,
+			end: values[day].end as string,
 		}));
 		updateProfile.mutateAsync(
 			{
@@ -53,9 +55,9 @@ export const OfficeHoursTab = ({ onClose }: OfficeHoursTabProps) => {
 	};
 
 	const form = useForm({
-		resolver: zodResolver(schema),
+		resolver: zodResolver(schema) as any,
 		mode: 'onChange',
-		defaultValues: (profile?.office_hours?.length
+		defaultValues: profile?.office_hours?.length
 			? Object.fromEntries(
 					profile.office_hours.map(({ day, is_available, start, end }) => [
 						day,
@@ -67,7 +69,7 @@ export const OfficeHoursTab = ({ onClose }: OfficeHoursTabProps) => {
 						day,
 						{ is_available, start, end },
 					]),
-				)) as z.infer<typeof schema>,
+				),
 	});
 
 	const onInvalid = () => {
@@ -82,7 +84,7 @@ export const OfficeHoursTab = ({ onClose }: OfficeHoursTabProps) => {
 	return (
 		<Form
 			validationBehavior="aria"
-			onSubmit={form.handleSubmit(handleSubmit, onInvalid)}
+			onSubmit={form.handleSubmit(handleSubmit as any, onInvalid)}
 			className="w-full space-y-6"
 		>
 			{(
@@ -115,7 +117,6 @@ export const OfficeHoursTab = ({ onClose }: OfficeHoursTabProps) => {
 							<Controller
 								control={form.control}
 								name={`${day}.start` as const}
-								rules={{ required: isActive }}
 								render={({ field, fieldState }) => (
 									<Input.Time
 										label="Início"
@@ -133,7 +134,6 @@ export const OfficeHoursTab = ({ onClose }: OfficeHoursTabProps) => {
 							<Controller
 								control={form.control}
 								name={`${day}.end` as const}
-								rules={{ required: isActive }}
 								render={({ field, fieldState }) => (
 									<Input.Time
 										label="Fim"

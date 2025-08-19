@@ -1,17 +1,111 @@
-import {
-	characteristicsZ,
-	informationZ,
-	locationZ,
-	officeHoursByDayZ,
-	pricesBySlotZ,
-} from '@/api/utils/schemas/escort';
-import type { ProfileSelect } from '@/api/utils/types/escort';
+import { z } from 'zod';
+import { DAYS, SLOTS } from '@/api/utils/defaults/escort';
+import type { Day, ProfileSelect, Slot } from '@/api/utils/types/escort';
+import { escortProfileSchema } from '@/api/utils/types/teste';
 
-export const informationSchema = informationZ;
-export const locationSchema = locationZ;
-export const characteristicsSchema = characteristicsZ;
-export const officeHoursSchema = officeHoursByDayZ;
-export const pricesSchema = pricesBySlotZ;
+export const informationSchema = escortProfileSchema.pick({
+	artist_name: true,
+	slug: true,
+	description: true,
+	birthday: true,
+	nationality: true,
+	phone: true,
+	whatsapp: true,
+});
+
+export const locationSchema = escortProfileSchema.pick({
+	country: true,
+	district: true,
+	zone: true,
+});
+
+export const characteristicsSchema = escortProfileSchema.pick({
+	characteristics: true,
+});
+
+// Schema para formulário de office hours (por dia)
+const timeRegex = /^([01]\d|2[0-3]):([0-5]\d)$/;
+export const officeHoursSchema = z
+	.object(
+		Object.fromEntries(
+			(DAYS as readonly Day[]).map((day) => [
+				day,
+				z
+					.object({
+						is_available: z.boolean(),
+						start: z.string().regex(timeRegex),
+						end: z.string().regex(timeRegex),
+					})
+					.superRefine((val, ctx) => {
+						if (!val.is_available) return;
+						if ((val.start ?? '') >= (val.end ?? '')) {
+							ctx.addIssue({
+								code: 'custom',
+								message: 'Hora de início deve ser menor que a hora de fim',
+								path: ['end'],
+							});
+						}
+					}),
+			]),
+		) as Record<Day, z.ZodObject<any>>,
+	)
+	.superRefine((val, ctx) => {
+		const anyActive = Object.values(val).some((v: any) => !!v.is_available);
+		if (!anyActive) {
+			const firstDay = (DAYS as readonly Day[])[0];
+			ctx.addIssue({
+				code: 'custom',
+				message: 'Ative pelo menos um dia para salvar os horários.',
+				path: [firstDay, 'is_available'],
+			});
+		}
+	});
+
+// Schema para formulário de preços (por slot)
+export const pricesSchema = z
+	.object(
+		Object.fromEntries(
+			(SLOTS as readonly Slot[]).map((slot) => [
+				slot,
+				z
+					.object({
+						is_available: z.boolean(),
+						amount: z.number().min(0).optional(),
+						currency: z.literal('EUR').optional(),
+					})
+					.superRefine((val, ctx) => {
+						if (val.is_available && (val.amount ?? 0) <= 0) {
+							ctx.addIssue({
+								code: 'custom',
+								message: 'Quando ativo, o valor deve ser maior que 0.',
+								path: ['amount'],
+							});
+						}
+					}),
+			]),
+		) as Record<Slot, z.ZodObject<any>>,
+	)
+	.superRefine((val, ctx) => {
+		const anyValid = Object.values(val).some(
+			(v: any) => !!v.is_available && (v.amount ?? 0) > 0,
+		);
+		if (!anyValid) {
+			const firstSlot = (SLOTS as readonly Slot[])[0];
+			ctx.addIssue({
+				code: 'custom',
+				message: 'Pelo menos um item deve estar ativo.',
+				path: [firstSlot, 'amount'],
+			});
+		}
+	});
+
+export const servicesSchema = escortProfileSchema.pick({
+	services: true,
+});
+
+export const gallerySchema = escortProfileSchema.pick({
+	gallery: true,
+});
 
 export function isInformationComplete(profile: ProfileSelect): boolean {
 	return informationSchema.safeParse(profile).success;
@@ -22,7 +116,9 @@ export function isLocationComplete(profile: ProfileSelect): boolean {
 }
 
 export function isCharacteristicsComplete(profile: ProfileSelect): boolean {
-	return characteristicsSchema.safeParse(profile.characteristics ?? {}).success;
+	return characteristicsSchema.safeParse({
+		characteristics: profile.characteristics,
+	}).success;
 }
 
 export function isOfficeHoursComplete(profile: ProfileSelect): boolean {
@@ -42,13 +138,8 @@ export function isPricesComplete(profile: ProfileSelect): boolean {
 }
 
 export function isServicesComplete(profile: ProfileSelect): boolean {
-	const sv = profile.services as unknown;
-	if (!Array.isArray(sv) || (sv as unknown[]).length === 0) return false;
-	if (typeof (sv as unknown[])[0] === 'number')
-		return ((sv as number[]) ?? []).length > 0;
-	return (sv as Array<{ id: number; is_available?: boolean }>).some(
-		(s) => !!s?.is_available,
-	);
+	const services = Array.isArray(profile.services) ? profile.services : [];
+	return services.length > 5;
 }
 
 export function isGalleryComplete(
@@ -56,10 +147,10 @@ export function isGalleryComplete(
 	minPhotos = 5,
 ): boolean {
 	const gallery = Array.isArray(profile.gallery) ? profile.gallery : [];
-	const valid = gallery.filter(
+	const validPhotos = gallery.filter(
 		(g) => typeof g?.url === 'string' && g.url.length > 0,
 	);
-	return valid.length >= minPhotos;
+	return validPhotos.length >= minPhotos;
 }
 
 export function computeOnboardingCompletion(profile: ProfileSelect): boolean[] {

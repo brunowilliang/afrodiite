@@ -29,6 +29,13 @@
       "when": 1755541701549,
       "tag": "0003_fluffy_morph",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1755621511859,
+      "tag": "0004_colorful_frog_thor",
+      "breakpoints": true
     }
   ]
 }

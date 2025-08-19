@@ -2,12 +2,14 @@ import { Form } from '@heroui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { useRouteContext, useRouter } from '@tanstack/react-router';
+import { useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import z from 'zod';
 import { Button } from '@/components/heroui/Button';
 import { Input } from '@/components/heroui/Input';
 import { api } from '@/lib/api';
+import { PortugalCities } from '@/utils/lists/PortugalCities';
 import { locationSchema } from './schema';
 
 const schema = locationSchema;
@@ -17,6 +19,22 @@ type LocationTabProps = { onClose?: () => void };
 export const LocationTab = ({ onClose }: LocationTabProps) => {
 	const router = useRouter();
 	const { session, profile } = useRouteContext({ from: '/{-$locale}' });
+
+	// Lista de distritos únicos (admin_name)
+	const districtOptions = useMemo(() => {
+		return [...new Set(PortugalCities.map((city) => city.admin_name))]
+			.filter(Boolean)
+			.sort();
+	}, []);
+
+	// Lista de cidades filtradas baseado no distrito selecionado
+	const getCitiesByDistrict = (selectedDistrict: string | undefined) => {
+		if (!selectedDistrict) return [];
+
+		return PortugalCities.filter((city) => city.admin_name === selectedDistrict)
+			.map((city) => city.city)
+			.sort();
+	};
 
 	const updateProfile = useMutation(
 		api.queries.profile.update.mutationOptions(),
@@ -49,12 +67,17 @@ export const LocationTab = ({ onClose }: LocationTabProps) => {
 		resolver: zodResolver(schema),
 		mode: 'onChange',
 		defaultValues: {
+			district: profile?.district ?? '',
+			zone: profile?.zone ?? '',
 			country: profile?.country ?? 'Portugal',
-			state: profile?.state ?? '',
-			city: profile?.city ?? '',
-			neighborhood: profile?.neighborhood ?? '',
 		},
 	});
+
+	// Observa mudanças no distrito para filtrar cidades
+	const selectedDistrict = form.watch('district');
+	const cityOptions = useMemo(() => {
+		return getCitiesByDistrict(selectedDistrict);
+	}, [selectedDistrict]);
 
 	return (
 		<Form
@@ -64,55 +87,60 @@ export const LocationTab = ({ onClose }: LocationTabProps) => {
 		>
 			<Controller
 				control={form.control}
-				name="city"
+				name="district"
 				render={({ field, fieldState }) => (
-					<Input
-						label="Cidade"
+					<Input.AutoComplete
+						label="Distrito"
 						isRequired
-						value={field.value}
-						onValueChange={field.onChange}
+						placeholder="Digite para buscar distrito"
+						inputValue={field.value ?? ''}
+						onInputChange={field.onChange}
+						onSelectionChange={(key) => {
+							field.onChange(key);
+							// Limpa a zona quando distrito muda
+							form.setValue('zone', '');
+						}}
 						onBlur={field.onBlur}
-						ref={field.ref}
-						name={field.name}
 						isInvalid={!!fieldState.error}
 						errorMessage={fieldState.error?.message}
-					/>
+					>
+						{districtOptions.map((district) => (
+							<Input.AutoComplete.Item key={district}>
+								{district}
+							</Input.AutoComplete.Item>
+						))}
+					</Input.AutoComplete>
 				)}
 			/>
 
 			<Controller
 				control={form.control}
-				name="state"
+				name="zone"
 				render={({ field, fieldState }) => (
-					<Input
-						label="Estado"
+					<Input.AutoComplete
+						label="Zona"
 						isRequired
-						value={field.value}
-						onValueChange={field.onChange}
+						placeholder={
+							selectedDistrict
+								? `Digite para buscar cidades em ${selectedDistrict}`
+								: 'Primeiro selecione um distrito'
+						}
+						isDisabled={!selectedDistrict}
+						inputValue={field.value ?? ''}
+						onInputChange={field.onChange}
+						onSelectionChange={(key) => {
+							field.onChange(key);
+						}}
 						onBlur={field.onBlur}
-						ref={field.ref}
-						name={field.name}
 						isInvalid={!!fieldState.error}
 						errorMessage={fieldState.error?.message}
-					/>
-				)}
-			/>
-
-			<Controller
-				control={form.control}
-				name="neighborhood"
-				render={({ field, fieldState }) => (
-					<Input
-						label="Bairro"
-						isRequired
-						value={field.value}
-						onValueChange={field.onChange}
-						onBlur={field.onBlur}
-						ref={field.ref}
-						name={field.name}
-						isInvalid={!!fieldState.error}
-						errorMessage={fieldState.error?.message}
-					/>
+					>
+						{cityOptions.map((city) => (
+							<Input.AutoComplete.Item key={city}>
+								{city}
+							</Input.AutoComplete.Item>
+						))}
+					</Input.AutoComplete>
 				)}
 			/>
 
