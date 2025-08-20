@@ -247,4 +247,28 @@ export const DATA_SERVICES = [
 		short_description:
 			'Pisoteamento erótico controlado com variedade de calçados, controle de pressão e técnicas específicas.',
 	},
+	{
+		id: 32,
+		label: 'Ménage',
+		description:
+			'Experiência sexual envolvendo três pessoas simultaneamente com dinâmicas e posições diversificadas. Coordenação entre os participantes para maximizar o prazer de todos envolvidos. Estabelecimento prévio de limites e preferências de cada pessoa. Ambiente adequado com espaço suficiente para movimento e conforto. Comunicação constante para ajustes durante a experiência.',
+		short_description:
+			'Experiência sexual a três com dinâmicas coordenadas, limites estabelecidos e comunicação constante.',
+	},
+	{
+		id: 33,
+		label: 'Casal',
+		description:
+			'Atendimento simultâneo a casais oferecendo experiências personalizadas para ambos os parceiros. Dinâmicas que incluem desde interação com apenas um dos parceiros até participação mútua. Respeito à relação do casal e seus limites específicos previamente estabelecidos. Ambiente confortável que permita privacidade e intimidade adequadas. Experiência focada no prazer conjunto do casal.',
+		short_description:
+			'Atendimento personalizado a casais com dinâmicas flexíveis respeitando limites e relação estabelecida.',
+	},
+	{
+		id: 34,
+		label: 'Inversão de papel',
+		description:
+			'Troca de papéis dominante/submisso onde a acompanhante assume posição de controle ou submissão conforme desejo do cliente. Exploração de dinâmicas de poder invertidas com acessórios apropriados para cada papel. Comunicação sobre limites e intensidade desejada antes do início da sessão. Cenários e roteiros podem ser desenvolvidos para maior realismo. Experiência psicológica intensa além da física.',
+		short_description:
+			'Troca de papéis dominante/submisso com dinâmicas de poder invertidas e cenários personalizados.',
+	},
 ] as const;

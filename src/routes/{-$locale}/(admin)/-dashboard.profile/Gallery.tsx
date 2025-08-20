@@ -2,7 +2,6 @@ import { useMutation } from '@tanstack/react-query';
 import { useRouteContext, useRouter } from '@tanstack/react-router';
 import { useUploadFiles } from 'better-upload/client';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { toast } from 'sonner';
 import {
 	deleteFile,
 	MAX_FILE_SIZE,
@@ -13,6 +12,7 @@ import type { GalleryItem } from '@/api/utils/types/escort';
 import { Stack } from '@/components/core/Stack';
 import { SortableGallery } from '@/components/dashboard/SortableGallery';
 import { Input } from '@/components/heroui/Input';
+import { toast } from '@/components/heroui/Toast';
 import { api } from '@/lib/api';
 import { tryCatch } from '@/utils/tryCatch';
 

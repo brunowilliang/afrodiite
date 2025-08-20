@@ -22,6 +22,7 @@ export type Price = {
 	slot: Slot;
 	is_available: boolean;
 	amount?: number;
+	negotiated?: boolean;
 	currency?: 'EUR';
 };
 

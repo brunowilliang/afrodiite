@@ -2,12 +2,12 @@ import { Card, Divider } from '@heroui/react';
 import { useMutation } from '@tanstack/react-query';
 import { useRouteContext, useRouter } from '@tanstack/react-router';
 import { Fragment, useMemo, useRef, useState } from 'react';
-import { toast } from 'sonner';
 import type { ProfileUpdate } from '@/api/utils/types/escort';
 import { Icon } from '@/components/core/Icon';
 import { Text } from '@/components/core/Text';
 import { Input } from '@/components/heroui/Input';
 import { Modal, ModalRef } from '@/components/heroui/Modal';
+import { toast } from '@/components/heroui/Toast';
 import { api } from '@/lib/api';
 import { cn } from '@/lib/utils';
 import { DATA_SERVICES } from '@/utils/services';
@@ -114,7 +114,7 @@ export const ServicesTab = ({ onClose }: ServicesTabProps) => {
 				))}
 			</div>
 
-			<Modal ref={modalRef} placement="top-center">
+			<Modal ref={modalRef} placement="top-center" isDismissable={false}>
 				<Modal.Content>
 					<Modal.Header className="px-6 pt-5 pb-3 text-default-700">
 						{modalService?.label}

@@ -142,6 +142,7 @@ export const escortProfileSchema = createInsertSchema(escortProfiles, {
 			z.object({
 				day: z.string().min(1),
 				is_available: z.boolean(),
+				negotiated: z.boolean().optional(),
 				start: z.string().regex(timeRegex),
 				end: z.string().regex(timeRegex),
 			}),

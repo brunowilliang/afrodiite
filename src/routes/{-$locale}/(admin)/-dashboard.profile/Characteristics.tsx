@@ -4,10 +4,10 @@ import { useMutation } from '@tanstack/react-query';
 import { useRouteContext, useRouter } from '@tanstack/react-router';
 
 import { Controller, useForm } from 'react-hook-form';
-import { toast } from 'sonner';
 import z from 'zod';
 import { Button } from '@/components/heroui/Button';
 import { Input } from '@/components/heroui/Input';
+import { toast } from '@/components/heroui/Toast';
 import { api } from '@/lib/api';
 import { characteristicsSchema } from './schema';
 
@@ -117,15 +117,16 @@ export const CharacteristicsTab = ({ onClose }: CharacteristicsTabProps) => {
 							label="Idade"
 							description="Ex: 25"
 							minValue={17}
+							defaultValue={18}
 							maxValue={100}
 							step={1}
-							formatOptions={{
-								style: 'unit',
-								unit: 'year',
-								unitDisplay: 'long',
-								minimumFractionDigits: 0,
-								maximumFractionDigits: 0,
-							}}
+							// formatOptions={{
+							// 	style: 'unit',
+							// 	unit: 'year',
+							// 	unitDisplay: 'long',
+							// 	minimumFractionDigits: 0,
+							// 	maximumFractionDigits: 0,
+							// }}
 							isInvalid={!!fieldState.error}
 							errorMessage={fieldState.error?.message}
 							value={field.value as number}
@@ -142,13 +143,20 @@ export const CharacteristicsTab = ({ onClose }: CharacteristicsTabProps) => {
 							isRequired
 							label="Altura"
 							description="Ex: 1,54"
+							defaultValue={1.54}
 							step={0.01}
+							// formatOptions={{
+							// 	style: 'unit',
+							// 	unit: 'meter',
+							// 	unitDisplay: 'short',
+							// 	minimumFractionDigits: 2,
+							// 	maximumFractionDigits: 2,
+							// }}
 							formatOptions={{
-								style: 'unit',
-								unit: 'meter',
-								unitDisplay: 'short',
+								style: 'decimal',
 								minimumFractionDigits: 2,
 								maximumFractionDigits: 2,
+								useGrouping: false,
 							}}
 							isInvalid={!!fieldState.error}
 							errorMessage={fieldState.error?.message}
@@ -180,15 +188,22 @@ export const CharacteristicsTab = ({ onClose }: CharacteristicsTabProps) => {
 							isRequired
 							label="Peso"
 							description="Ex: 54,4"
-							minValue={25}
+							minValue={30}
+							defaultValue={54.4}
 							maxValue={200}
 							step={0.1}
+							// formatOptions={{
+							// 	style: 'unit',
+							// 	unit: 'kilogram',
+							// 	unitDisplay: 'short',
+							// 	minimumFractionDigits: 1,
+							// 	maximumFractionDigits: 1,
+							// }}
 							formatOptions={{
-								style: 'unit',
-								unit: 'kilogram',
-								unitDisplay: 'short',
+								style: 'decimal',
 								minimumFractionDigits: 1,
 								maximumFractionDigits: 1,
+								useGrouping: false,
 							}}
 							isInvalid={!!fieldState.error}
 							errorMessage={fieldState.error?.message}

@@ -12,7 +12,6 @@ import {
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
 import { PhotoProvider } from 'react-photo-view';
 import reactPhotoViewCss from 'react-photo-view/dist/react-photo-view.css?url';
-import { Toaster } from 'sonner';
 import { ThemeProvider } from '@/components/ui/theme-provider';
 import { api } from '@/lib/api';
 import appCss from '@/styles/app.css?url';
@@ -113,19 +112,18 @@ function RootDocument() {
 					disableTransitionOnChange
 					storageKey="theme"
 				>
-					<HeroUIProvider>
-						<I18nProvider locale="pt-PT">
-							<PhotoProvider>
+					<PhotoProvider>
+						<HeroUIProvider>
+							<I18nProvider locale="pt-PT">
 								<Outlet />
-								<Toaster position="top-center" />
-							</PhotoProvider>
-							<ToastProvider
-								toastOffset={20}
-								toastProps={{}}
-								placement="top-center"
-							/>
-						</I18nProvider>
-					</HeroUIProvider>
+								<ToastProvider
+									toastOffset={20}
+									maxVisibleToasts={2}
+									placement="top-center"
+								/>
+							</I18nProvider>
+						</HeroUIProvider>
+					</PhotoProvider>
 				</ThemeProvider>
 				<TanStackRouterDevtools position="bottom-right" />
 				<Scripts />

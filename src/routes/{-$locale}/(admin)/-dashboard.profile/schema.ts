@@ -71,13 +71,16 @@ export const pricesSchema = z
 					.object({
 						is_available: z.boolean(),
 						amount: z.number().min(0).optional(),
+						negotiated: z.boolean().optional(),
 						currency: z.literal('EUR').optional(),
 					})
 					.superRefine((val, ctx) => {
-						if (val.is_available && (val.amount ?? 0) <= 0) {
+						// Se está ativo e NÃO é negociado, então deve ter valor > 0
+						if (val.is_available && !val.negotiated && (val.amount ?? 0) <= 0) {
 							ctx.addIssue({
 								code: 'custom',
-								message: 'Quando ativo, o valor deve ser maior que 0.',
+								message:
+									'Quando ativo, o valor deve ser maior que 0 ou marque "A combinar".',
 								path: ['amount'],
 							});
 						}
@@ -86,8 +89,9 @@ export const pricesSchema = z
 		) as Record<Slot, z.ZodObject<any>>,
 	)
 	.superRefine((val, ctx) => {
+		// Pelo menos um slot deve estar ativo (com valor ou negociado)
 		const anyValid = Object.values(val).some(
-			(v: any) => !!v.is_available && (v.amount ?? 0) > 0,
+			(v: any) => !!v.is_available && ((v.amount ?? 0) > 0 || !!v.negotiated),
 		);
 		if (!anyValid) {
 			const firstSlot = (SLOTS as readonly Slot[])[0];
@@ -134,12 +138,33 @@ export function isOfficeHoursComplete(profile: ProfileSelect): boolean {
 
 export function isPricesComplete(profile: ProfileSelect): boolean {
 	const prices = Array.isArray(profile.prices) ? profile.prices : [];
-	return prices.some((p) => Boolean(p?.is_available) && (p?.amount ?? 0) > 0);
+	return prices.some(
+		(p) =>
+			Boolean(p?.is_available) &&
+			((p?.amount ?? 0) > 0 || Boolean(p?.negotiated)),
+	);
 }
 
 export function isServicesComplete(profile: ProfileSelect): boolean {
 	const services = Array.isArray(profile.services) ? profile.services : [];
 	return services.length > 5;
+}
+
+export function getServicesProgress(profile: ProfileSelect): {
+	count: number;
+	isComplete: boolean;
+	hasPartialProgress: boolean;
+} {
+	const services = Array.isArray(profile.services) ? profile.services : [];
+	const count = services.length;
+	const isComplete = count > 5;
+	const hasPartialProgress = count > 0 && count <= 5;
+
+	return {
+		count,
+		isComplete,
+		hasPartialProgress,
+	};
 }
 
 export function isGalleryComplete(
@@ -151,6 +176,26 @@ export function isGalleryComplete(
 		(g) => typeof g?.url === 'string' && g.url.length > 0,
 	);
 	return validPhotos.length >= minPhotos;
+}
+
+export function getGalleryProgress(profile: ProfileSelect): {
+	count: number;
+	isComplete: boolean;
+	hasPartialProgress: boolean;
+} {
+	const gallery = Array.isArray(profile.gallery) ? profile.gallery : [];
+	const validPhotos = gallery.filter(
+		(g) => typeof g?.url === 'string' && g.url.length > 0,
+	);
+	const count = validPhotos.length;
+	const isComplete = count >= 5;
+	const hasPartialProgress = count > 0 && count < 5;
+
+	return {
+		count,
+		isComplete,
+		hasPartialProgress,
+	};
 }
 
 export function computeOnboardingCompletion(profile: ProfileSelect): boolean[] {

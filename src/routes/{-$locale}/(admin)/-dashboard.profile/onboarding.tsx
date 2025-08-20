@@ -15,7 +15,11 @@ import { LocationTab } from './Location';
 import { OfficeHoursTab } from './OfficeHours';
 import { PricesTab } from './Prices';
 import { ServicesTab } from './Services';
-import { computeOnboardingCompletion } from './schema';
+import {
+	computeOnboardingCompletion,
+	getGalleryProgress,
+	getServicesProgress,
+} from './schema';
 
 const steps = [
 	{
@@ -83,9 +87,38 @@ export const Onboarding = ({ profile }: OnboardingProps) => {
 	);
 	const { stepsState } = useOnboardingStep(steps.length, completedSteps);
 
+	// Calcular progresso dos serviços para mostrar aviso
+	const servicesProgress = useMemo(
+		() => getServicesProgress((profile ?? {}) as any),
+		[profile],
+	);
+
+	// Calcular progresso da galeria para mostrar aviso
+	const galleryProgress = useMemo(
+		() => getGalleryProgress((profile ?? {}) as any),
+		[profile],
+	);
+
 	const closeModal = () => {
 		modalRef.current?.close();
 		setSelectedIdx(null);
+	};
+
+	// Função para obter a descrição dinâmica dos steps com progresso parcial
+	const getStepDescription = (stepIndex: number) => {
+		const step = steps[stepIndex];
+
+		// Step 5 é o índice 5 (serviços)
+		if (stepIndex === 5 && servicesProgress.hasPartialProgress) {
+			return `${step.description}\n\n⚠️ Você selecionou ${servicesProgress.count} serviço${servicesProgress.count > 1 ? 's' : ''}, mas precisamos de pelo menos 6 para completar esta etapa.`;
+		}
+
+		// Step 6 é o índice 6 (galeria)
+		if (stepIndex === 6 && galleryProgress.hasPartialProgress) {
+			return `${step.description}\n\n⚠️ Você adicionou ${galleryProgress.count} foto${galleryProgress.count > 1 ? 's' : ''}, mas precisamos de pelo menos 5 para completar esta etapa.`;
+		}
+
+		return step.description;
 	};
 
 	const renderSelectedTab = () => {
@@ -115,37 +148,57 @@ export const Onboarding = ({ profile }: OnboardingProps) => {
 			<Stack className="gap-5">
 				{steps.map((step, idx) => {
 					const s = stepsState[idx];
+					const description = getStepDescription(idx);
+					const hasServicesWarning =
+						idx === 5 && servicesProgress.hasPartialProgress;
+					const hasGalleryWarning =
+						idx === 6 && galleryProgress.hasPartialProgress;
+					const hasWarning = hasServicesWarning || hasGalleryWarning;
+					const displayColor = hasWarning ? 'warning' : s.color;
+
 					return (
 						<Alert
 							key={step.id}
-							color={s.color}
+							color={displayColor as any}
 							title={step.title}
-							description={step.description}
+							description={description}
 							variant="faded"
 							className={cn(
 								'flex',
-								s.isCompleted || s.isActive ? 'opacity-100' : 'opacity-35',
+								s.isCompleted || s.isActive || hasWarning
+									? 'opacity-100'
+									: 'opacity-35',
+								hasWarning && 'border-warning-300 bg-warning-50',
 							)}
 							classNames={{
 								base: 'flex flex-col gap-2 text-center md:text-left md:flex-row',
-								description: 'text-sm font-light',
+								description: cn(
+									'font-light text-sm',
+									hasWarning && 'whitespace-pre-line',
+								),
 								title: 'text-lg font-medium',
 							}}
 							endContent={
 								<Button
-									color={s.color}
+									color={displayColor as any}
 									size="sm"
 									variant="flat"
 									className="px-10"
-									disabled={!s.isActive && !s.isCompleted}
+									disabled={!s.isActive && !s.isCompleted && !hasWarning}
 									onPress={() => {
-										if (s.isActive || s.isCompleted) {
+										if (s.isActive || s.isCompleted || hasWarning) {
 											setSelectedIdx(idx);
 											modalRef.current?.open();
 										}
 									}}
 								>
-									{s.isCompleted ? 'Editar' : step.buttonText}
+									{s.isCompleted
+										? 'Editar'
+										: hasServicesWarning
+											? 'Completar Serviços'
+											: hasGalleryWarning
+												? 'Adicionar Mais Fotos'
+												: step.buttonText}
 								</Button>
 							}
 						/>
@@ -155,10 +208,8 @@ export const Onboarding = ({ profile }: OnboardingProps) => {
 			<Modal
 				ref={modalRef}
 				title={selectedIdx !== null ? steps[selectedIdx].title : 'Onboarding'}
-				placement="top-center"
 				size="3xl"
-				scrollBehavior="inside"
-				shouldBlockScroll={false}
+				isDismissable={false}
 			>
 				<Modal.Content>
 					<Modal.Body className="px-5 py-6 pb-20">

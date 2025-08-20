@@ -68,8 +68,11 @@ function ModalRoot({
 		<HeroModal
 			isOpen={Boolean(currentOpen)}
 			onOpenChange={handleOpenChange}
+			placement="top-center"
 			backdrop={'blur'}
 			className="bg-background"
+			scrollBehavior="inside"
+			shouldBlockScroll={false}
 			classNames={{
 				backdrop: 'bg-black/20',
 			}}

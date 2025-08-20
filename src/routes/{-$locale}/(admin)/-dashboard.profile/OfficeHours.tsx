@@ -4,13 +4,13 @@ import { parseTime } from '@internationalized/date';
 import { useMutation } from '@tanstack/react-query';
 import { useRouteContext, useRouter } from '@tanstack/react-router';
 import { Controller, useForm } from 'react-hook-form';
-import { toast } from 'sonner';
 import z from 'zod';
 import { DAYS, DEFAULT_OFFICE_HOURS } from '@/api/utils/defaults/escort';
 import type { Day } from '@/api/utils/types/escort';
 import { Stack } from '@/components/core/Stack';
 import { Button } from '@/components/heroui/Button';
 import { Input } from '@/components/heroui/Input';
+import { toast } from '@/components/heroui/Toast';
 import { api } from '@/lib/api';
 import { officeHoursSchema } from './schema';
 
@@ -81,6 +81,23 @@ export const OfficeHoursTab = ({ onClose }: OfficeHoursTabProps) => {
 		}
 	};
 
+	// Helper para verificar se é "dia inteiro" baseado nos valores atuais
+	const isFullDay = (day: Day) => {
+		const values = form.watch();
+		return values[day]?.start === '00:00' && values[day]?.end === '23:59';
+	};
+
+	// Helper para definir dia inteiro
+	const setFullDay = (day: Day, enabled: boolean) => {
+		if (enabled) {
+			form.setValue(`${day}.start`, '00:00');
+			form.setValue(`${day}.end`, '23:59');
+		} else {
+			form.setValue(`${day}.start`, '08:00');
+			form.setValue(`${day}.end`, '18:00');
+		}
+	};
+
 	return (
 		<Form
 			validationBehavior="aria"
@@ -101,18 +118,29 @@ export const OfficeHoursTab = ({ onClose }: OfficeHoursTabProps) => {
 				const isActive = form.watch(`${day}.is_available`);
 				return (
 					<Stack key={day} className="w-full gap-3">
-						<Controller
-							control={form.control}
-							name={`${day}.is_available` as const}
-							render={({ field }) => (
+						<div className="flex items-center justify-between">
+							<Controller
+								control={form.control}
+								name={`${day}.is_available` as const}
+								render={({ field }) => (
+									<Input.Switch
+										isSelected={field.value}
+										onValueChange={field.onChange}
+									>
+										{label}
+									</Input.Switch>
+								)}
+							/>
+							{isActive && (
 								<Input.Switch
-									isSelected={field.value}
-									onValueChange={field.onChange}
+									isSelected={isFullDay(day)}
+									onValueChange={(enabled) => setFullDay(day, enabled)}
+									size="sm"
 								>
-									{label}
+									Dia inteiro?
 								</Input.Switch>
 							)}
-						/>
+						</div>
 						<Stack direction="row" className="w-full gap-4">
 							<Controller
 								control={form.control}

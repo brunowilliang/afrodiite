@@ -8,6 +8,7 @@ import { cn } from '@/utils/cn';
 export const SelectRoot = useStyled(HeroSelect, {
 	base: {
 		children: null,
+		isClearable: true,
 		size: 'md',
 		variant: 'flat',
 		radius: 'sm',
