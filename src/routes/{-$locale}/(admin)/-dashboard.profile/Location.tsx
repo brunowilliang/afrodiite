@@ -9,7 +9,7 @@ import { Button } from '@/components/heroui/Button';
 import { Input } from '@/components/heroui/Input';
 import { toast } from '@/components/heroui/Toast';
 import { api } from '@/lib/api';
-import { PortugalCities } from '@/utils/lists/PortugalCities';
+import { PortugalDistricts } from '@/utils/lists/Portugal';
 import { locationSchema } from './schema';
 
 const schema = locationSchema;
@@ -20,9 +20,9 @@ export const LocationTab = ({ onClose }: LocationTabProps) => {
 	const router = useRouter();
 	const { session, profile } = useRouteContext({ from: '/{-$locale}' });
 
-	// Lista de distritos únicos (admin_name)
+	// Lista de distritos únicos
 	const districtOptions = useMemo(() => {
-		return [...new Set(PortugalCities.map((city) => city.admin_name))]
+		return [...new Set(PortugalDistricts.map((item) => item.distrito))]
 			.filter(Boolean)
 			.sort();
 	}, []);
@@ -31,8 +31,10 @@ export const LocationTab = ({ onClose }: LocationTabProps) => {
 	const getCitiesByDistrict = (selectedDistrict: string | undefined) => {
 		if (!selectedDistrict) return [];
 
-		return PortugalCities.filter((city) => city.admin_name === selectedDistrict)
-			.map((city) => city.city)
+		return PortugalDistricts.filter(
+			(item) => item.distrito === selectedDistrict,
+		)
+			.map((item) => item.cidade)
 			.sort();
 	};
 

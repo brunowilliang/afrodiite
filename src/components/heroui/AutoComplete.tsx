@@ -11,15 +11,21 @@ export const AutocompleteRoot = useStyled(HeroAutocomplete, {
 		size: 'md',
 		variant: 'flat',
 		radius: 'sm',
-		classNames: {
-			label: cn('text-foreground/50'),
-			base: cn(
-				'group-data-[invalid=true]:!border-2',
-				'group-data-[invalid=true]:!border-danger',
-				'group-data-[invalid=true]:!bg-danger/5',
-				'data-[disabled]:opacity-80',
-			),
-		},
+		className: cn(
+			'text-foreground/50',
+			'group-data-[invalid=true]:!border-2',
+			'group-data-[invalid=true]:!border-danger',
+			'group-data-[invalid=true]:!bg-danger/5',
+			'data-[disabled]:opacity-80',
+		),
+		// classNames: {
+		// 	base: cn(
+		// 		'group-data-[invalid=true]:!border-2',
+		// 		'group-data-[invalid=true]:!border-danger',
+		// 		'group-data-[invalid=true]:!bg-danger/5',
+		// 		'data-[disabled]:opacity-80',
+		// 	),
+		// },
 	},
 });
 

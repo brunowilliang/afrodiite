@@ -1,7 +1,9 @@
+import { Image } from '@heroui/react';
 import useEmblaCarousel from 'embla-carousel-react';
 import { useCallback, useEffect, useState } from 'react';
 import { PhotoSlider } from 'react-photo-view';
 import { useStyled } from 'use-styled';
+import { GalleryItem } from '@/api/utils/types/escort';
 import { cn } from '@/utils/cn';
 
 export const DATA_IMAGES = [
@@ -52,8 +54,11 @@ const CarouselSlide = useStyled('div', {
 	base: { className: 'relative aspect-[3/4] overflow-hidden' },
 });
 
-const CarouselImage = useStyled('img', {
-	base: { className: 'size-full object-cover' },
+const CarouselImage = useStyled(Image, {
+	base: {
+		className: 'aspect-[3/4] cursor-zoom-in object-cover',
+		isBlurred: true,
+	},
 });
 
 const DotsContainer = useStyled('div', {
@@ -107,10 +112,7 @@ const Dot = useStyled('button', {
 });
 
 interface ImageCarouselProps {
-	images: Array<{
-		src: string;
-		alt?: string;
-	}>;
+	images: GalleryItem[];
 	width?: CarouselWidth;
 	gap?: string;
 	children?: React.ReactNode;
@@ -199,8 +201,8 @@ export function ImageCarousel({
 								className={CAROUSEL_WIDTH_CLASSES[width]}
 							>
 								<CarouselImage
-									src={image.src}
-									alt={image.alt || `Slide ${index + 1}`}
+									src={image.url}
+									alt={image.id || `Slide ${index + 1}`}
 									loading={index === 0 ? 'eager' : 'lazy'}
 									onClick={
 										openPreview
@@ -210,7 +212,7 @@ export function ImageCarousel({
 												}
 											: undefined
 									}
-									aria-label={`View ${image.alt || `Image ${index + 1}`}`}
+									aria-label={`View ${image.id || `Image ${index + 1}`}`}
 								/>
 							</CarouselSlide>
 						))}
@@ -249,7 +251,7 @@ export function ImageCarousel({
 			</CarouselRoot>
 
 			<PhotoSlider
-				images={images.map((img) => ({ src: img.src, key: img.src }))}
+				images={images.map((img) => ({ src: img.url, key: img.id }))}
 				visible={visible}
 				onClose={() => setVisible(false)}
 				index={photoIndex}

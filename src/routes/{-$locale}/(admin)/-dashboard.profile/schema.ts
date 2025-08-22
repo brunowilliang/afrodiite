@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { DAYS, SLOTS } from '@/api/utils/defaults/escort';
+import { escortProfileSchema } from '@/api/utils/schemas/escort';
 import type { Day, ProfileSelect, Slot } from '@/api/utils/types/escort';
-import { escortProfileSchema } from '@/api/utils/types/teste';
 
 export const informationSchema = escortProfileSchema.pick({
 	artist_name: true,

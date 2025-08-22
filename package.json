@@ -13,6 +13,7 @@
     "db:studio": "drizzle-kit studio --config=src/api/drizzle.config.ts",
     "db:generate": "drizzle-kit generate --config=src/api/drizzle.config.ts",
     "db:migrate": "drizzle-kit migrate --config=src/api/drizzle.config.ts",
+    "db:seed": "bun run src/api/db/seed.ts",
     "auth:gen": "@better-auth/cli@latest generate --output src/api/db/schemas/auth.ts --config src/lib/auth/auth.server.ts --yes",
     "npx:auth:gen": "npx @better-auth/cli@latest generate --config src/lib/auth/auth.server.ts --output src/api/db/schemas/auth.ts --yes",
     "email:dev": "email dev --dir src/lib/email/templates",
@@ -105,6 +106,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^2.1.2",
+    "@faker-js/faker": "^9.9.0",
     "@react-email/preview-server": "4.2.8",
     "@types/lodash.throttle": "^4.1.9",
     "@types/node": "^22.5.4",

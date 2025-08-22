@@ -43,6 +43,19 @@ function RouteComponent() {
 				</Button>
 			)}
 
+			<Button
+				onPress={() =>
+					router.navigate({
+						to: '/{-$locale}/escorts/$country',
+						params: { country: 'portugal' },
+					})
+				}
+				color="primary"
+				variant="flat"
+			>
+				Descubra as acompanhantes
+			</Button>
+
 			{/* <Input
 				isClearable
 				classNames={{

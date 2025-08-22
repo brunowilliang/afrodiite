@@ -3,6 +3,7 @@ import { useMemo, useRef, useState } from 'react';
 import type { ProfileSelect } from '@/api/utils/types/escort';
 import { Icon } from '@/components/core/Icon';
 import { Stack } from '@/components/core/Stack';
+import { Text } from '@/components/core/Text';
 import { Badge } from '@/components/heroui/Badge';
 import { Button } from '@/components/heroui/Button';
 import { Modal, ModalRef } from '@/components/heroui/Modal';
@@ -146,6 +147,16 @@ export const Onboarding = ({ profile }: OnboardingProps) => {
 	return (
 		<>
 			<Stack className="gap-5">
+				<Stack className="gap-1">
+					<Text size="xl" weight="bold">
+						Prepare o seu perfil para destacar 🚀
+					</Text>
+					<Text size="md" weight="light">
+						Em poucos passos, construa um perfil que para o scroll, atrai
+						olhares e transforma interesse em ação instantânea.
+					</Text>
+				</Stack>
+
 				{steps.map((step, idx) => {
 					const s = stepsState[idx];
 					const description = getStepDescription(idx);
