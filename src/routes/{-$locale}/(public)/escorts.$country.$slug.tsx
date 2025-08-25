@@ -1,6 +1,11 @@
 import { Accordion, AccordionItem, Card, Chip } from '@heroui/react';
 import { useSuspenseQuery } from '@tanstack/react-query';
-import { createFileRoute, notFound } from '@tanstack/react-router';
+import {
+	createFileRoute,
+	notFound,
+	useCanGoBack,
+	useRouter,
+} from '@tanstack/react-router';
 import type { OfficeHour, Price } from '@/api/utils/types/escort';
 import { Characteristics } from '@/api/utils/types/escort';
 import { Icon } from '@/components/core/Icon';
@@ -27,7 +32,11 @@ export const Route = createFileRoute(
 });
 
 function RouteComponent() {
+	const router = useRouter();
+	const canGoBack = useCanGoBack();
+
 	const { slug } = Route.useParams();
+
 	const { data: profile } = useSuspenseQuery(
 		api.queries.profile.detail.queryOptions({ input: { slug } }),
 	);
@@ -89,10 +98,32 @@ function RouteComponent() {
 	const price = profile.prices?.find((price) => price.slot === '1h');
 	const priceLabel = price?.amount ? `€${price.amount} / 1h` : 'Consultar';
 
+	const handleGoBack = () => {
+		if (canGoBack) {
+			router.history.back();
+		} else {
+			router.history.push('/');
+		}
+	};
+
 	return (
 		<Container>
 			<div className="grid grid-cols-1 gap-4 lg:grid-cols-12">
 				<div className="col-span-8 space-y-4">
+					<Button
+						variant="light"
+						color="primary"
+						size="md"
+						onPress={handleGoBack}
+					>
+						<Icon
+							name="ArrowLeft"
+							variant="stroke"
+							size="20"
+							className="-mr-1 -ml-1"
+						/>
+						Voltar
+					</Button>
 					<Card className="gap-1 p-1">
 						<ImageCarousel
 							images={gallery}
