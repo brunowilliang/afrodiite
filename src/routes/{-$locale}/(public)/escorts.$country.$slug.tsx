@@ -163,7 +163,7 @@ function RouteComponent() {
 									direction="row"
 									className="gap-1 border-divider/40 border-b py-1 last:border-b-0"
 								>
-									<Text weight="normal">
+									<Text weight="bold">
 										{caracteristicsTranslations[key as keyof Characteristics]}:
 									</Text>
 									<Text weight="light">
@@ -190,9 +190,7 @@ function RouteComponent() {
 									direction="row"
 									className="gap-1 border-divider/40 border-b py-1 last:border-b-0"
 								>
-									<Text weight="normal">
-										{officeHourTranslations[hour.day]}
-									</Text>
+									<Text weight="bold">{officeHourTranslations[hour.day]}</Text>
 									<Text weight="light">
 										{hour.start} - {hour.end}
 									</Text>
@@ -210,7 +208,7 @@ function RouteComponent() {
 									direction="row"
 									className="gap-1 border-divider/40 border-b py-1 last:border-b-0"
 								>
-									<Text weight="normal">{priceTranslations[price.slot]}</Text>
+									<Text weight="bold">{priceTranslations[price.slot]}</Text>
 									<Text weight="light">
 										{price.is_available ? `€ ${price.amount}` : 'Não realiza'}
 									</Text>
@@ -229,7 +227,7 @@ function RouteComponent() {
 								direction="row"
 								className="gap-1 border-divider/40 border-b py-1 last:border-b-0"
 							>
-								<Text weight="light">
+								<Text weight="normal">
 									{
 										serviceTranslations[
 											serviceId as keyof typeof serviceTranslations
