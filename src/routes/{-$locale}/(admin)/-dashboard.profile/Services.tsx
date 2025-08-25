@@ -1,6 +1,10 @@
 import { Card, Divider } from '@heroui/react';
 import { useMutation } from '@tanstack/react-query';
-import { useRouteContext, useRouter } from '@tanstack/react-router';
+import {
+	useLoaderData,
+	useRouteContext,
+	useRouter,
+} from '@tanstack/react-router';
 import { Fragment, useMemo, useRef, useState } from 'react';
 import type { ProfileUpdate } from '@/api/utils/types/escort';
 import { Icon } from '@/components/core/Icon';
@@ -21,7 +25,8 @@ export const ServicesTab = ({ onClose }: ServicesTabProps) => {
 		label: string;
 		description: string;
 	} | null>(null);
-	const { session, profile } = useRouteContext({ from: '/{-$locale}' });
+	const { session } = useRouteContext({ from: '/{-$locale}' });
+	const { profile } = useLoaderData({ from: '/{-$locale}/(admin)/dashboard' });
 
 	const updateProfile = useMutation(
 		api.queries.profile.update.mutationOptions(),

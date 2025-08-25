@@ -60,6 +60,7 @@ export const Icon = useStyled('i', {
 			Idea: { className: 'hgi-ai-idea' },
 			Info: { className: 'hgi-information-circle' },
 			Refresh: { className: 'hgi-arrow-reload-horizontal' },
+			Anonymous: { className: 'hgi-anonymous' },
 		},
 	},
 	defaultVariants: {

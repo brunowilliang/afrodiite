@@ -1,7 +1,11 @@
 import { Form } from '@heroui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
-import { useRouteContext, useRouter } from '@tanstack/react-router';
+import {
+	useLoaderData,
+	useRouteContext,
+	useRouter,
+} from '@tanstack/react-router';
 import { useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import z from 'zod';
@@ -18,7 +22,8 @@ type LocationTabProps = { onClose?: () => void };
 
 export const LocationTab = ({ onClose }: LocationTabProps) => {
 	const router = useRouter();
-	const { session, profile } = useRouteContext({ from: '/{-$locale}' });
+	const { session } = useRouteContext({ from: '/{-$locale}' });
+	const { profile } = useLoaderData({ from: '/{-$locale}/(admin)/dashboard' });
 
 	// Lista de distritos únicos
 	const districtOptions = useMemo(() => {

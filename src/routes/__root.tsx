@@ -16,6 +16,7 @@ import { ThemeProvider } from '@/components/ui/theme-provider';
 import { api } from '@/lib/api';
 import appCss from '@/styles/app.css?url';
 import { seo } from '@/utils/seo';
+import { tryCatch } from '@/utils/tryCatch';
 
 type RootContext = {
 	queryClient: QueryClient;
@@ -24,12 +25,14 @@ type RootContext = {
 export const Route = createRootRouteWithContext<RootContext>()({
 	component: RootDocument,
 	beforeLoad: async () => {
-		const session = await api.client.session();
-		if (session) {
-			const profile = await api.client.profile.get();
-			return { session, profile };
+		const [error, session] = await tryCatch(api.client.session());
+
+		if (error) {
+			console.warn('Session check failed:', error.message);
+			return { session: null };
 		}
-		return { session: null };
+
+		return { session };
 	},
 	head: () => ({
 		meta: [

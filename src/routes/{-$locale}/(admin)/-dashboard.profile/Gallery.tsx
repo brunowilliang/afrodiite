@@ -1,5 +1,9 @@
 import { useMutation } from '@tanstack/react-query';
-import { useRouteContext, useRouter } from '@tanstack/react-router';
+import {
+	useLoaderData,
+	useRouteContext,
+	useRouter,
+} from '@tanstack/react-router';
 import { useUploadFiles } from 'better-upload/client';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
@@ -22,7 +26,8 @@ export const GalleryTab = ({ onClose }: GalleryTabProps) => {
 	const { control } = useUploadFiles({ route: 'gallery' });
 
 	const router = useRouter();
-	const { session, profile } = useRouteContext({ from: '/{-$locale}' });
+	const { session } = useRouteContext({ from: '/{-$locale}' });
+	const { profile } = useLoaderData({ from: '/{-$locale}/(admin)/dashboard' });
 	const id = session?.user.id as string;
 
 	const updateProfile = useMutation(

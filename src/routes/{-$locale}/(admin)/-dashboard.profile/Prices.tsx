@@ -2,7 +2,11 @@ import { Form } from '@heroui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { I18nProvider } from '@react-aria/i18n';
 import { useMutation } from '@tanstack/react-query';
-import { useRouteContext, useRouter } from '@tanstack/react-router';
+import {
+	useLoaderData,
+	useRouteContext,
+	useRouter,
+} from '@tanstack/react-router';
 import { Controller, useForm } from 'react-hook-form';
 import z from 'zod';
 import { DEFAULT_PRICES, SLOTS } from '@/api/utils/defaults/escort';
@@ -31,7 +35,8 @@ const slotLabels: Record<Slot, string> = {
 
 export const PricesTab = ({ onClose }: PricesTabProps) => {
 	const router = useRouter();
-	const { session, profile } = useRouteContext({ from: '/{-$locale}' });
+	const { session } = useRouteContext({ from: '/{-$locale}' });
+	const { profile } = useLoaderData({ from: '/{-$locale}/(admin)/dashboard' });
 
 	const updateProfile = useMutation(
 		api.queries.profile.update.mutationOptions(),

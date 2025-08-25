@@ -1,7 +1,11 @@
 import { Form } from '@heroui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
-import { useRouteContext, useRouter } from '@tanstack/react-router';
+import {
+	useLoaderData,
+	useRouteContext,
+	useRouter,
+} from '@tanstack/react-router';
 
 import { Controller, useForm } from 'react-hook-form';
 import z from 'zod';
@@ -17,7 +21,8 @@ type CharacteristicsTabProps = { onClose?: () => void };
 
 export const CharacteristicsTab = ({ onClose }: CharacteristicsTabProps) => {
 	const router = useRouter();
-	const { session, profile } = useRouteContext({ from: '/{-$locale}' });
+	const { session } = useRouteContext({ from: '/{-$locale}' });
+	const { profile } = useLoaderData({ from: '/{-$locale}/(admin)/dashboard' });
 
 	const languageOptions = [
 		'Português',
@@ -120,13 +125,6 @@ export const CharacteristicsTab = ({ onClose }: CharacteristicsTabProps) => {
 							defaultValue={18}
 							maxValue={100}
 							step={1}
-							// formatOptions={{
-							// 	style: 'unit',
-							// 	unit: 'year',
-							// 	unitDisplay: 'long',
-							// 	minimumFractionDigits: 0,
-							// 	maximumFractionDigits: 0,
-							// }}
 							isInvalid={!!fieldState.error}
 							errorMessage={fieldState.error?.message}
 							value={field.value as number}
@@ -145,13 +143,6 @@ export const CharacteristicsTab = ({ onClose }: CharacteristicsTabProps) => {
 							description="Ex: 1,54"
 							defaultValue={1.54}
 							step={0.01}
-							// formatOptions={{
-							// 	style: 'unit',
-							// 	unit: 'meter',
-							// 	unitDisplay: 'short',
-							// 	minimumFractionDigits: 2,
-							// 	maximumFractionDigits: 2,
-							// }}
 							formatOptions={{
 								style: 'decimal',
 								minimumFractionDigits: 2,
@@ -192,13 +183,6 @@ export const CharacteristicsTab = ({ onClose }: CharacteristicsTabProps) => {
 							defaultValue={54.4}
 							maxValue={200}
 							step={0.1}
-							// formatOptions={{
-							// 	style: 'unit',
-							// 	unit: 'kilogram',
-							// 	unitDisplay: 'short',
-							// 	minimumFractionDigits: 1,
-							// 	maximumFractionDigits: 1,
-							// }}
 							formatOptions={{
 								style: 'decimal',
 								minimumFractionDigits: 1,
@@ -230,8 +214,8 @@ export const CharacteristicsTab = ({ onClose }: CharacteristicsTabProps) => {
 							isInvalid={!!fieldState.error}
 							errorMessage={fieldState.error?.message}
 						>
-							<Input.Select.Item key="male">Masculino</Input.Select.Item>
-							<Input.Select.Item key="female">Feminino</Input.Select.Item>
+							<Input.Select.Item key="Masculino">Masculino</Input.Select.Item>
+							<Input.Select.Item key="Feminino">Feminino</Input.Select.Item>
 						</Input.Select>
 					)}
 				/>
@@ -250,11 +234,15 @@ export const CharacteristicsTab = ({ onClose }: CharacteristicsTabProps) => {
 							isInvalid={!!fieldState.error}
 							errorMessage={fieldState.error?.message}
 						>
-							<Input.Select.Item key="white">Branco</Input.Select.Item>
-							<Input.Select.Item key="black">Negro</Input.Select.Item>
-							<Input.Select.Item key="brown">Pardo</Input.Select.Item>
-							<Input.Select.Item key="indigenous">Indígena</Input.Select.Item>
-							<Input.Select.Item key="other">Outro</Input.Select.Item>
+							<Input.Select.Item key="Branca">Branca</Input.Select.Item>
+							<Input.Select.Item key="Negra">Negra</Input.Select.Item>
+							<Input.Select.Item key="Parda">Parda</Input.Select.Item>
+							<Input.Select.Item key="Indígena">Indígena</Input.Select.Item>
+							<Input.Select.Item key="Caucasiana">Caucasiana</Input.Select.Item>
+							<Input.Select.Item key="Asiática">Asiática</Input.Select.Item>
+							<Input.Select.Item key="Latina">Latina</Input.Select.Item>
+							<Input.Select.Item key="Mestiça">Mestiça</Input.Select.Item>
+							<Input.Select.Item key="Outra">Outra</Input.Select.Item>
 						</Input.Select>
 					)}
 				/>
@@ -275,27 +263,30 @@ export const CharacteristicsTab = ({ onClose }: CharacteristicsTabProps) => {
 							isInvalid={!!fieldState.error}
 							errorMessage={fieldState.error?.message}
 						>
-							<Input.Select.Item key="castanho-escuro">
-								Castanho escuro
+							<Input.Select.Item key="Castanhos escuros">
+								Castanhos escuros
 							</Input.Select.Item>
-							<Input.Select.Item key="castanho-claro">
-								Castanho claro
+							<Input.Select.Item key="Castanhos claros">
+								Castanhos claros
 							</Input.Select.Item>
-							<Input.Select.Item key="preto">Preto</Input.Select.Item>
-							<Input.Select.Item key="azul-escuro">
-								Azul escuro
+							<Input.Select.Item key="Castanhos">Castanhos</Input.Select.Item>
+							<Input.Select.Item key="Pretos">Pretos</Input.Select.Item>
+							<Input.Select.Item key="Azuis escuros">
+								Azuis escuros
 							</Input.Select.Item>
-							<Input.Select.Item key="azul-claro">Azul claro</Input.Select.Item>
-							<Input.Select.Item key="verde-escuro">
-								Verde escuro
+							<Input.Select.Item key="Azuis claros">
+								Azuis claros
 							</Input.Select.Item>
-							<Input.Select.Item key="verde-claro">
-								Verde claro
+							<Input.Select.Item key="Verdes escuros">
+								Verdes escuros
 							</Input.Select.Item>
-							<Input.Select.Item key="mel">Mel/Âmbar</Input.Select.Item>
-							<Input.Select.Item key="avela">Avelã</Input.Select.Item>
-							<Input.Select.Item key="cinza">Cinza</Input.Select.Item>
-							<Input.Select.Item key="violeta">Violeta</Input.Select.Item>
+							<Input.Select.Item key="Verdes claros">
+								Verdes claros
+							</Input.Select.Item>
+							<Input.Select.Item key="Mel">Mel</Input.Select.Item>
+							<Input.Select.Item key="Avelã">Avelã</Input.Select.Item>
+							<Input.Select.Item key="Cinzentos">Cinzentos</Input.Select.Item>
+							<Input.Select.Item key="Violetas">Violetas</Input.Select.Item>
 						</Input.Select>
 					)}
 				/>
@@ -314,32 +305,36 @@ export const CharacteristicsTab = ({ onClose }: CharacteristicsTabProps) => {
 							isInvalid={!!fieldState.error}
 							errorMessage={fieldState.error?.message}
 						>
-							<Input.Select.Item key="preto">Preto</Input.Select.Item>
-							<Input.Select.Item key="castanho-escuro">
+							<Input.Select.Item key="Preto">Preto</Input.Select.Item>
+							<Input.Select.Item key="Castanho escuro">
 								Castanho escuro
 							</Input.Select.Item>
-							<Input.Select.Item key="castanho-claro">
+							<Input.Select.Item key="Castanho claro">
 								Castanho claro
 							</Input.Select.Item>
-							<Input.Select.Item key="loiro-platinado">
+							<Input.Select.Item key="Castanho">Castanho</Input.Select.Item>
+							<Input.Select.Item key="Moreno">Moreno</Input.Select.Item>
+							<Input.Select.Item key="Loiro platinado">
 								Loiro platinado
 							</Input.Select.Item>
-							<Input.Select.Item key="loiro-escuro">
+							<Input.Select.Item key="Loiro escuro">
 								Loiro escuro
 							</Input.Select.Item>
-							<Input.Select.Item key="loiro-claro">
+							<Input.Select.Item key="Loiro claro">
 								Loiro claro
 							</Input.Select.Item>
-							<Input.Select.Item key="ruivo-claro">
+							<Input.Select.Item key="Loiro">Loiro</Input.Select.Item>
+							<Input.Select.Item key="Ruivo claro">
 								Ruivo claro
 							</Input.Select.Item>
-							<Input.Select.Item key="ruivo-escuro">
+							<Input.Select.Item key="Ruivo escuro">
 								Ruivo escuro
 							</Input.Select.Item>
-							<Input.Select.Item key="auburn">Auburn</Input.Select.Item>
-							<Input.Select.Item key="grisalho">Grisalho</Input.Select.Item>
-							<Input.Select.Item key="branco">Branco</Input.Select.Item>
-							<Input.Select.Item key="colorido">Colorido</Input.Select.Item>
+							<Input.Select.Item key="Ruivo">Ruivo</Input.Select.Item>
+							<Input.Select.Item key="Auburn">Auburn</Input.Select.Item>
+							<Input.Select.Item key="Grisalho">Grisalho</Input.Select.Item>
+							<Input.Select.Item key="Branco">Branco</Input.Select.Item>
+							<Input.Select.Item key="Colorido">Colorido</Input.Select.Item>
 						</Input.Select>
 					)}
 				/>
@@ -392,9 +387,11 @@ export const CharacteristicsTab = ({ onClose }: CharacteristicsTabProps) => {
 							isInvalid={!!fieldState.error}
 							errorMessage={fieldState.error?.message}
 						>
-							<Input.Select.Item key="male">Masculino</Input.Select.Item>
-							<Input.Select.Item key="female">Feminino</Input.Select.Item>
-							<Input.Select.Item key="both">Ambos</Input.Select.Item>
+							<Input.Select.Item key="Homens">Homens</Input.Select.Item>
+							<Input.Select.Item key="Mulheres">Mulheres</Input.Select.Item>
+							<Input.Select.Item key="Ambos os sexos">
+								Ambos os sexos
+							</Input.Select.Item>
 						</Input.Select>
 					)}
 				/>

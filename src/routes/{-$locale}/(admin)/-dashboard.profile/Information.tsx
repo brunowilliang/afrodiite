@@ -2,7 +2,11 @@ import { Form } from '@heroui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { parseDate, toCalendarDate } from '@internationalized/date';
 import { useMutation } from '@tanstack/react-query';
-import { useRouteContext, useRouter } from '@tanstack/react-router';
+import {
+	useLoaderData,
+	useRouteContext,
+	useRouter,
+} from '@tanstack/react-router';
 import { useMemo, useRef } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import slugify from 'slugify';
@@ -21,7 +25,8 @@ type InformationTabProps = { onClose?: () => void };
 
 export const InformationTab = ({ onClose }: InformationTabProps) => {
 	const router = useRouter();
-	const { session, profile } = useRouteContext({ from: '/{-$locale}' });
+	const { session } = useRouteContext({ from: '/{-$locale}' });
+	const { profile } = useLoaderData({ from: '/{-$locale}/(admin)/dashboard' });
 
 	// Lista de nacionalidades usando o JSON local (gentílicos!)
 	const nationalityOptions = useMemo(() => {

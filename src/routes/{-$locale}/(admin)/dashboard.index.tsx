@@ -1,8 +1,6 @@
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute, useLoaderData } from '@tanstack/react-router';
 import { Container, Stack } from '@/components/core/Stack';
 import { Text } from '@/components/core/Text';
-import { EscortCard } from '@/components/escorts/Card';
-import { NestedMenu } from '@/components/escorts/NestedMenu';
 import { Onboarding } from './-dashboard.profile/onboarding';
 import { computeOnboardingCompletion } from './-dashboard.profile/schema';
 
@@ -24,7 +22,7 @@ export const Route = createFileRoute('/{-$locale}/(admin)/dashboard/')({
 });
 
 function RouteComponent() {
-	const { profile } = Route.useRouteContext();
+	const { profile } = useLoaderData({ from: '/{-$locale}/(admin)/dashboard' });
 
 	const completed = computeOnboardingCompletion((profile ?? {}) as any);
 	const isOnboardingDone = completed.every(Boolean);
@@ -43,13 +41,6 @@ function RouteComponent() {
 					<Text size="md" weight="light">
 						Bem-vinda ao seu painel. (Conteúdo do dashboard aqui)
 					</Text>
-				</Stack>
-
-				<NestedMenu />
-
-				<Stack className="grid grid-cols-2 gap-4 md:grid-cols-3">
-					<EscortCard profile={profile as any} />
-					<EscortCard profile={profile as any} />
 				</Stack>
 
 				<div className={isOnboardingDone ? 'hidden' : ''}>

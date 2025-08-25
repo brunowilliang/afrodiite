@@ -11,7 +11,7 @@ import {
 	NavbarItem,
 	useDisclosure,
 } from '@heroui/react';
-import { useRouteContext, useRouter } from '@tanstack/react-router';
+import { useLoaderData, useRouter } from '@tanstack/react-router';
 import { useThemeController } from '@/hooks/useThemeController';
 import { api } from '@/lib/api';
 import { links } from '@/utils/navigation';
@@ -20,7 +20,8 @@ import { Logo } from '../core/Logo';
 
 export function Header() {
 	const router = useRouter();
-	const { profile } = useRouteContext({ from: '/{-$locale}' });
+	const { profile } = useLoaderData({ from: '/{-$locale}/(admin)/dashboard' });
+
 	const { isOpen, onOpen, onOpenChange } = useDisclosure();
 	const { themeName, setThemeDirect } = useThemeController({
 		withTransition: true,

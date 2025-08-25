@@ -2,7 +2,11 @@ import { Form } from '@heroui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { parseTime } from '@internationalized/date';
 import { useMutation } from '@tanstack/react-query';
-import { useRouteContext, useRouter } from '@tanstack/react-router';
+import {
+	useLoaderData,
+	useRouteContext,
+	useRouter,
+} from '@tanstack/react-router';
 import { Controller, useForm } from 'react-hook-form';
 import z from 'zod';
 import { DAYS, DEFAULT_OFFICE_HOURS } from '@/api/utils/defaults/escort';
@@ -20,7 +24,8 @@ type OfficeHoursTabProps = { onClose?: () => void };
 
 export const OfficeHoursTab = ({ onClose }: OfficeHoursTabProps) => {
 	const router = useRouter();
-	const { session, profile } = useRouteContext({ from: '/{-$locale}' });
+	const { session } = useRouteContext({ from: '/{-$locale}' });
+	const { profile } = useLoaderData({ from: '/{-$locale}/(admin)/dashboard' });
 
 	const updateProfile = useMutation(
 		api.queries.profile.update.mutationOptions(),
