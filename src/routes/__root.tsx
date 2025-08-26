@@ -110,10 +110,10 @@ function RootDocument() {
 			<body className="antialiased">
 				<ThemeProvider
 					attribute="class"
-					defaultTheme="system"
+					defaultTheme="dark"
 					enableSystem
 					disableTransitionOnChange
-					storageKey="theme"
+					storageKey="afrodite-theme"
 				>
 					<PhotoProvider>
 						<HeroUIProvider>
