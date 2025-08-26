@@ -13,7 +13,9 @@ import ResetPassword from '../email/templates/reset-password';
 import { createUserProfile, deleteCustomer } from './user';
 
 export type UserRole = 'user' | 'escort';
-export type IUser = typeof auth.$Infer.Session.user;
+export type IUser = typeof auth.$Infer.Session.user & {
+	stripeCustomerId: string;
+};
 
 export const stripeClient = new Stripe(env.STRIPE_SECRET_KEY, {
 	apiVersion: '2025-07-30.basil',
@@ -68,7 +70,7 @@ export const auth = betterAuth({
 		},
 		sendOnSignUp: true,
 		autoSignInAfterVerification: true,
-		expiresIn: 3600, // 1 hour
+		expiresIn: 3600,
 	},
 	databaseHooks: {
 		user: {

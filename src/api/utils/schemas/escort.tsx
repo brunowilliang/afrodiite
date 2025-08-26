@@ -106,13 +106,6 @@ const informationZ = z.object({
 	}),
 });
 
-// Location
-const locationZ = z.object({
-	country: z.string().min(1).default('Portugal'),
-	state: z.string().min(1),
-	city: z.string().min(1),
-	neighborhood: z.string().min(1),
-});
 
 export const escortProfileSchema = createInsertSchema(escortProfiles, {
 	// Information fields
@@ -127,9 +120,9 @@ export const escortProfileSchema = createInsertSchema(escortProfiles, {
 	email: z.email().optional(),
 
 	// Location fields
-	country: locationZ.shape.country.optional(),
+	country: z.string().min(1).default('Portugal'),
 	district: z.string().min(1).optional(),
-	zone: z.string().min(1).optional(),
+	city: z.string().min(1).optional(),
 
 	// Status fields
 	is_active: z.boolean().default(false).optional(),

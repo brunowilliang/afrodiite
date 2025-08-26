@@ -13,10 +13,9 @@ import { createServerRootRoute } from '@tanstack/react-start/server'
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as Char123LocaleChar125RouteRouteImport } from './routes/{-$locale}/route'
-import { Route as Char123LocaleChar125publicEscortsRouteImport } from './routes/{-$locale}/(public)/escorts'
+import { Route as Char123LocaleChar125publicDefaultRouteImport } from './routes/{-$locale}/(public)/_default'
 import { Route as Char123LocaleChar125publicAppRouteImport } from './routes/{-$locale}/(public)/_app'
 import { Route as Char123LocaleChar125adminDashboardRouteImport } from './routes/{-$locale}/(admin)/dashboard'
-import { Route as Char123LocaleChar125publicEscortsIndexRouteImport } from './routes/{-$locale}/(public)/escorts.index'
 import { Route as Char123LocaleChar125publicAppIndexRouteImport } from './routes/{-$locale}/(public)/_app.index'
 import { Route as Char123LocaleChar125adminDashboardIndexRouteImport } from './routes/{-$locale}/(admin)/dashboard.index'
 import { Route as Char123LocaleChar125publicAppSignInRouteImport } from './routes/{-$locale}/(public)/_app.sign-in'
@@ -26,8 +25,9 @@ import { Route as Char123LocaleChar125adminDashboardSettingsRouteImport } from '
 import { Route as Char123LocaleChar125adminDashboardProfileRouteImport } from './routes/{-$locale}/(admin)/dashboard.profile'
 import { Route as Char123LocaleChar125adminDashboardMyAccountRouteImport } from './routes/{-$locale}/(admin)/dashboard.my-account'
 import { Route as Char123LocaleChar125adminDashboardAdvertsRouteImport } from './routes/{-$locale}/(admin)/dashboard.adverts'
-import { Route as Char123LocaleChar125publicEscortsCountryIndexRouteImport } from './routes/{-$locale}/(public)/escorts.$country.index'
-import { Route as Char123LocaleChar125publicEscortsCountrySlugRouteImport } from './routes/{-$locale}/(public)/escorts.$country.$slug'
+import { Route as Char123LocaleChar125publicDefaultEscortsIndexRouteImport } from './routes/{-$locale}/(public)/_default.escorts.index'
+import { Route as Char123LocaleChar125publicDefaultEscortsCountryRouteImport } from './routes/{-$locale}/(public)/_default.escorts.$country'
+import { Route as Char123LocaleChar125publicDefaultEscortPublic_idChar123SlugChar125RouteImport } from './routes/{-$locale}/(public)/_default.escort.$public_id.{-$slug}'
 import { ServerRoute as ApiRpcSplatServerRouteImport } from './routes/api/rpc.$'
 import { ServerRoute as ApiAuthSplatServerRouteImport } from './routes/api/auth.$'
 
@@ -47,10 +47,9 @@ const Char123LocaleChar125publicRoute =
     id: '/(public)',
     getParentRoute: () => Char123LocaleChar125RouteRoute,
   } as any)
-const Char123LocaleChar125publicEscortsRoute =
-  Char123LocaleChar125publicEscortsRouteImport.update({
-    id: '/escorts',
-    path: '/escorts',
+const Char123LocaleChar125publicDefaultRoute =
+  Char123LocaleChar125publicDefaultRouteImport.update({
+    id: '/_default',
     getParentRoute: () => Char123LocaleChar125publicRoute,
   } as any)
 const Char123LocaleChar125publicAppRoute =
@@ -63,12 +62,6 @@ const Char123LocaleChar125adminDashboardRoute =
     id: '/(admin)/dashboard',
     path: '/dashboard',
     getParentRoute: () => Char123LocaleChar125RouteRoute,
-  } as any)
-const Char123LocaleChar125publicEscortsIndexRoute =
-  Char123LocaleChar125publicEscortsIndexRouteImport.update({
-    id: '/',
-    path: '/',
-    getParentRoute: () => Char123LocaleChar125publicEscortsRoute,
   } as any)
 const Char123LocaleChar125publicAppIndexRoute =
   Char123LocaleChar125publicAppIndexRouteImport.update({
@@ -124,18 +117,26 @@ const Char123LocaleChar125adminDashboardAdvertsRoute =
     path: '/adverts',
     getParentRoute: () => Char123LocaleChar125adminDashboardRoute,
   } as any)
-const Char123LocaleChar125publicEscortsCountryIndexRoute =
-  Char123LocaleChar125publicEscortsCountryIndexRouteImport.update({
-    id: '/$country/',
-    path: '/$country/',
-    getParentRoute: () => Char123LocaleChar125publicEscortsRoute,
+const Char123LocaleChar125publicDefaultEscortsIndexRoute =
+  Char123LocaleChar125publicDefaultEscortsIndexRouteImport.update({
+    id: '/escorts/',
+    path: '/escorts/',
+    getParentRoute: () => Char123LocaleChar125publicDefaultRoute,
   } as any)
-const Char123LocaleChar125publicEscortsCountrySlugRoute =
-  Char123LocaleChar125publicEscortsCountrySlugRouteImport.update({
-    id: '/$country/$slug',
-    path: '/$country/$slug',
-    getParentRoute: () => Char123LocaleChar125publicEscortsRoute,
+const Char123LocaleChar125publicDefaultEscortsCountryRoute =
+  Char123LocaleChar125publicDefaultEscortsCountryRouteImport.update({
+    id: '/escorts/$country',
+    path: '/escorts/$country',
+    getParentRoute: () => Char123LocaleChar125publicDefaultRoute,
   } as any)
+const Char123LocaleChar125publicDefaultEscortPublic_idChar123SlugChar125Route =
+  Char123LocaleChar125publicDefaultEscortPublic_idChar123SlugChar125RouteImport.update(
+    {
+      id: '/escort/$public_id/{-$slug}',
+      path: '/escort/$public_id/{-$slug}',
+      getParentRoute: () => Char123LocaleChar125publicDefaultRoute,
+    } as any,
+  )
 const ApiRpcSplatServerRoute = ApiRpcSplatServerRouteImport.update({
   id: '/api/rpc/$',
   path: '/api/rpc/$',
@@ -148,10 +149,9 @@ const ApiAuthSplatServerRoute = ApiAuthSplatServerRouteImport.update({
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/{-$locale}': typeof Char123LocaleChar125RouteRouteWithChildren
+  '/{-$locale}': typeof Char123LocaleChar125publicDefaultRouteWithChildren
   '/{-$locale}/dashboard': typeof Char123LocaleChar125adminDashboardRouteWithChildren
   '/{-$locale}/': typeof Char123LocaleChar125publicAppIndexRoute
-  '/{-$locale}/escorts': typeof Char123LocaleChar125publicEscortsRouteWithChildren
   '/{-$locale}/dashboard/adverts': typeof Char123LocaleChar125adminDashboardAdvertsRoute
   '/{-$locale}/dashboard/my-account': typeof Char123LocaleChar125adminDashboardMyAccountRoute
   '/{-$locale}/dashboard/profile': typeof Char123LocaleChar125adminDashboardProfileRoute
@@ -160,11 +160,12 @@ export interface FileRoutesByFullPath {
   '/{-$locale}/reset-password': typeof Char123LocaleChar125publicAppResetPasswordRoute
   '/{-$locale}/sign-in': typeof Char123LocaleChar125publicAppSignInRoute
   '/{-$locale}/dashboard/': typeof Char123LocaleChar125adminDashboardIndexRoute
-  '/{-$locale}/escorts/': typeof Char123LocaleChar125publicEscortsIndexRoute
-  '/{-$locale}/escorts/$country/$slug': typeof Char123LocaleChar125publicEscortsCountrySlugRoute
-  '/{-$locale}/escorts/$country': typeof Char123LocaleChar125publicEscortsCountryIndexRoute
+  '/{-$locale}/escorts/$country': typeof Char123LocaleChar125publicDefaultEscortsCountryRoute
+  '/{-$locale}/escorts': typeof Char123LocaleChar125publicDefaultEscortsIndexRoute
+  '/{-$locale}/escort/$public_id/{-$slug}': typeof Char123LocaleChar125publicDefaultEscortPublic_idChar123SlugChar125Route
 }
 export interface FileRoutesByTo {
+  '/{-$locale}': typeof Char123LocaleChar125publicAppIndexRoute
   '/{-$locale}/dashboard/adverts': typeof Char123LocaleChar125adminDashboardAdvertsRoute
   '/{-$locale}/dashboard/my-account': typeof Char123LocaleChar125adminDashboardMyAccountRoute
   '/{-$locale}/dashboard/profile': typeof Char123LocaleChar125adminDashboardProfileRoute
@@ -173,10 +174,9 @@ export interface FileRoutesByTo {
   '/{-$locale}/reset-password': typeof Char123LocaleChar125publicAppResetPasswordRoute
   '/{-$locale}/sign-in': typeof Char123LocaleChar125publicAppSignInRoute
   '/{-$locale}/dashboard': typeof Char123LocaleChar125adminDashboardIndexRoute
-  '/{-$locale}': typeof Char123LocaleChar125publicAppIndexRoute
-  '/{-$locale}/escorts': typeof Char123LocaleChar125publicEscortsIndexRoute
-  '/{-$locale}/escorts/$country/$slug': typeof Char123LocaleChar125publicEscortsCountrySlugRoute
-  '/{-$locale}/escorts/$country': typeof Char123LocaleChar125publicEscortsCountryIndexRoute
+  '/{-$locale}/escorts/$country': typeof Char123LocaleChar125publicDefaultEscortsCountryRoute
+  '/{-$locale}/escorts': typeof Char123LocaleChar125publicDefaultEscortsIndexRoute
+  '/{-$locale}/escort/$public_id/{-$slug}': typeof Char123LocaleChar125publicDefaultEscortPublic_idChar123SlugChar125Route
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -184,7 +184,7 @@ export interface FileRoutesById {
   '/{-$locale}/(admin)/dashboard': typeof Char123LocaleChar125adminDashboardRouteWithChildren
   '/{-$locale}/(public)': typeof Char123LocaleChar125publicRouteWithChildren
   '/{-$locale}/(public)/_app': typeof Char123LocaleChar125publicAppRouteWithChildren
-  '/{-$locale}/(public)/escorts': typeof Char123LocaleChar125publicEscortsRouteWithChildren
+  '/{-$locale}/(public)/_default': typeof Char123LocaleChar125publicDefaultRouteWithChildren
   '/{-$locale}/(admin)/dashboard/adverts': typeof Char123LocaleChar125adminDashboardAdvertsRoute
   '/{-$locale}/(admin)/dashboard/my-account': typeof Char123LocaleChar125adminDashboardMyAccountRoute
   '/{-$locale}/(admin)/dashboard/profile': typeof Char123LocaleChar125adminDashboardProfileRoute
@@ -194,9 +194,9 @@ export interface FileRoutesById {
   '/{-$locale}/(public)/_app/sign-in': typeof Char123LocaleChar125publicAppSignInRoute
   '/{-$locale}/(admin)/dashboard/': typeof Char123LocaleChar125adminDashboardIndexRoute
   '/{-$locale}/(public)/_app/': typeof Char123LocaleChar125publicAppIndexRoute
-  '/{-$locale}/(public)/escorts/': typeof Char123LocaleChar125publicEscortsIndexRoute
-  '/{-$locale}/(public)/escorts/$country/$slug': typeof Char123LocaleChar125publicEscortsCountrySlugRoute
-  '/{-$locale}/(public)/escorts/$country/': typeof Char123LocaleChar125publicEscortsCountryIndexRoute
+  '/{-$locale}/(public)/_default/escorts/$country': typeof Char123LocaleChar125publicDefaultEscortsCountryRoute
+  '/{-$locale}/(public)/_default/escorts/': typeof Char123LocaleChar125publicDefaultEscortsIndexRoute
+  '/{-$locale}/(public)/_default/escort/$public_id/{-$slug}': typeof Char123LocaleChar125publicDefaultEscortPublic_idChar123SlugChar125Route
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -204,7 +204,6 @@ export interface FileRouteTypes {
     | '/{-$locale}'
     | '/{-$locale}/dashboard'
     | '/{-$locale}/'
-    | '/{-$locale}/escorts'
     | '/{-$locale}/dashboard/adverts'
     | '/{-$locale}/dashboard/my-account'
     | '/{-$locale}/dashboard/profile'
@@ -213,11 +212,12 @@ export interface FileRouteTypes {
     | '/{-$locale}/reset-password'
     | '/{-$locale}/sign-in'
     | '/{-$locale}/dashboard/'
-    | '/{-$locale}/escorts/'
-    | '/{-$locale}/escorts/$country/$slug'
     | '/{-$locale}/escorts/$country'
+    | '/{-$locale}/escorts'
+    | '/{-$locale}/escort/$public_id/{-$slug}'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/{-$locale}'
     | '/{-$locale}/dashboard/adverts'
     | '/{-$locale}/dashboard/my-account'
     | '/{-$locale}/dashboard/profile'
@@ -226,17 +226,16 @@ export interface FileRouteTypes {
     | '/{-$locale}/reset-password'
     | '/{-$locale}/sign-in'
     | '/{-$locale}/dashboard'
-    | '/{-$locale}'
-    | '/{-$locale}/escorts'
-    | '/{-$locale}/escorts/$country/$slug'
     | '/{-$locale}/escorts/$country'
+    | '/{-$locale}/escorts'
+    | '/{-$locale}/escort/$public_id/{-$slug}'
   id:
     | '__root__'
     | '/{-$locale}'
     | '/{-$locale}/(admin)/dashboard'
     | '/{-$locale}/(public)'
     | '/{-$locale}/(public)/_app'
-    | '/{-$locale}/(public)/escorts'
+    | '/{-$locale}/(public)/_default'
     | '/{-$locale}/(admin)/dashboard/adverts'
     | '/{-$locale}/(admin)/dashboard/my-account'
     | '/{-$locale}/(admin)/dashboard/profile'
@@ -246,9 +245,9 @@ export interface FileRouteTypes {
     | '/{-$locale}/(public)/_app/sign-in'
     | '/{-$locale}/(admin)/dashboard/'
     | '/{-$locale}/(public)/_app/'
-    | '/{-$locale}/(public)/escorts/'
-    | '/{-$locale}/(public)/escorts/$country/$slug'
-    | '/{-$locale}/(public)/escorts/$country/'
+    | '/{-$locale}/(public)/_default/escorts/$country'
+    | '/{-$locale}/(public)/_default/escorts/'
+    | '/{-$locale}/(public)/_default/escort/$public_id/{-$slug}'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -296,11 +295,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Char123LocaleChar125publicRouteImport
       parentRoute: typeof Char123LocaleChar125RouteRoute
     }
-    '/{-$locale}/(public)/escorts': {
-      id: '/{-$locale}/(public)/escorts'
-      path: '/escorts'
-      fullPath: '/{-$locale}/escorts'
-      preLoaderRoute: typeof Char123LocaleChar125publicEscortsRouteImport
+    '/{-$locale}/(public)/_default': {
+      id: '/{-$locale}/(public)/_default'
+      path: ''
+      fullPath: '/{-$locale}'
+      preLoaderRoute: typeof Char123LocaleChar125publicDefaultRouteImport
       parentRoute: typeof Char123LocaleChar125publicRoute
     }
     '/{-$locale}/(public)/_app': {
@@ -316,13 +315,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/{-$locale}/dashboard'
       preLoaderRoute: typeof Char123LocaleChar125adminDashboardRouteImport
       parentRoute: typeof Char123LocaleChar125RouteRoute
-    }
-    '/{-$locale}/(public)/escorts/': {
-      id: '/{-$locale}/(public)/escorts/'
-      path: '/'
-      fullPath: '/{-$locale}/escorts/'
-      preLoaderRoute: typeof Char123LocaleChar125publicEscortsIndexRouteImport
-      parentRoute: typeof Char123LocaleChar125publicEscortsRoute
     }
     '/{-$locale}/(public)/_app/': {
       id: '/{-$locale}/(public)/_app/'
@@ -387,19 +379,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Char123LocaleChar125adminDashboardAdvertsRouteImport
       parentRoute: typeof Char123LocaleChar125adminDashboardRoute
     }
-    '/{-$locale}/(public)/escorts/$country/': {
-      id: '/{-$locale}/(public)/escorts/$country/'
-      path: '/$country'
-      fullPath: '/{-$locale}/escorts/$country'
-      preLoaderRoute: typeof Char123LocaleChar125publicEscortsCountryIndexRouteImport
-      parentRoute: typeof Char123LocaleChar125publicEscortsRoute
+    '/{-$locale}/(public)/_default/escorts/': {
+      id: '/{-$locale}/(public)/_default/escorts/'
+      path: '/escorts'
+      fullPath: '/{-$locale}/escorts'
+      preLoaderRoute: typeof Char123LocaleChar125publicDefaultEscortsIndexRouteImport
+      parentRoute: typeof Char123LocaleChar125publicDefaultRoute
     }
-    '/{-$locale}/(public)/escorts/$country/$slug': {
-      id: '/{-$locale}/(public)/escorts/$country/$slug'
-      path: '/$country/$slug'
-      fullPath: '/{-$locale}/escorts/$country/$slug'
-      preLoaderRoute: typeof Char123LocaleChar125publicEscortsCountrySlugRouteImport
-      parentRoute: typeof Char123LocaleChar125publicEscortsRoute
+    '/{-$locale}/(public)/_default/escorts/$country': {
+      id: '/{-$locale}/(public)/_default/escorts/$country'
+      path: '/escorts/$country'
+      fullPath: '/{-$locale}/escorts/$country'
+      preLoaderRoute: typeof Char123LocaleChar125publicDefaultEscortsCountryRouteImport
+      parentRoute: typeof Char123LocaleChar125publicDefaultRoute
+    }
+    '/{-$locale}/(public)/_default/escort/$public_id/{-$slug}': {
+      id: '/{-$locale}/(public)/_default/escort/$public_id/{-$slug}'
+      path: '/escort/$public_id/{-$slug}'
+      fullPath: '/{-$locale}/escort/$public_id/{-$slug}'
+      preLoaderRoute: typeof Char123LocaleChar125publicDefaultEscortPublic_idChar123SlugChar125RouteImport
+      parentRoute: typeof Char123LocaleChar125publicDefaultRoute
     }
   }
 }
@@ -473,38 +472,38 @@ const Char123LocaleChar125publicAppRouteWithChildren =
     Char123LocaleChar125publicAppRouteChildren,
   )
 
-interface Char123LocaleChar125publicEscortsRouteChildren {
-  Char123LocaleChar125publicEscortsIndexRoute: typeof Char123LocaleChar125publicEscortsIndexRoute
-  Char123LocaleChar125publicEscortsCountrySlugRoute: typeof Char123LocaleChar125publicEscortsCountrySlugRoute
-  Char123LocaleChar125publicEscortsCountryIndexRoute: typeof Char123LocaleChar125publicEscortsCountryIndexRoute
+interface Char123LocaleChar125publicDefaultRouteChildren {
+  Char123LocaleChar125publicDefaultEscortsCountryRoute: typeof Char123LocaleChar125publicDefaultEscortsCountryRoute
+  Char123LocaleChar125publicDefaultEscortsIndexRoute: typeof Char123LocaleChar125publicDefaultEscortsIndexRoute
+  Char123LocaleChar125publicDefaultEscortPublic_idChar123SlugChar125Route: typeof Char123LocaleChar125publicDefaultEscortPublic_idChar123SlugChar125Route
 }
 
-const Char123LocaleChar125publicEscortsRouteChildren: Char123LocaleChar125publicEscortsRouteChildren =
+const Char123LocaleChar125publicDefaultRouteChildren: Char123LocaleChar125publicDefaultRouteChildren =
   {
-    Char123LocaleChar125publicEscortsIndexRoute:
-      Char123LocaleChar125publicEscortsIndexRoute,
-    Char123LocaleChar125publicEscortsCountrySlugRoute:
-      Char123LocaleChar125publicEscortsCountrySlugRoute,
-    Char123LocaleChar125publicEscortsCountryIndexRoute:
-      Char123LocaleChar125publicEscortsCountryIndexRoute,
+    Char123LocaleChar125publicDefaultEscortsCountryRoute:
+      Char123LocaleChar125publicDefaultEscortsCountryRoute,
+    Char123LocaleChar125publicDefaultEscortsIndexRoute:
+      Char123LocaleChar125publicDefaultEscortsIndexRoute,
+    Char123LocaleChar125publicDefaultEscortPublic_idChar123SlugChar125Route:
+      Char123LocaleChar125publicDefaultEscortPublic_idChar123SlugChar125Route,
   }
 
-const Char123LocaleChar125publicEscortsRouteWithChildren =
-  Char123LocaleChar125publicEscortsRoute._addFileChildren(
-    Char123LocaleChar125publicEscortsRouteChildren,
+const Char123LocaleChar125publicDefaultRouteWithChildren =
+  Char123LocaleChar125publicDefaultRoute._addFileChildren(
+    Char123LocaleChar125publicDefaultRouteChildren,
   )
 
 interface Char123LocaleChar125publicRouteChildren {
   Char123LocaleChar125publicAppRoute: typeof Char123LocaleChar125publicAppRouteWithChildren
-  Char123LocaleChar125publicEscortsRoute: typeof Char123LocaleChar125publicEscortsRouteWithChildren
+  Char123LocaleChar125publicDefaultRoute: typeof Char123LocaleChar125publicDefaultRouteWithChildren
 }
 
 const Char123LocaleChar125publicRouteChildren: Char123LocaleChar125publicRouteChildren =
   {
     Char123LocaleChar125publicAppRoute:
       Char123LocaleChar125publicAppRouteWithChildren,
-    Char123LocaleChar125publicEscortsRoute:
-      Char123LocaleChar125publicEscortsRouteWithChildren,
+    Char123LocaleChar125publicDefaultRoute:
+      Char123LocaleChar125publicDefaultRouteWithChildren,
   }
 
 const Char123LocaleChar125publicRouteWithChildren =

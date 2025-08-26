@@ -187,7 +187,7 @@ export const InformationTab = ({ onClose }: InformationTabProps) => {
 					<Input.DateInput
 						label="Data de Nascimento"
 						isRequired
-						value={field.value ? parseDate(field.value) : null}
+						value={field.value ? parseDate(field.value) : null as any}
 						onChange={(date) => {
 							const v = date ? toCalendarDate(date).toString() : null;
 							field.onChange(v);

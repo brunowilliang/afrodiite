@@ -1,51 +1,66 @@
-import { Accordion, AccordionItem, Card, Chip } from '@heroui/react';
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { Accordion, AccordionItem, Card, Chip } from '@heroui/react'
+import { useSuspenseQuery } from '@tanstack/react-query'
 import {
 	createFileRoute,
 	notFound,
+	redirect,
 	useCanGoBack,
 	useRouter,
-} from '@tanstack/react-router';
-import type { OfficeHour, Price } from '@/api/utils/types/escort';
-import { Characteristics } from '@/api/utils/types/escort';
-import { Icon } from '@/components/core/Icon';
-import { ImageCarousel } from '@/components/core/ImageCarousel';
-import { Container, Stack } from '@/components/core/Stack';
-import { Text } from '@/components/core/Text';
-import { Button } from '@/components/heroui/Button';
-import { api } from '@/lib/api';
-import { DATA_SERVICES } from '@/utils/services';
+} from '@tanstack/react-router'
+import type { OfficeHour, Price } from '@/api/utils/types/escort'
+import { Characteristics } from '@/api/utils/types/escort'
+import { Icon } from '@/components/core/Icon'
+import { ImageCarousel } from '@/components/core/ImageCarousel'
+import { Container, Stack } from '@/components/core/Stack'
+import { Text } from '@/components/core/Text'
+import { Button } from '@/components/heroui/Button'
+import { api } from '@/lib/api'
+import { DATA_SERVICES } from '@/utils/services'
+import { NotFound } from '@/components/NotFound'
 
 export const Route = createFileRoute(
-	'/{-$locale}/(public)/escorts/$country/$slug',
+	'/{-$locale}/(public)/_default/escort/$public_id/{-$slug}',
 )({
-	beforeLoad: ({ params }) => {
-		const { country } = params;
-		if (country !== 'portugal') throw notFound();
-	},
 	loader: async ({ context: { queryClient }, params }) => {
+		const { public_id, slug } = params
+
+		const profile = await api.client.profile.detail({ public_id })
+		if (!profile) throw notFound()
+
+		if (!slug || profile.slug !== slug) {
+			throw redirect({
+				to: '/{-$locale}/escort/$public_id/{-$slug}',
+				params: {
+					public_id,
+					slug: profile.slug ?? '',
+				},
+				statusCode: 308,
+				replace: true,
+				throw: true,
+			})
+		}
+
 		await queryClient.ensureQueryData(
-			api.queries.profile.detail.queryOptions({ input: { slug: params.slug } }),
-		);
+			api.queries.profile.detail.queryOptions({ input: { public_id } }),
+		)
 	},
 	component: RouteComponent,
-});
+})
 
 function RouteComponent() {
-	const router = useRouter();
-	const canGoBack = useCanGoBack();
+	const router = useRouter()
+	const canGoBack = useCanGoBack()
 
-	const { slug } = Route.useParams();
+	const { public_id } = Route.useParams()
 
 	const { data: profile } = useSuspenseQuery(
-		api.queries.profile.detail.queryOptions({ input: { slug } }),
-	);
+		api.queries.profile.detail.queryOptions({ input: { public_id } }),
+	)
 
-	if (!profile) throw notFound();
+	if (!profile) throw notFound()
 
-	// Traduções tipadas
 	const caracteristicsTranslations: Record<keyof Characteristics, string> = {
-		gender: 'Género',
+		gender: 'Gênero',
 		age: 'Idade',
 		height: 'Altura',
 		weight: 'Peso',
@@ -58,7 +73,7 @@ function RouteComponent() {
 		piercings: 'Piercings',
 		smoker: 'Fumante',
 		languages: 'Idiomas',
-	};
+	}
 
 	const officeHourTranslations: Record<OfficeHour['day'], string> = {
 		monday: 'Segunda-feira:',
@@ -68,7 +83,7 @@ function RouteComponent() {
 		friday: 'Sexta-feira:',
 		saturday: 'Sábado:',
 		sunday: 'Domingo:',
-	};
+	}
 
 	const priceTranslations: Record<Price['slot'], string> = {
 		'30m': '30 minutos:',
@@ -79,47 +94,46 @@ function RouteComponent() {
 		overnight: 'Pernoite:',
 		travel: 'Diária de viagem:',
 		outcall: 'Deslocação:',
-	};
+	}
 
-	// Criar mapeamento tipado dos serviços
 	const serviceTranslations: Record<
 		(typeof DATA_SERVICES)[number]['id'],
 		string
 	> = DATA_SERVICES.reduce(
 		(acc, service) => {
-			acc[service.id] = service.label;
-			return acc;
+			acc[service.id] = service.label
+			return acc
 		},
 		{} as Record<(typeof DATA_SERVICES)[number]['id'], string>,
-	);
+	)
 
-	const gallery = profile.gallery ?? [];
+	const gallery = profile.gallery ?? []
 
-	const price = profile.prices?.find((price) => price.slot === '1h');
-	const priceLabel = price?.amount ? `€${price.amount} / 1h` : 'Consultar';
+	const price = profile.prices?.find((price) => price.slot === '1h')
+	const priceLabel = price?.amount ? `€${price.amount} / 1h` : 'Consultar'
 
 	const handleGoBack = () => {
 		if (canGoBack) {
-			router.history.back();
+			router.history.back()
 		} else {
-			router.history.push('/');
+			router.history.push('/')
 		}
-	};
+	}
 
 	return (
 		<Container>
 			<div className="grid grid-cols-1 gap-4 lg:grid-cols-12">
 				<div className="col-span-8 space-y-4">
 					<Button
-						variant="light"
-						color="primary"
-						size="md"
+						variant='light'
+						color='primary'
+						size='md'
 						onPress={handleGoBack}
 					>
 						<Icon
-							name="ArrowLeft"
-							variant="stroke"
-							size="20"
+							name='ArrowLeft'
+							variant='stroke'
+							size='20'
 							className="-mr-1 -ml-1"
 						/>
 						Voltar
@@ -129,9 +143,9 @@ function RouteComponent() {
 							images={gallery}
 							drag
 							openPreview
-							width="85%"
-							gap="2"
-							dotSize="medium"
+							width='85%'
+							gap='2'
+							dotSize='medium'
 						/>
 						<Card className="gap-4 p-5" shadow="none">
 							<Chip color="primary" variant="flat" radius="sm">
@@ -160,13 +174,13 @@ function RouteComponent() {
 							([key, value]) => (
 								<Stack
 									key={key}
-									direction="row"
+									direction='row'
 									className="gap-1 border-divider/40 border-b py-1 last:border-b-0"
 								>
-									<Text weight="bold">
+									<Text weight='bold'>
 										{caracteristicsTranslations[key as keyof Characteristics]}:
 									</Text>
-									<Text weight="light">
+									<Text weight='light'>
 										{typeof value === 'boolean'
 											? value
 												? 'Sim'
@@ -178,7 +192,6 @@ function RouteComponent() {
 						)}
 					</Card>
 
-					{/* Layout responsivo: lado a lado no desktop, um embaixo do outro no mobile */}
 					<div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
 						<Card className="gap-4 p-5">
 							<Chip color="primary" variant="flat" radius="sm">
@@ -187,11 +200,11 @@ function RouteComponent() {
 							{(profile.office_hours ?? []).map((hour) => (
 								<Stack
 									key={hour.day}
-									direction="row"
+									direction='row'
 									className="gap-1 border-divider/40 border-b py-1 last:border-b-0"
 								>
 									<Text weight="bold">{officeHourTranslations[hour.day]}</Text>
-									<Text weight="light">
+									<Text weight='light'>
 										{hour.start} - {hour.end}
 									</Text>
 								</Stack>
@@ -205,11 +218,11 @@ function RouteComponent() {
 							{(profile.prices ?? []).map((price) => (
 								<Stack
 									key={price.slot}
-									direction="row"
+									direction='row'
 									className="gap-1 border-divider/40 border-b py-1 last:border-b-0"
 								>
 									<Text weight="bold">{priceTranslations[price.slot]}</Text>
-									<Text weight="light">
+									<Text weight='light'>
 										{price.is_available ? `€ ${price.amount}` : 'Não realiza'}
 									</Text>
 								</Stack>
@@ -224,10 +237,10 @@ function RouteComponent() {
 						{(profile.services ?? []).map((serviceId) => (
 							<Stack
 								key={serviceId}
-								direction="row"
+								direction='row'
 								className="gap-1 border-divider/40 border-b py-1 last:border-b-0"
 							>
-								<Text weight="normal">
+								<Text weight='normal'>
 									{
 										serviceTranslations[
 											serviceId as keyof typeof serviceTranslations
@@ -246,18 +259,13 @@ function RouteComponent() {
 							</Chip>
 							<Accordion>
 								<AccordionItem
-									key="prices"
+									key='prices'
 									aria-label="Tabela de preços"
-									indicator={
-										<Icon name="ArrowLeft" variant="stroke" size="20" />
-									}
+									indicator={<Icon name="ArrowLeft" variant="stroke" size="20" />}
 									classNames={{ indicator: 'text-foreground' }}
 									title={
-										<Stack
-											direction="row"
-											className="w-full items-center justify-between"
-										>
-											<Text as="h2" weight="bold">
+										<Stack direction='row' className="w-full items-center justify-between">
+											<Text as='h2' weight='bold'>
 												{priceLabel}
 											</Text>
 										</Stack>
@@ -266,14 +274,12 @@ function RouteComponent() {
 									{(profile.prices ?? []).map((price) => (
 										<Stack
 											key={price.slot}
-											direction="row"
+											direction='row'
 											className="justify-start gap-1 border-divider/40 border-b py-2 first:pt-0 last:border-b-0 last:pb-5"
 										>
 											<Text weight="bold">{priceTranslations[price.slot]}</Text>
-											<Text weight="light">
-												{price.is_available
-													? `€ ${price.amount}`
-													: 'Não realiza'}
+											<Text weight='light'>
+												{price.is_available ? '€ ${price.amount}' : 'Não realiza'}
 											</Text>
 										</Stack>
 									))}
@@ -291,27 +297,13 @@ function RouteComponent() {
 								'Contato Seguro',
 								'Não possui penalidades',
 							].map((label, index) => (
-								<Stack
-									key={index}
-									direction="row"
-									className="items-center justify-start gap-2"
-								>
-									<Icon
-										name="Check"
-										variant="bulk"
-										size="24"
-										className="text-foreground"
-									/>
+								<Stack key={index} direction='row' className="items-center justify-start gap-2">
+									<Icon name='Check' variant='bulk' size='24' className='text-foreground' />
 									<Text weight="normal">{label}</Text>
 								</Stack>
 							))}
 
-							<Button
-								variant="light"
-								color="danger"
-								size="md"
-								className="w-full"
-							>
+							<Button variant='light' color='danger' size='md' className='w-full'>
 								<Icon name="Anonymous" variant="bulk" size="24" />
 								Denunciar perfil anonimamente
 							</Button>
@@ -320,5 +312,5 @@ function RouteComponent() {
 				</div>
 			</div>
 		</Container>
-	);
+	)
 }

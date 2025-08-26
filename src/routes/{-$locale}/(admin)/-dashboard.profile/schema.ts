@@ -16,7 +16,7 @@ export const informationSchema = escortProfileSchema.pick({
 export const locationSchema = escortProfileSchema.pick({
 	country: true,
 	district: true,
-	zone: true,
+	city: true,
 });
 
 export const characteristicsSchema = escortProfileSchema.pick({

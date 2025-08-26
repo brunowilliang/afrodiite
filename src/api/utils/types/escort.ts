@@ -53,9 +53,15 @@ export type Characteristics = {
 	languages: string;
 };
 
-export const profileSelectSchema = createSelectSchema(escortProfiles);
-export const profileUpdateSchema = createUpdateSchema(escortProfiles);
-export const profileInsertSchema = createInsertSchema(escortProfiles);
+export const profileSelectSchema = createSelectSchema(escortProfiles, {
+	public_id: z.coerce.number().int().min(1).optional(),
+});
+export const profileUpdateSchema = createUpdateSchema(escortProfiles, {
+	public_id: z.coerce.number().int().min(1).optional(),
+});
+export const profileInsertSchema = createInsertSchema(escortProfiles, {
+	public_id: z.coerce.number().int().min(1).optional(),
+});
 
 export type ProfileSelect = z.infer<typeof profileSelectSchema>;
 export type ProfileUpdate = z.infer<typeof profileUpdateSchema>;

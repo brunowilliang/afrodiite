@@ -23,7 +23,6 @@ export const validateLocale = (
 export const Route = createFileRoute('/{-$locale}')({
 	params: localeSchema,
 	beforeLoad: async ({ params }) => ({ locale: params.locale }),
-	errorComponent: () => <NotFound />,
 	component: () => {
 		const { locale } = Route.useParams();
 

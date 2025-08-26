@@ -27,7 +27,7 @@ export const LocationTab = ({ onClose }: LocationTabProps) => {
 
 	// Lista de distritos únicos
 	const districtOptions = useMemo(() => {
-		return [...new Set(PortugalDistricts.map((item) => item.distrito))]
+		return [...new Set(PortugalDistricts.map((item) => item.district))]
 			.filter(Boolean)
 			.sort();
 	}, []);
@@ -37,9 +37,9 @@ export const LocationTab = ({ onClose }: LocationTabProps) => {
 		if (!selectedDistrict) return [];
 
 		return PortugalDistricts.filter(
-			(item) => item.distrito === selectedDistrict,
+			(item) => item.district === selectedDistrict,
 		)
-			.map((item) => item.cidade)
+			.map((item) => item.city)
 			.sort();
 	};
 
@@ -48,7 +48,6 @@ export const LocationTab = ({ onClose }: LocationTabProps) => {
 	);
 
 	const handleSubmit = (values: z.infer<typeof schema>) => {
-		console.log(values);
 		updateProfile.mutateAsync(
 			{
 				id: session?.user.id,
@@ -75,7 +74,7 @@ export const LocationTab = ({ onClose }: LocationTabProps) => {
 		mode: 'onChange',
 		defaultValues: {
 			district: profile?.district ?? '',
-			zone: profile?.zone ?? '',
+			city: profile?.city ?? '',
 			country: profile?.country ?? 'Portugal',
 		},
 	});
@@ -104,8 +103,7 @@ export const LocationTab = ({ onClose }: LocationTabProps) => {
 						onInputChange={field.onChange}
 						onSelectionChange={(key) => {
 							field.onChange(key);
-							// Limpa a zona quando distrito muda
-							form.setValue('zone', '');
+							form.setValue('city', '');
 						}}
 						onBlur={field.onBlur}
 						isInvalid={!!fieldState.error}
@@ -122,10 +120,10 @@ export const LocationTab = ({ onClose }: LocationTabProps) => {
 
 			<Controller
 				control={form.control}
-				name="zone"
+				name="city"
 				render={({ field, fieldState }) => (
 					<Input.AutoComplete
-						label="Zona"
+						label="Cidade"
 						isRequired
 						placeholder={
 							selectedDistrict

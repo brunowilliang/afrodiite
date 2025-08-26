@@ -12,7 +12,7 @@ import {
 import { z } from 'zod';
 import { db } from '@/api/db';
 import { escortProfiles } from '@/api/db/schemas';
-import { profileUpdateSchema } from '@/api/utils/types/escort';
+import { profileSelectSchema, profileUpdateSchema } from '@/api/utils/types/escort';
 import { authProcedure, publicProcedure } from '../middlewares/auth';
 
 export const profileRoutes = {
@@ -33,11 +33,30 @@ export const profileRoutes = {
 				.where(eq(escortProfiles.id, context.session.user.id));
 		}),
 	list: publicProcedure
+		.output(z.object({
+			data: z.array(profileSelectSchema.transform((data) => ({
+				...data,
+				public_id: String(data.public_id),
+			}))),
+			pagination: z.object({
+				page: z.number(),
+				limit: z.number(),
+				total: z.number(),
+				totalPages: z.number(),
+				hasNextPage: z.boolean(),
+				hasPreviousPage: z.boolean(),
+			}),
+			filters: z.object({
+				district: z.string().optional(),
+				city: z.string().optional(),
+				name: z.string().optional(),
+			}),
+		}))
 		.input(
 			z.object({
 				// Filtros
 				district: z.string().optional(),
-				zone: z.string().optional(),
+				city: z.string().optional(),
 				name: z.string().optional(),
 
 				// Paginação
@@ -52,7 +71,7 @@ export const profileRoutes = {
 			}),
 		)
 		.handler(async ({ input }) => {
-			const { district, zone, name, page, limit, sortBy, sortOrder } = input;
+			const { district, city, name, page, limit, sortBy, sortOrder } = input;
 
 			// Construir condições de filtro
 			const conditions = [eq(escortProfiles.is_active, true)];
@@ -61,8 +80,8 @@ export const profileRoutes = {
 				conditions.push(ilike(escortProfiles.district, `%${district}%`));
 			}
 
-			if (zone) {
-				conditions.push(ilike(escortProfiles.zone, `%${zone}%`));
+			if (city) {
+				conditions.push(ilike(escortProfiles.city, `%${city}%`));
 			}
 
 			if (name) {
@@ -126,14 +145,14 @@ export const profileRoutes = {
 				pagination: {
 					page,
 					limit,
-					total: Number(total),
+					total,
 					totalPages,
 					hasNextPage: page < totalPages,
 					hasPreviousPage: page > 1,
 				},
 				filters: {
 					district,
-					zone,
+					city,
 					name,
 				},
 			};
@@ -141,7 +160,7 @@ export const profileRoutes = {
 	filters: publicProcedure
 		.input(
 			z.object({
-				district: z.string().optional(), // Filtrar zonas por distrito
+				district: z.string().optional(),
 			}),
 		)
 		.handler(async ({ input }) => {
@@ -163,42 +182,43 @@ export const profileRoutes = {
 				.orderBy(asc(escortProfiles.district));
 
 			// Buscar zonas disponíveis com contagem (filtrado por distrito se fornecido)
-			const zoneConditions = [
+			const cityConditions = [
 				eq(escortProfiles.is_active, true),
-				isNotNull(escortProfiles.zone),
-				ne(escortProfiles.zone, ''),
+				isNotNull(escortProfiles.city),
+				ne(escortProfiles.city, ''),
 			];
 
 			// Filtrar por distrito se fornecido
 			if (input.district) {
-				zoneConditions.push(eq(escortProfiles.district, input.district));
+				cityConditions.push(eq(escortProfiles.district, input.district));
 			}
 
-			const zonesQuery = await db
+			const citiesQuery = await db
 				.select({
-					name: escortProfiles.zone,
+					name: escortProfiles.city,
 					count: count(),
 				})
 				.from(escortProfiles)
-				.where(and(...zoneConditions))
-				.groupBy(escortProfiles.zone)
-				.orderBy(asc(escortProfiles.zone));
+				.where(and(...cityConditions))
+				.groupBy(escortProfiles.city)
+				.orderBy(asc(escortProfiles.city));
 
 			return {
 				districts: districtsQuery.map((d) => ({
 					name: d.name,
 					count: Number(d.count),
 				})),
-				zones: zonesQuery.map((z) => ({
-					name: z.name,
-					count: Number(z.count),
+				cities: citiesQuery.map((c) => ({
+					name: c.name,
+					count: Number(c.count),
 				})),
 			};
 		}),
 	detail: publicProcedure
+		.output(profileSelectSchema.nullable())
 		.input(
 			z.object({
-				slug: z.string(),
+				public_id: z.coerce.number().int().min(1).max(2147483647)
 			}),
 		)
 		.handler(async ({ input }) => {
@@ -207,7 +227,7 @@ export const profileRoutes = {
 				.from(escortProfiles)
 				.where(
 					and(
-						eq(escortProfiles.slug, input.slug),
+						eq(escortProfiles.public_id, input.public_id),
 						eq(escortProfiles.is_active, true),
 					),
 				)

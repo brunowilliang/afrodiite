@@ -5,7 +5,7 @@ type Props = DateInputProps & {};
 
 export const DateInput = ({ value, onChange, ...props }: Props) => {
 	return (
-		<HeroDateInput
+		<HeroDateInput 
 			{...props}
 			maxValue={today(getLocalTimeZone())}
 			granularity="day"

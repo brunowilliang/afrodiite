@@ -10,7 +10,7 @@ import { Button } from '@/components/heroui/Button';
 import { Input } from '@/components/heroui/Input';
 import { api } from '@/lib/api';
 
-export const Route = createFileRoute('/{-$locale}/(public)/escorts/$country/')({
+export const Route = createFileRoute('/{-$locale}/(public)/_default/escorts/$country')({
 	component: RouteComponent,
 	beforeLoad: async ({ params }) => {
 		const { country } = params;
@@ -26,7 +26,7 @@ export const Route = createFileRoute('/{-$locale}/(public)/escorts/$country/')({
 		page: z.number().default(1),
 		name: z.string().optional(),
 		district: z.string().optional(),
-		zone: z.string().optional(),
+		city: z.string().optional(),
 	}),
 	loaderDeps: ({ search }) => search,
 	loader: async ({ context, deps }) => {
@@ -34,7 +34,7 @@ export const Route = createFileRoute('/{-$locale}/(public)/escorts/$country/')({
 			api.queries.profile.list.queryOptions({
 				input: deps,
 			}),
-		);
+		)
 	},
 });
 
@@ -47,13 +47,13 @@ function RouteComponent() {
 		api.queries.profile.list.queryOptions({
 			input: search,
 		}),
-	);
+	)
 
 	const { data: filters } = useQuery(
 		api.queries.profile.filters.queryOptions({
 			input: { district: search.district },
 		}),
-	);
+	)
 
 	return (
 		<Container className="py-20">
@@ -84,19 +84,19 @@ function RouteComponent() {
 										page: 1,
 										name: typedName || undefined,
 									}),
-								});
+								})
 							}
 						}}
 						onClear={() => {
-							setTypedName('');
+							setTypedName('')
 							navigate({
 								search: (prev) => ({ ...prev, page: 1, name: undefined }),
-							});
+							})
 						}}
 					/>
 					<Stack className="w-full flex-row gap-2">
 						<Input.AutoComplete
-							label="Por distrito"
+							label='Por distrito'
 							selectedKey={search.district ?? null}
 							onSelectionChange={(key) => {
 								navigate({
@@ -104,9 +104,9 @@ function RouteComponent() {
 										...prev,
 										page: 1,
 										district: (key as string) || undefined,
-										zone: undefined,
+										city: undefined,
 									}),
-								});
+								})
 							}}
 						>
 							{(filters?.districts ?? []).map((d) => (
@@ -119,24 +119,24 @@ function RouteComponent() {
 							))}
 						</Input.AutoComplete>
 						<Input.AutoComplete
-							label="Por zona"
-							selectedKey={search.zone ?? null}
+							label='Por cidade'
+							selectedKey={search.city ?? null}
 							onSelectionChange={(key) => {
 								navigate({
 									search: (prev) => ({
 										...prev,
 										page: 1,
-										zone: (key as string) || undefined,
+										city: (key as string) || undefined,
 									}),
-								});
+								})
 							}}
 						>
-							{(filters?.zones ?? []).map((z) => (
+							{(filters?.cities ?? []).map((c) => (
 								<Input.AutoComplete.Item
-									key={z.name ?? ''}
-									textValue={z.name ?? ''}
+									key={c.name ?? ''}
+									textValue={c.name ?? ''}
 								>
-									{z.name} ({z.count})
+									{c.name} ({c.count})
 								</Input.AutoComplete.Item>
 							))}
 						</Input.AutoComplete>
@@ -144,17 +144,17 @@ function RouteComponent() {
 
 					<Stack className="w-full flex-row items-center justify-between">
 						<Button
-							size="md"
-							variant="light"
+							size='md'
+							variant='light'
 							onClick={() => {
 								navigate({ search: {} });
-								setTypedName('');
+								setTypedName('')
 							}}
 						>
 							Remover filtros
 						</Button>
 						<Button
-							size="md"
+							size='md'
 							onClick={() => {
 								navigate({
 									search: (prev) => ({
@@ -162,7 +162,7 @@ function RouteComponent() {
 										page: 1,
 										name: typedName || undefined,
 									}),
-								});
+								})
 							}}
 						>
 							Pesquisar
@@ -172,56 +172,45 @@ function RouteComponent() {
 
 				{/* Resultados e filtros ativos */}
 				<div className="flex flex-wrap gap-1">
-					<Text>Filtros ativos:</Text>
+					{Object.entries(search).filter(([key]) => key !== 'page').length > 0 && <Text>Filtros ativos:</Text>}
 					{Object.entries(search)
 						.filter(([key]) => key !== 'page')
 						.map(([key, value]) => {
 							const labelMap: Record<string, string> = {
 								name: 'Nome',
 								district: 'Distrito',
-								zone: 'Zona',
-							};
+								city: 'Cidade',
+							}
 							const label = labelMap[key] ?? key;
 							return (
 								<Chip
 									key={key}
-									color="primary"
-									variant="flat"
+									color='primary'
+									variant='flat'
 									onClose={() => {
 										navigate({
 											search: (prev) => ({
 												...prev,
 												[key]: undefined,
-												...(key === 'district' ? { zone: undefined } : {}),
+												...(key === 'district' ? { city: undefined } : {}),
 											}),
-										});
+										})
 										if (key === 'name') setTypedName('');
 									}}
 								>
 									{label}: {String(value)}
 								</Chip>
-							);
+							)
 						})}
 				</div>
 
 				{/* {isFetching && <Spinner variant="gradient" title="Carregando..." />} */}
 
-				{/* Grid de 4 colunas */}
 				<div className="grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-6 lg:grid-cols-4">
 					{data?.data.map((profile) => (
 						<EscortCard
 							key={profile.id}
 							profile={profile as any}
-							onClick={() => {
-								console.log('Navigate to', profile.slug);
-								navigate({
-									to: '/{-$locale}/escorts/$country/$slug',
-									params: {
-										country: 'portugal',
-										slug: profile.slug ?? '',
-									},
-								});
-							}}
 						/>
 					))}
 				</div>
@@ -237,11 +226,11 @@ function RouteComponent() {
 						onChange={(page) => {
 							navigate({
 								search: (prev) => ({ ...prev, page }),
-							});
+							})
 						}}
 					/>
 				)}
 			</Stack>
 		</Container>
-	);
+	)
 }

@@ -9,14 +9,12 @@ import { Stack } from '../core/Stack';
 import { Text } from '../core/Text';
 
 interface EscortCardProps {
-	profile: ProfileSelect;
-	onClick?: () => void;
+	profile: ProfileSelect & { public_id: string };
 	className?: string;
 }
 
 export const EscortCard = ({
 	profile,
-	onClick,
 	className,
 }: EscortCardProps) => {
 	const [selectedIndex, setSelectedIndex] = useState(0);
@@ -72,11 +70,6 @@ export const EscortCard = ({
 		);
 	};
 
-	const handleCardClick = () => {
-		console.log('Click', profile.slug);
-		onClick?.();
-	};
-
 	// If no images, show placeholder
 	if (previewImages.length === 0) {
 		return (
@@ -87,7 +80,6 @@ export const EscortCard = ({
 					className,
 				)}
 				radius="lg"
-				onPress={handleCardClick}
 			>
 				<div className="relative flex aspect-[3/4] items-center justify-center rounded-lg bg-gray-200">
 					<Text className="text-default-600 text-sm">Sem imagens</Text>
@@ -106,7 +98,7 @@ export const EscortCard = ({
 							color="textSecondary"
 							className="w-full truncate text-default-600 text-xs md:text-sm"
 						>
-							{profile.zone}, {profile.district}
+							{profile.city}, {profile.district}
 						</Text>
 					</Stack>
 					<Stack className="-space-y-1 flex-col items-end">
@@ -134,16 +126,14 @@ export const EscortCard = ({
 
 	return (
 		<Link
-			to="/{-$locale}/escorts/$country/$slug"
+			to="/{-$locale}/escort/$public_id/{-$slug}"
 			params={{
-				country: 'portugal',
-				slug: profile.slug ?? '',
+				public_id: profile.public_id,
+				slug: profile.slug || '',
 			}}
 		>
 			<Card
 				isHoverable
-				// isPressable
-				onPress={handleCardClick}
 				className={cn(
 					'cursor-pointer overflow-visible border-none bg-transparent shadow-none',
 					className,
@@ -241,7 +231,7 @@ export const EscortCard = ({
 							color="textSecondary"
 							className="w-full truncate text-default-600 text-xs md:text-sm"
 						>
-							{profile.zone}, {profile.district}
+							{profile.city}, {profile.district}
 						</Text>
 					</Stack>
 					<Stack className="-space-y-1 flex-col items-end">

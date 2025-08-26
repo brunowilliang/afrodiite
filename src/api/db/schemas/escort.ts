@@ -2,8 +2,10 @@ import {
 	boolean,
 	date,
 	jsonb,
+	pgSequence,
 	pgTable,
 	text,
+	bigint,
 	timestamp,
 } from 'drizzle-orm/pg-core';
 import {
@@ -18,11 +20,16 @@ import type {
 	Price,
 } from '@/api/utils/types/escort';
 import { users } from './auth';
+import { sql } from 'drizzle-orm';
+
+export const escortPublicIdSeq = pgSequence('escort_public_id_seq', { startWith: 1000 });
+
 
 export const escortProfiles = pgTable('escort_profiles', {
 	id: text('id')
 		.primaryKey()
 		.references(() => users.id, { onDelete: 'cascade' }),
+		public_id: bigint('public_id', { mode: 'number' }).notNull().unique().default(sql`nextval('escort_public_id_seq')`),
 
 	// Information
 	name: text('name').notNull(),
@@ -40,7 +47,7 @@ export const escortProfiles = pgTable('escort_profiles', {
 
 	// Location
 	district: text('district'),
-	zone: text('zone'),
+	city: text('city'),
 	country: text('country'),
 
 	// Status

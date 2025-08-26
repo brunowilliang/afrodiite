@@ -238,8 +238,8 @@ function generateEscortProfile() {
 	// Descrição mais realista baseada nas características
 	const descriptions = [
 		`Olá, sou a ${artistName}! Uma mulher elegante de ${characteristics.age} anos, com cabelos ${characteristics.hair_color.toLowerCase()} e olhos ${characteristics.eye_color.toLowerCase()}. Adoro conversar e proporcionar momentos únicos.`,
-		`${artistName} aqui! Sou uma pessoa carinhosa e atenciosa de ${location.cidade}. Com ${characteristics.height}cm de altura, sempre pronta para uma boa conversa e experiências especiais.`,
-		`Me chamo ${artistName}, tenho ${characteristics.age} anos e moro em ${location.cidade}. Sou uma mulher sofisticada que valoriza conexões genuínas e momentos memoráveis.`,
+		`${artistName} aqui! Sou uma pessoa carinhosa e atenciosa de ${location.city}. Com ${characteristics.height}cm de altura, sempre pronta para uma boa conversa e experiências especiais.`,
+		`Me chamo ${artistName}, tenho ${characteristics.age} anos e moro em ${location.city}. Sou uma mulher sofisticada que valoriza conexões genuínas e momentos memoráveis.`,
 	];
 
 	return {
@@ -256,7 +256,7 @@ function generateEscortProfile() {
 		profile: {
 			name: fullName,
 			artist_name: artistName,
-			slug: `${artistName.toLowerCase()}-${location.cidade.toLowerCase().replace(/\s+/g, '-')}-${faker.number.int({ min: 100, max: 999 })}`,
+			slug: `${artistName.toLowerCase()}-${location.city.toLowerCase().replace(/\s+/g, '-')}-${faker.number.int({ min: 100, max: 999 })}`,
 			description: faker.helpers.arrayElement(descriptions),
 			birthday: faker.date
 				.between({
@@ -282,8 +282,8 @@ function generateEscortProfile() {
 				'Ucraniana',
 				'Romena',
 			]),
-			district: location.distrito,
-			zone: location.cidade,
+			district: location.district,
+			zone: location.city,
 			country: 'Portugal',
 			is_active: faker.datatype.boolean({ probability: 0.75 }),
 			is_verified: faker.datatype.boolean({ probability: 0.6 }),
