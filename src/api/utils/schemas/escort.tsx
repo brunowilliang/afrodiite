@@ -106,7 +106,6 @@ const informationZ = z.object({
 	}),
 });
 
-
 export const escortProfileSchema = createInsertSchema(escortProfiles, {
 	// Information fields
 	name: z.string().min(1),
@@ -125,8 +124,8 @@ export const escortProfileSchema = createInsertSchema(escortProfiles, {
 	city: z.string().min(1).optional(),
 
 	// Status fields
-	is_active: z.boolean().default(false).optional(),
-	is_verified: z.boolean().default(false).optional(),
+	is_visible: z.boolean().default(false).optional(),
+	is_onboarding_complete: z.boolean().default(false).optional(),
 
 	// Content fields
 	characteristics: characteristicsZ.optional(),
