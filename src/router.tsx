@@ -17,11 +17,11 @@ export function createRouter() {
 		routeTree,
 		defaultPreload: 'intent',
 		defaultViewTransition: true,
-		// defaultErrorComponent: ({ error, reset }) => (
-		// 	<DefaultCatchBoundary error={error} reset={reset} />
-		// ),
+		defaultErrorComponent: ({ error, reset }) => (
+			<DefaultCatchBoundary error={error} reset={reset} />
+		),
 		notFoundMode: 'root',
-		defaultErrorComponent: () => <NotFound />,
+		// defaultErrorComponent: () => <NotFound />,
 		defaultNotFoundComponent: () => <NotFound />,
 		scrollRestoration: true,
 		scrollRestorationBehavior: 'instant',

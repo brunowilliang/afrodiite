@@ -1,10 +1,10 @@
 import { stripe } from '@better-auth/stripe';
 import { betterAuth } from 'better-auth';
-
 import { openAPI } from 'better-auth/plugins';
 import { reactStartCookies } from 'better-auth/react-start';
 import Stripe from 'stripe';
 import { database } from '@/api/db';
+import { createAuthId } from '@/api/utils/generateId';
 import { env } from '@/utils/env';
 import { tryCatch } from '@/utils/tryCatch';
 import { sendEmail } from '../email';
@@ -24,6 +24,11 @@ export const stripeClient = new Stripe(env.STRIPE_SECRET_KEY, {
 export const auth = betterAuth({
 	appName: 'Afrodiite',
 	database,
+	advanced: {
+		database: {
+			generateId: () => createAuthId(),
+		},
+	},
 	secret: env.BETTER_AUTH_SECRET,
 	baseURL: env.VITE_BETTER_AUTH_URL,
 	trustedOrigins: [

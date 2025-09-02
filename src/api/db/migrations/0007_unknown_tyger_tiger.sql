@@ -1,1 +1,0 @@
-ALTER TABLE "escort_profiles" RENAME COLUMN "zone" TO "city";

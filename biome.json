@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.1.3/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.2.2/schema.json",
   "vcs": {
     "enabled": true,
     "clientKind": "git",
@@ -49,7 +49,6 @@
         }
       },
       "nursery": {
-        "useUniqueElementIds": "off",
         "useSortedClasses": {
           "level": "warn",
           "fix": "safe",
@@ -75,6 +74,7 @@
         "noLabelWithoutControl": "off"
       },
       "suspicious": {
+        "useIterableCallbackReturn": "off",
         "noShadowRestrictedNames": "off",
         "noArrayIndexKey": "off",
         "noExplicitAny": "off"

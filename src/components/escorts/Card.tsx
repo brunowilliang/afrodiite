@@ -9,14 +9,11 @@ import { Stack } from '../core/Stack';
 import { Text } from '../core/Text';
 
 interface EscortCardProps {
-	profile: ProfileSelect & { public_id: string };
+	profile: ProfileSelect;
 	className?: string;
 }
 
-export const EscortCard = ({
-	profile,
-	className,
-}: EscortCardProps) => {
+export const EscortCard = ({ profile, className }: EscortCardProps) => {
 	const [selectedIndex, setSelectedIndex] = useState(0);
 
 	// Get only first 3 images sorted by order
@@ -128,7 +125,7 @@ export const EscortCard = ({
 		<Link
 			to="/{-$locale}/escort/$public_id/{-$slug}"
 			params={{
-				public_id: profile.public_id,
+				public_id: profile.public_id?.toString() || '',
 				slug: profile.slug || '',
 			}}
 		>

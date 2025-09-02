@@ -127,7 +127,7 @@ export const InformationTab = ({ onClose }: InformationTabProps) => {
 					<Input
 						label="Slug"
 						isRequired
-						description={`https://afrodiite.com/escort/${form.getValues('slug')}`}
+						description={`https://afrodiite.com/escort/${profile?.public_id}/${form.getValues('slug')}`}
 						endContent={
 							<Button
 								type="button"
@@ -187,7 +187,7 @@ export const InformationTab = ({ onClose }: InformationTabProps) => {
 					<Input.DateInput
 						label="Data de Nascimento"
 						isRequired
-						value={field.value ? parseDate(field.value) : null as any}
+						value={field.value ? parseDate(field.value) : (null as any)}
 						onChange={(date) => {
 							const v = date ? toCalendarDate(date).toString() : null;
 							field.onChange(v);

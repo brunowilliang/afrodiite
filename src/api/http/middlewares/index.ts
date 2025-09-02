@@ -1,0 +1,19 @@
+import { ORPCError, os } from '@orpc/server';
+import { Context } from '../context/session';
+
+export const o = os.$context<Context>();
+
+export const publicProcedure = o;
+
+const AuthMiddleware = o.middleware(async ({ context, next }) => {
+	if (!context.session?.user) {
+		throw new ORPCError('UNAUTHORIZED');
+	}
+	return next({
+		context: {
+			session: context.session,
+		},
+	});
+});
+
+export const authProcedure = publicProcedure.use(AuthMiddleware);

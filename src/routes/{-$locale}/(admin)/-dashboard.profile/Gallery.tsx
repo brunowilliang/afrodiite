@@ -5,13 +5,10 @@ import {
 	useRouter,
 } from '@tanstack/react-router';
 import { useUploadFiles } from 'better-upload/client';
+import { nanoid } from 'nanoid';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import {
-	deleteFile,
-	MAX_FILE_SIZE,
-	toGalleryItems,
-	uploadFile,
-} from '@/api/http/routes/uploadFile';
+import { MAX_FILE_SIZE_GALLERY } from '@/api/http/routes/storage';
+import { buildGalleryItems } from '@/api/utils/buildGalleryItems';
 import type { GalleryItem } from '@/api/utils/types/escort';
 import { Stack } from '@/components/core/Stack';
 import { SortableGallery } from '@/components/dashboard/SortableGallery';
@@ -20,9 +17,7 @@ import { toast } from '@/components/heroui/Toast';
 import { api } from '@/lib/api';
 import { tryCatch } from '@/utils/tryCatch';
 
-type GalleryTabProps = { onClose?: () => void };
-
-export const GalleryTab = ({ onClose }: GalleryTabProps) => {
+export const GalleryTab = () => {
 	const { control } = useUploadFiles({ route: 'gallery' });
 
 	const router = useRouter();
@@ -37,7 +32,8 @@ export const GalleryTab = ({ onClose }: GalleryTabProps) => {
 	const [isSaving, setIsSaving] = useState(false);
 	const [progress, setProgress] = useState<Map<string, number>>(new Map());
 	const MAX_FILES = 10;
-	const MAX_SIZE = MAX_FILE_SIZE;
+	const MAX_SIZE = MAX_FILE_SIZE_GALLERY;
+	const ALLOWED_MIME = new Set(['image/jpeg', 'image/png']);
 
 	const [items, setItems] = useState<GalleryItem[]>([]);
 
@@ -103,22 +99,20 @@ export const GalleryTab = ({ onClose }: GalleryTabProps) => {
 			});
 		}
 		const allowed = incoming.filter(
-			(f) => f.size <= MAX_SIZE && f.type.startsWith('image/'),
+			(f) => f.size <= MAX_SIZE && ALLOWED_MIME.has(f.type),
 		);
 		const available = Math.max(0, MAX_FILES - items.length);
 		const toAdd = allowed.slice(0, available);
 		if (!toAdd.length) return;
 
 		const newItems: GalleryItem[] = toAdd.map((file, idx) => {
-			const localId = `local-${crypto.randomUUID()}`;
-			localFilesRef.current.set(localId, file);
+			const fileId = nanoid(6);
+			localFilesRef.current.set(fileId, file);
 			return {
-				id: localId,
+				id: fileId,
 				path: '',
 				url: URL.createObjectURL(file),
 				size: file.size,
-				width: 0,
-				height: 0,
 				order: items.length + idx,
 				createdAt: new Date().toISOString(),
 			};
@@ -129,30 +123,52 @@ export const GalleryTab = ({ onClose }: GalleryTabProps) => {
 		const nextOrder = [...order, ...newIds];
 		setProgress((prev) => {
 			const map = new Map(prev);
-			newIds.forEach((id) => map.set(id, 0.1));
+			newIds.forEach((fileId) => map.set(fileId, 0.1));
 			return map;
 		});
 
 		setIsSaving(true);
-		const successes: Array<{ lid: string; meta: any }> = [];
+		const successes: Array<{
+			lid: string;
+			meta: Partial<GalleryItem>;
+		}> = [];
 
 		await Promise.all(
-			newIds.map(async (lid) => {
-				const file = localFilesRef.current.get(lid);
+			newIds.map(async (fileId) => {
+				const file = localFilesRef.current.get(fileId);
 				if (!file) return;
-				const [err, meta] = await tryCatch(uploadFile(id, file));
-				if (!err && meta) {
-					setProgress((prev) => {
-						const map = new Map(prev);
-						map.set(lid, 0.8);
-						return map;
-					});
-					successes.push({ lid, meta });
-				}
+
+				const ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
+				const key = `${id}/${fileId}.${ext}`;
+
+				const [presignErr, presign] = await tryCatch(
+					api.client.storage.upload({
+						bucket: 'escort-gallery',
+						key,
+						file,
+					}),
+				);
+				if (presignErr || !presign) return;
+
+				// 2) Create gallery item metadata (no more width/height)
+				const meta = {
+					id: fileId,
+					path: presign.key,
+					url: presign.url,
+					size: file.size,
+				};
+
+				setProgress((prev) => {
+					const map = new Map(prev);
+					map.set(fileId, 0.8);
+					return map;
+				});
+
+				successes.push({ lid: fileId, meta });
 			}),
 		);
 
-		const uploaded = toGalleryItems(successes.map((s) => s.meta));
+		const uploaded = buildGalleryItems(successes.map((s) => s.meta));
 		const idToUploaded = new Map<string, GalleryItem>();
 		uploaded.forEach((u, i) => {
 			const pair = successes[i];
@@ -164,7 +180,8 @@ export const GalleryTab = ({ onClose }: GalleryTabProps) => {
 		for (let i = 0; i < nextOrder.length; i++) {
 			const oid = nextOrder[i];
 			const up = idToUploaded.get(oid);
-			if (up) final.push({ ...up, id: oid, order: i });
+			if (up)
+				final.push({ ...up, order: i }); // Keep original ID, just update order
 			else {
 				const ex = baseItems.find((it) => it.id === oid);
 				if (ex) final.push({ ...ex, order: i });
@@ -191,7 +208,7 @@ export const GalleryTab = ({ onClose }: GalleryTabProps) => {
 		await persistProfileSafe(final);
 		setProgress((prev) => {
 			const map = new Map(prev);
-			newIds.forEach((lid) => map.delete(lid));
+			newIds.forEach((fileId) => map.delete(fileId));
 			return map;
 		});
 		setIsSaving(false);
@@ -209,7 +226,12 @@ export const GalleryTab = ({ onClose }: GalleryTabProps) => {
 			} catch {}
 		}
 		if (target?.path && !target?.url?.startsWith('blob:')) {
-			await tryCatch(deleteFile(target.path));
+			await tryCatch(
+				api.client.storage.delete({
+					bucket: 'escort-gallery',
+					key: target.path,
+				}),
+			);
 		}
 		localFilesRef.current.delete(key);
 		const nextItems = reindex(items.filter((it) => it.id !== key));

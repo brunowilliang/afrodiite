@@ -12,8 +12,11 @@ import {
 import { z } from 'zod';
 import { db } from '@/api/db';
 import { escortProfiles } from '@/api/db/schemas';
-import { profileSelectSchema, profileUpdateSchema } from '@/api/utils/types/escort';
-import { authProcedure, publicProcedure } from '../middlewares/auth';
+import { authProcedure, publicProcedure } from '@/api/http/middlewares';
+import {
+	profileSelectSchema,
+	profileUpdateSchema,
+} from '@/api/utils/types/escort';
 
 export const profileRoutes = {
 	get: authProcedure.handler(async ({ context }) => {
@@ -33,25 +36,29 @@ export const profileRoutes = {
 				.where(eq(escortProfiles.id, context.session.user.id));
 		}),
 	list: publicProcedure
-		.output(z.object({
-			data: z.array(profileSelectSchema.transform((data) => ({
-				...data,
-				public_id: String(data.public_id),
-			}))),
-			pagination: z.object({
-				page: z.number(),
-				limit: z.number(),
-				total: z.number(),
-				totalPages: z.number(),
-				hasNextPage: z.boolean(),
-				hasPreviousPage: z.boolean(),
+		.output(
+			z.object({
+				data: z.array(
+					profileSelectSchema.transform((data) => ({
+						...data,
+						public_id: String(data.public_id),
+					})),
+				),
+				pagination: z.object({
+					page: z.number(),
+					limit: z.number(),
+					total: z.number(),
+					totalPages: z.number(),
+					hasNextPage: z.boolean(),
+					hasPreviousPage: z.boolean(),
+				}),
+				filters: z.object({
+					district: z.string().optional(),
+					city: z.string().optional(),
+					name: z.string().optional(),
+				}),
 			}),
-			filters: z.object({
-				district: z.string().optional(),
-				city: z.string().optional(),
-				name: z.string().optional(),
-			}),
-		}))
+		)
 		.input(
 			z.object({
 				// Filtros
@@ -218,7 +225,7 @@ export const profileRoutes = {
 		.output(profileSelectSchema.nullable())
 		.input(
 			z.object({
-				public_id: z.coerce.number().int().min(1).max(2147483647)
+				public_id: z.coerce.number().int().min(1).max(2147483647),
 			}),
 		)
 		.handler(async ({ input }) => {

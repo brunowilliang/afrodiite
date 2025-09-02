@@ -31,8 +31,6 @@ export type GalleryItem = {
 	path: string;
 	url: string;
 	size: number;
-	width: number;
-	height: number;
 	order: number;
 	createdAt: string;
 };
@@ -54,13 +52,13 @@ export type Characteristics = {
 };
 
 export const profileSelectSchema = createSelectSchema(escortProfiles, {
-	public_id: z.coerce.number().int().min(1).optional(),
+	public_id: z.coerce.number().optional(),
 });
 export const profileUpdateSchema = createUpdateSchema(escortProfiles, {
-	public_id: z.coerce.number().int().min(1).optional(),
+	public_id: z.coerce.number().optional(),
 });
 export const profileInsertSchema = createInsertSchema(escortProfiles, {
-	public_id: z.coerce.number().int().min(1).optional(),
+	public_id: z.coerce.number().optional(),
 });
 
 export type ProfileSelect = z.infer<typeof profileSelectSchema>;

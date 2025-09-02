@@ -138,7 +138,7 @@ export const Onboarding = ({ profile }: OnboardingProps) => {
 			case 5:
 				return <ServicesTab onClose={closeModal} />;
 			case 6:
-				return <GalleryTab onClose={closeModal} />;
+				return <GalleryTab />;
 			default:
 				return null;
 		}

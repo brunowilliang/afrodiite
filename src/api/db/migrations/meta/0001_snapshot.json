@@ -1,285 +1,102 @@
 {
-  "id": "b006369d-8c25-495c-8056-e72f260c040b",
-  "prevId": "e810b52b-07d1-40c3-b0dc-c3abaaec22db",
-  "version": "7",
-  "dialect": "postgresql",
+  "version": "6",
+  "dialect": "sqlite",
+  "id": "dc3c2ca7-7093-4379-91b6-0aa217b4cbc8",
+  "prevId": "264eb3ea-8872-497e-85be-6224906e6cf8",
   "tables": {
-    "public.escort_profiles": {
-      "name": "escort_profiles",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "name": {
-          "name": "name",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "artist_name": {
-          "name": "artist_name",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "slug": {
-          "name": "slug",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "description": {
-          "name": "description",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "birthday": {
-          "name": "birthday",
-          "type": "date",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "phone": {
-          "name": "phone",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "whatsapp": {
-          "name": "whatsapp",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "email": {
-          "name": "email",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "links": {
-          "name": "links",
-          "type": "jsonb",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "'{}'::jsonb"
-        },
-        "city": {
-          "name": "city",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "state": {
-          "name": "state",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "country": {
-          "name": "country",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "neighborhood": {
-          "name": "neighborhood",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "nationality": {
-          "name": "nationality",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "is_active": {
-          "name": "is_active",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": false,
-          "default": false
-        },
-        "is_verified": {
-          "name": "is_verified",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": false,
-          "default": false
-        },
-        "office_hours": {
-          "name": "office_hours",
-          "type": "jsonb",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "'[{\"day\":\"monday\",\"is_available\":true,\"start\":\"00:00\",\"end\":\"23:59\"},{\"day\":\"tuesday\",\"is_available\":true,\"start\":\"00:00\",\"end\":\"23:59\"},{\"day\":\"wednesday\",\"is_available\":true,\"start\":\"00:00\",\"end\":\"23:59\"},{\"day\":\"thursday\",\"is_available\":true,\"start\":\"00:00\",\"end\":\"23:59\"},{\"day\":\"friday\",\"is_available\":true,\"start\":\"00:00\",\"end\":\"23:59\"},{\"day\":\"saturday\",\"is_available\":true,\"start\":\"00:00\",\"end\":\"23:59\"},{\"day\":\"sunday\",\"is_available\":true,\"start\":\"00:00\",\"end\":\"23:59\"}]'::jsonb"
-        },
-        "prices": {
-          "name": "prices",
-          "type": "jsonb",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "'[{\"slot\":\"30m\",\"is_available\":true,\"amount\":0,\"currency\":\"EUR\"},{\"slot\":\"1h\",\"is_available\":true,\"amount\":0,\"currency\":\"EUR\"},{\"slot\":\"2h\",\"is_available\":true,\"amount\":0,\"currency\":\"EUR\"},{\"slot\":\"4h\",\"is_available\":true,\"amount\":0,\"currency\":\"EUR\"},{\"slot\":\"overnight\",\"is_available\":true,\"amount\":0,\"currency\":\"EUR\"},{\"slot\":\"daily\",\"is_available\":true,\"amount\":0,\"currency\":\"EUR\"},{\"slot\":\"travel_daily\",\"is_available\":true,\"amount\":0,\"currency\":\"EUR\"}]'::jsonb"
-        },
-        "characteristics": {
-          "name": "characteristics",
-          "type": "jsonb",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "'{\"gender\":\"\",\"age\":0,\"height\":0,\"weight\":0,\"hair_color\":\"\",\"eye_color\":\"\",\"sexual_preference\":\"\",\"ethnicity\":\"\",\"silicone\":\"\",\"tattoos\":\"\",\"piercings\":\"\",\"smoker\":\"\",\"languages\":\"\"}'::jsonb"
-        },
-        "services": {
-          "name": "services",
-          "type": "jsonb",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "'[{\"id\":1,\"label\":\"Sexo anal com preservativo\",\"is_available\":false},{\"id\":2,\"label\":\"Sexo vaginal com preservativo\",\"is_available\":false},{\"id\":3,\"label\":\"Sexo oral com preservativo\",\"is_available\":false},{\"id\":4,\"label\":\"Beijo na boca\",\"is_available\":false},{\"id\":5,\"label\":\"Striptease\",\"is_available\":false},{\"id\":6,\"label\":\"Masturbação\",\"is_available\":false},{\"id\":7,\"label\":\"Massagem tradicional\",\"is_available\":false},{\"id\":8,\"label\":\"Massagem tântrica\",\"is_available\":false},{\"id\":9,\"label\":\"Sexo Virtual\",\"is_available\":false},{\"id\":10,\"label\":\"Acompanhante\",\"is_available\":false},{\"id\":11,\"label\":\"Viagem\",\"is_available\":false},{\"id\":12,\"label\":\"Sexo oral sem preservativo\",\"is_available\":false},{\"id\":13,\"label\":\"Dupla penetração\",\"is_available\":false},{\"id\":14,\"label\":\"Tripla penetração\",\"is_available\":false},{\"id\":15,\"label\":\"Dominação\",\"is_available\":false},{\"id\":16,\"label\":\"Uso de roupas de fantasia/uniformes\",\"is_available\":false},{\"id\":17,\"label\":\"Roleplay\",\"is_available\":false},{\"id\":18,\"label\":\"Penetração com acessórios sexuais\",\"is_available\":false},{\"id\":19,\"label\":\"Permite filmagem\",\"is_available\":false},{\"id\":20,\"label\":\"Beijo grego\",\"is_available\":false},{\"id\":21,\"label\":\"Sexo com voyeurismo/ser voyeur\",\"is_available\":false},{\"id\":22,\"label\":\"Podolatria\",\"is_available\":false},{\"id\":23,\"label\":\"Bondage\",\"is_available\":false},{\"id\":24,\"label\":\"Sadomasoquismo\",\"is_available\":false},{\"id\":25,\"label\":\"Fisting\",\"is_available\":false},{\"id\":26,\"label\":\"Facefuck\",\"is_available\":false},{\"id\":27,\"label\":\"Quirofilia\",\"is_available\":false},{\"id\":28,\"label\":\"Squirt\",\"is_available\":false},{\"id\":29,\"label\":\"Chuva dourada\",\"is_available\":false},{\"id\":30,\"label\":\"Chuva marrom\",\"is_available\":false},{\"id\":31,\"label\":\"Frampling\",\"is_available\":false}]'::jsonb"
-        },
-        "gallery": {
-          "name": "gallery",
-          "type": "jsonb",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "'[]'::jsonb"
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "now()"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "now()"
-        },
-        "last_active_at": {
-          "name": "last_active_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "escort_profiles_id_users_id_fk": {
-          "name": "escort_profiles_id_users_id_fk",
-          "tableFrom": "escort_profiles",
-          "tableTo": "users",
-          "columnsFrom": [
-            "id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "escort_profiles_slug_unique": {
-          "name": "escort_profiles_slug_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "slug"
-          ]
-        }
-      },
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.accounts": {
+    "accounts": {
       "name": "accounts",
-      "schema": "",
       "columns": {
         "id": {
           "name": "id",
           "type": "text",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "autoincrement": false
         },
         "account_id": {
           "name": "account_id",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "autoincrement": false
         },
         "provider_id": {
           "name": "provider_id",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "autoincrement": false
         },
         "user_id": {
           "name": "user_id",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "autoincrement": false
         },
         "access_token": {
           "name": "access_token",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": false,
+          "autoincrement": false
         },
         "refresh_token": {
           "name": "refresh_token",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": false,
+          "autoincrement": false
         },
         "id_token": {
           "name": "id_token",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": false,
+          "autoincrement": false
         },
         "access_token_expires_at": {
           "name": "access_token_expires_at",
-          "type": "timestamp",
+          "type": "integer",
           "primaryKey": false,
-          "notNull": false
+          "notNull": false,
+          "autoincrement": false
         },
         "refresh_token_expires_at": {
           "name": "refresh_token_expires_at",
-          "type": "timestamp",
+          "type": "integer",
           "primaryKey": false,
-          "notNull": false
+          "notNull": false,
+          "autoincrement": false
         },
         "scope": {
           "name": "scope",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": false,
+          "autoincrement": false
         },
         "password": {
           "name": "password",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": false,
+          "autoincrement": false
         },
         "created_at": {
           "name": "created_at",
-          "type": "timestamp",
+          "type": "integer",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "autoincrement": false
         },
         "updated_at": {
           "name": "updated_at",
-          "type": "timestamp",
+          "type": "integer",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "autoincrement": false
         }
       },
       "indexes": {},
@@ -300,64 +117,77 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
+      "checkConstraints": {}
     },
-    "public.sessions": {
+    "sessions": {
       "name": "sessions",
-      "schema": "",
       "columns": {
         "id": {
           "name": "id",
           "type": "text",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "autoincrement": false
         },
         "expires_at": {
           "name": "expires_at",
-          "type": "timestamp",
+          "type": "integer",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "autoincrement": false
         },
         "token": {
           "name": "token",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "autoincrement": false
         },
         "created_at": {
           "name": "created_at",
-          "type": "timestamp",
+          "type": "integer",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "autoincrement": false
         },
         "updated_at": {
           "name": "updated_at",
-          "type": "timestamp",
+          "type": "integer",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "autoincrement": false
         },
         "ip_address": {
           "name": "ip_address",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": false,
+          "autoincrement": false
         },
         "user_agent": {
           "name": "user_agent",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": false,
+          "autoincrement": false
         },
         "user_id": {
           "name": "user_id",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "autoincrement": false
         }
       },
-      "indexes": {},
+      "indexes": {
+        "sessions_token_unique": {
+          "name": "sessions_token_unique",
+          "columns": [
+            "token"
+          ],
+          "isUnique": true
+        }
+      },
       "foreignKeys": {
         "sessions_user_id_users_id_fk": {
           "name": "sessions_user_id_users_id_fk",
@@ -374,228 +204,453 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "sessions_token_unique": {
-          "name": "sessions_token_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "token"
-          ]
-        }
-      },
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
+      "uniqueConstraints": {},
+      "checkConstraints": {}
     },
-    "public.subscriptions": {
+    "subscriptions": {
       "name": "subscriptions",
-      "schema": "",
       "columns": {
         "id": {
           "name": "id",
           "type": "text",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "autoincrement": false
         },
         "plan": {
           "name": "plan",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "autoincrement": false
         },
         "reference_id": {
           "name": "reference_id",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "autoincrement": false
         },
         "stripe_customer_id": {
           "name": "stripe_customer_id",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": false,
+          "autoincrement": false
         },
         "stripe_subscription_id": {
           "name": "stripe_subscription_id",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": false,
+          "autoincrement": false
         },
         "status": {
           "name": "status",
           "type": "text",
           "primaryKey": false,
           "notNull": false,
+          "autoincrement": false,
           "default": "'incomplete'"
         },
         "period_start": {
           "name": "period_start",
-          "type": "timestamp",
+          "type": "integer",
           "primaryKey": false,
-          "notNull": false
+          "notNull": false,
+          "autoincrement": false
         },
         "period_end": {
           "name": "period_end",
-          "type": "timestamp",
+          "type": "integer",
           "primaryKey": false,
-          "notNull": false
+          "notNull": false,
+          "autoincrement": false
         },
         "cancel_at_period_end": {
           "name": "cancel_at_period_end",
-          "type": "boolean",
+          "type": "integer",
           "primaryKey": false,
-          "notNull": false
+          "notNull": false,
+          "autoincrement": false
         },
         "seats": {
           "name": "seats",
           "type": "integer",
           "primaryKey": false,
-          "notNull": false
+          "notNull": false,
+          "autoincrement": false
         }
       },
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
+      "checkConstraints": {}
     },
-    "public.users": {
+    "users": {
       "name": "users",
-      "schema": "",
       "columns": {
         "id": {
           "name": "id",
           "type": "text",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "autoincrement": false
         },
         "name": {
           "name": "name",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "autoincrement": false
         },
         "email": {
           "name": "email",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "autoincrement": false
         },
         "email_verified": {
           "name": "email_verified",
-          "type": "boolean",
+          "type": "integer",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "autoincrement": false
         },
         "image": {
           "name": "image",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": false,
+          "autoincrement": false
         },
         "created_at": {
           "name": "created_at",
-          "type": "timestamp",
+          "type": "integer",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "autoincrement": false
         },
         "updated_at": {
           "name": "updated_at",
-          "type": "timestamp",
+          "type": "integer",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "autoincrement": false
         },
         "stripe_customer_id": {
           "name": "stripe_customer_id",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": false,
+          "autoincrement": false
         },
         "role": {
           "name": "role",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
+          "autoincrement": false,
           "default": "'escort'"
         }
       },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {
+      "indexes": {
         "users_email_unique": {
           "name": "users_email_unique",
-          "nullsNotDistinct": false,
           "columns": [
             "email"
-          ]
+          ],
+          "isUnique": true
         }
       },
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
     },
-    "public.verifications": {
+    "verifications": {
       "name": "verifications",
-      "schema": "",
       "columns": {
         "id": {
           "name": "id",
           "type": "text",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "autoincrement": false
         },
         "identifier": {
           "name": "identifier",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "autoincrement": false
         },
         "value": {
           "name": "value",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "autoincrement": false
         },
         "expires_at": {
           "name": "expires_at",
-          "type": "timestamp",
+          "type": "integer",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "autoincrement": false
         },
         "created_at": {
           "name": "created_at",
-          "type": "timestamp",
+          "type": "integer",
           "primaryKey": false,
-          "notNull": false
+          "notNull": false,
+          "autoincrement": false
         },
         "updated_at": {
           "name": "updated_at",
-          "type": "timestamp",
+          "type": "integer",
           "primaryKey": false,
-          "notNull": false
+          "notNull": false,
+          "autoincrement": false
         }
       },
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
+      "checkConstraints": {}
+    },
+    "escort_profiles": {
+      "name": "escort_profiles",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "public_id": {
+          "name": "public_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "artist_name": {
+          "name": "artist_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "slug": {
+          "name": "slug",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "birthday": {
+          "name": "birthday",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "phone": {
+          "name": "phone",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "whatsapp": {
+          "name": "whatsapp",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "email": {
+          "name": "email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "nationality": {
+          "name": "nationality",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "links": {
+          "name": "links",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'{}'"
+        },
+        "district": {
+          "name": "district",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "city": {
+          "name": "city",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "country": {
+          "name": "country",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "is_active": {
+          "name": "is_active",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "is_verified": {
+          "name": "is_verified",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "office_hours": {
+          "name": "office_hours",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'[{\"day\":\"monday\",\"is_available\":false,\"start\":\"00:00\",\"end\":\"23:59\"},{\"day\":\"tuesday\",\"is_available\":false,\"start\":\"00:00\",\"end\":\"23:59\"},{\"day\":\"wednesday\",\"is_available\":false,\"start\":\"00:00\",\"end\":\"23:59\"},{\"day\":\"thursday\",\"is_available\":false,\"start\":\"00:00\",\"end\":\"23:59\"},{\"day\":\"friday\",\"is_available\":false,\"start\":\"00:00\",\"end\":\"23:59\"},{\"day\":\"saturday\",\"is_available\":false,\"start\":\"00:00\",\"end\":\"23:59\"},{\"day\":\"sunday\",\"is_available\":false,\"start\":\"00:00\",\"end\":\"23:59\"}]'"
+        },
+        "prices": {
+          "name": "prices",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'[{\"slot\":\"30m\",\"is_available\":false,\"amount\":0,\"negotiated\":false,\"currency\":\"EUR\"},{\"slot\":\"1h\",\"is_available\":false,\"amount\":0,\"negotiated\":false,\"currency\":\"EUR\"},{\"slot\":\"2h\",\"is_available\":false,\"amount\":0,\"negotiated\":false,\"currency\":\"EUR\"},{\"slot\":\"4h\",\"is_available\":false,\"amount\":0,\"negotiated\":false,\"currency\":\"EUR\"},{\"slot\":\"overnight\",\"is_available\":false,\"amount\":0,\"negotiated\":false,\"currency\":\"EUR\"},{\"slot\":\"daily\",\"is_available\":false,\"amount\":0,\"negotiated\":false,\"currency\":\"EUR\"},{\"slot\":\"travel\",\"is_available\":false,\"amount\":0,\"negotiated\":false,\"currency\":\"EUR\"},{\"slot\":\"outcall\",\"is_available\":false,\"amount\":0,\"negotiated\":false,\"currency\":\"EUR\"}]'"
+        },
+        "characteristics": {
+          "name": "characteristics",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'{\"gender\":\"\",\"age\":0,\"height\":0,\"weight\":0,\"hair_color\":\"\",\"eye_color\":\"\",\"sexual_preference\":\"\",\"ethnicity\":\"\",\"silicone\":false,\"tattoos\":false,\"piercings\":false,\"smoker\":false,\"languages\":\"\"}'"
+        },
+        "services": {
+          "name": "services",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'[]'"
+        },
+        "gallery": {
+          "name": "gallery",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'[]'"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "last_active_at": {
+          "name": "last_active_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "escort_profiles_public_id_unique": {
+          "name": "escort_profiles_public_id_unique",
+          "columns": [
+            "public_id"
+          ],
+          "isUnique": true
+        },
+        "escort_profiles_slug_unique": {
+          "name": "escort_profiles_slug_unique",
+          "columns": [
+            "slug"
+          ],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {
+        "escort_profiles_id_users_id_fk": {
+          "name": "escort_profiles_id_users_id_fk",
+          "tableFrom": "escort_profiles",
+          "tableTo": "users",
+          "columnsFrom": [
+            "id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
     }
   },
-  "enums": {},
-  "schemas": {},
-  "sequences": {},
-  "roles": {},
-  "policies": {},
   "views": {},
+  "enums": {},
   "_meta": {
-    "columns": {},
     "schemas": {},
-    "tables": {}
+    "tables": {},
+    "columns": {}
+  },
+  "internal": {
+    "indexes": {}
   }
 }

@@ -37,6 +37,7 @@ export const Route = createRootRouteWithContext<RootContext>()({
 	head: () => ({
 		meta: [
 			{
+				lang: 'pt-PT',
 				charSet: 'utf-8',
 			},
 			{

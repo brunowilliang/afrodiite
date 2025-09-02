@@ -15,7 +15,6 @@ export const createUserProfile = async (user: CreateProfile) => {
 	try {
 		console.log('🔄 Criando profile para usuário:', user.id);
 
-		// 1. Cria o profile do escort
 		await db.insert(escortProfiles).values({
 			id: user.id,
 			name: user.name,
