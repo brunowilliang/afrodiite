@@ -15,6 +15,20 @@
       "when": 1756508947697,
       "tag": "0001_mute_starhawk",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1756786717957,
+      "tag": "0002_mysterious_selene",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1756787446591,
+      "tag": "0003_awesome_fallen_one",
+      "breakpoints": true
     }
   ]
 }

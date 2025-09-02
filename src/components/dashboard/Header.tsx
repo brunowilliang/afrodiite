@@ -34,6 +34,11 @@ export function Header() {
 		router.invalidate();
 	};
 
+	const handleUserDelete = async () => {
+		await api.auth.deleteUser();
+		router.invalidate();
+	};
+
 	const profileSubmenu = links.find((l) => l.name === 'Perfil')?.subMenu ?? [];
 
 	return (
@@ -147,6 +152,15 @@ export function Header() {
 										onPress={handleLogout}
 									>
 										Sair
+									</DropdownItem>
+									<DropdownItem
+										aria-label="Delete User"
+										key="delete-user"
+										className="text-danger"
+										color="danger"
+										onPress={handleUserDelete}
+									>
+										Delete User
 									</DropdownItem>
 								</DropdownSection>
 							</DropdownMenu>

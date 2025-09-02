@@ -57,8 +57,6 @@ function RouteComponent() {
 		api.queries.escorts.detail.queryOptions({ input: { public_id } }),
 	);
 
-	console.log(profile);
-
 	if (!profile) throw notFound();
 
 	const caracteristicsTranslations: Record<keyof Characteristics, string> = {

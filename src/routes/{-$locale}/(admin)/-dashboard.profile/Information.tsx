@@ -21,7 +21,9 @@ import { informationSchema } from './schema';
 
 const schema = informationSchema;
 
-type InformationTabProps = { onClose?: () => void };
+type InformationTabProps = {
+	onClose?: () => void;
+};
 
 export const InformationTab = ({ onClose }: InformationTabProps) => {
 	const router = useRouter();
@@ -53,6 +55,7 @@ export const InformationTab = ({ onClose }: InformationTabProps) => {
 				onSuccess: () => {
 					toast.success('Profile updated');
 					router.invalidate();
+					// O useEffect no onboarding.tsx vai detectar mudanças automaticamente
 					onClose?.();
 				},
 				onError: (error) => {

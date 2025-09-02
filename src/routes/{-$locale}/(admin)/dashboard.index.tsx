@@ -42,10 +42,7 @@ function RouteComponent() {
 						Bem-vinda ao seu painel. (Conteúdo do dashboard aqui)
 					</Text>
 				</Stack>
-
-				<div className={isOnboardingDone ? 'hidden' : ''}>
-					<Onboarding profile={profile as any} />
-				</div>
+				<Onboarding profile={profile as any} />
 			</Stack>
 		</Container>
 	);

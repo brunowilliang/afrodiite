@@ -40,10 +40,12 @@ export const escortProfiles = sqliteTable('escort_profiles', {
 	country: text('country'),
 
 	// Status
-	is_active: integer('is_active', { mode: 'boolean' }).$defaultFn(() => false),
-	is_verified: integer('is_verified', { mode: 'boolean' }).$defaultFn(
+	is_visible: integer('is_visible', { mode: 'boolean' }).$defaultFn(
 		() => false,
 	),
+	is_onboarding_complete: integer('is_onboarding_complete', {
+		mode: 'boolean',
+	}).$defaultFn(() => false),
 
 	// Content (JSON em TEXT)
 	office_hours: text('office_hours', { mode: 'json' })

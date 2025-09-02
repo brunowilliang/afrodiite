@@ -1,0 +1,1 @@
+ALTER TABLE `escort_profiles` ADD `is_onboarding_complete` integer;

@@ -8,7 +8,7 @@ const escorts = createCrud(escortProfiles, {
 	searchFields: ['artist_name', 'city', 'district'],
 	allowedFilters: ['artist_name', 'city', 'district'],
 	scopeFilters: {
-		is_active: () => eq(escortProfiles.is_active, true),
+		is_visible: () => eq(escortProfiles.is_visible, true),
 	},
 });
 
@@ -27,17 +27,7 @@ const List = {
 
 export const escortRoutes = {
 	detail: publicProcedure.input(Detail.input).handler(async ({ input }) => {
-		console.log('🔍 API Debug:');
-		console.log('input.public_id:', input.public_id);
-		console.log('typeof input.public_id:', typeof input.public_id);
-
-		// Vamos ver o que tem na tabela
-		const allProfiles = await escorts.list({ page: 1, perPage: 10 });
-		console.log('🔍 Primeiros 10 perfis:', allProfiles);
-
-		// Vamos ver se existe algum com public_id = 1962
 		const profile = await escorts.findOne({ public_id: input.public_id });
-		console.log('Profile found:', profile);
 
 		return profile;
 	}),

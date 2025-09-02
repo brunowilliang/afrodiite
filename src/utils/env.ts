@@ -5,9 +5,6 @@ const envSchema = z.object({
 	// Client variables (VITE_*)
 	VITE_BETTER_AUTH_URL: z.url(),
 	VITE_CORS_ORIGIN: z.url(),
-	VITE_SUPABASE_URL: z.url(),
-	VITE_SUPABASE_PUBLISHABLE_KEY: z.string().min(1),
-	VITE_STRIPE_PUBLISHABLE_KEY: z.string().startsWith('pk_').optional(),
 
 	// Server variables
 	BETTER_AUTH_SECRET: z.string(),
@@ -27,9 +24,6 @@ const envSchema = z.object({
 const clientSchema = z.object({
 	VITE_BETTER_AUTH_URL: z.url(),
 	VITE_CORS_ORIGIN: z.url(),
-	VITE_SUPABASE_URL: z.url(),
-	VITE_SUPABASE_PUBLISHABLE_KEY: z.string().min(1),
-	VITE_STRIPE_PUBLISHABLE_KEY: z.string().startsWith('pk_').optional(),
 });
 
 const isServer = typeof window === 'undefined';
