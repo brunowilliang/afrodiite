@@ -18,9 +18,7 @@ import { locationSchema } from './schema';
 
 const schema = locationSchema;
 
-type LocationTabProps = { onClose?: () => void };
-
-export const LocationTab = ({ onClose }: LocationTabProps) => {
+export const LocationTab = () => {
 	const router = useRouter();
 	const { session } = useRouteContext({ from: '/{-$locale}' });
 	const { profile } = useLoaderData({ from: '/{-$locale}/(admin)/dashboard' });
@@ -57,7 +55,9 @@ export const LocationTab = ({ onClose }: LocationTabProps) => {
 				onSuccess: () => {
 					toast.success('Profile updated');
 					router.invalidate();
-					onClose?.();
+					if (!profile?.is_onboarding_complete) {
+						router.navigate({ to: '/{-$locale}/dashboard' });
+					}
 				},
 				onError: (error) => {
 					console.error(error);

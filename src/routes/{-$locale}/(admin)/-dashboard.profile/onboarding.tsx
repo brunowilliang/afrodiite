@@ -1,23 +1,12 @@
 import { Alert } from '@heroui/react';
-import { useMutation } from '@tanstack/react-query';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useNavigate } from '@tanstack/react-router';
+import { useMemo } from 'react';
 import type { ProfileSelect } from '@/api/utils/types/escort';
-import { Icon } from '@/components/core/Icon';
 import { Stack } from '@/components/core/Stack';
 import { Text } from '@/components/core/Text';
-import { Badge } from '@/components/heroui/Badge';
 import { Button } from '@/components/heroui/Button';
-import { Modal, ModalRef } from '@/components/heroui/Modal';
 import { useOnboardingStep } from '@/hooks/useOnboardingStep';
-import { api } from '@/lib/api';
 import { cn } from '@/utils/cn';
-import { CharacteristicsTab } from './Characteristics';
-import { GalleryTab } from './Gallery';
-import { InformationTab } from './Information';
-import { LocationTab } from './Location';
-import { OfficeHoursTab } from './OfficeHours';
-import { PricesTab } from './Prices';
-import { ServicesTab } from './Services';
 import {
 	computeOnboardingCompletion,
 	getGalleryProgress,
@@ -78,113 +67,31 @@ const steps = [
 
 export type OnboardingProps = {
 	profile: ProfileSelect | null | undefined;
+	mode?: 'onboarding' | 'alerts'; // 'onboarding' = tela inicial, 'alerts' = apenas alertas de pendências
 };
 
-export const Onboarding = ({ profile }: OnboardingProps) => {
-	const modalRef = useRef<ModalRef>(null);
-	const [selectedIdx, setSelectedIdx] = useState<number | null>(null);
+export const Onboarding = ({
+	profile,
+	mode = 'onboarding',
+}: OnboardingProps) => {
+	const navigate = useNavigate();
+
+	// Mapeamento de step index para tab name
+	const stepToTabMap = [
+		'information', // 0
+		'location', // 1
+		'characteristics', // 2
+		'schedule', // 3
+		'prices', // 4
+		'services', // 5
+		'gallery', // 6
+	] as const;
 
 	const completedSteps = useMemo(
 		() => computeOnboardingCompletion((profile ?? {}) as any),
 		[profile],
 	);
 	const { stepsState } = useOnboardingStep(steps.length, completedSteps);
-
-	// Mutation para atualizar perfil
-	const updateProfile = useMutation(
-		api.queries.profile.update.mutationOptions(),
-	);
-
-	// Verificar se onboarding está 100% completo
-	const isOnboardingComplete = useMemo(
-		() => completedSteps.every((step) => step === true),
-		[completedSteps],
-	);
-
-	// Estado para controlar quando executar o useEffect (evitar loops)
-	const [lastProfileState, setLastProfileState] = useState<{
-		isComplete: boolean;
-		isOnboardingComplete: boolean | null;
-		isVisible: boolean | null;
-	} | null>(null);
-
-	// useEffect CONTROLADO para atualizar status
-	useEffect(() => {
-		if (!profile) return;
-
-		const currentState = {
-			isComplete: isOnboardingComplete,
-			isOnboardingComplete: profile.is_onboarding_complete,
-			isVisible: profile.is_visible,
-		};
-
-		// Só executar se o estado mudou (evitar loops)
-		if (
-			lastProfileState &&
-			lastProfileState.isComplete === currentState.isComplete &&
-			lastProfileState.isOnboardingComplete ===
-				currentState.isOnboardingComplete &&
-			lastProfileState.isVisible === currentState.isVisible
-		) {
-			return; // Nenhuma mudança relevante
-		}
-
-		console.log('🔄 Estado mudou:', { lastProfileState, currentState });
-
-		const updateStatus = async () => {
-			try {
-				// Primeira vez completando onboarding
-				if (currentState.isComplete && !currentState.isOnboardingComplete) {
-					await updateProfile.mutateAsync({
-						id: profile.id,
-						is_onboarding_complete: true,
-						is_visible: true,
-					});
-					console.log('✅ Onboarding completo - perfil ativado');
-				}
-				// Perfil incompleto após onboarding
-				else if (
-					currentState.isOnboardingComplete &&
-					!currentState.isComplete &&
-					currentState.isVisible
-				) {
-					await updateProfile.mutateAsync({
-						id: profile.id,
-						is_visible: false,
-					});
-					console.log('⚠️ Perfil desativado - informações incompletas');
-				}
-				// Perfil completo novamente
-				else if (
-					currentState.isOnboardingComplete &&
-					currentState.isComplete &&
-					!currentState.isVisible
-				) {
-					await updateProfile.mutateAsync({
-						id: profile.id,
-						is_visible: true,
-					});
-					console.log('✅ Perfil reativado - informações completas');
-				}
-			} catch (error) {
-				console.error('❌ Erro ao atualizar status:', error);
-			}
-		};
-
-		// Debounce para evitar chamadas muito rápidas
-		const timeoutId = setTimeout(() => {
-			updateStatus();
-			setLastProfileState(currentState);
-		}, 300);
-
-		return () => clearTimeout(timeoutId);
-	}, [
-		isOnboardingComplete,
-		profile?.is_onboarding_complete,
-		profile?.is_visible,
-		profile?.id,
-		// NÃO incluir updateProfile nas deps para evitar loops
-	]);
 
 	// Calcular progresso dos serviços para mostrar aviso
 	const servicesProgress = useMemo(
@@ -197,12 +104,6 @@ export const Onboarding = ({ profile }: OnboardingProps) => {
 		() => getGalleryProgress((profile ?? {}) as any),
 		[profile],
 	);
-
-	const closeModal = () => {
-		modalRef.current?.close();
-		setSelectedIdx(null);
-		// O useEffect já vai detectar mudanças automaticamente
-	};
 
 	// Função para obter a descrição dinâmica dos steps com progresso parcial
 	const getStepDescription = (stepIndex: number) => {
@@ -221,34 +122,9 @@ export const Onboarding = ({ profile }: OnboardingProps) => {
 		return step.description;
 	};
 
-	const renderSelectedTab = () => {
-		if (selectedIdx === null) return null;
-		switch (selectedIdx) {
-			case 0:
-				return <InformationTab onClose={closeModal} />;
-			case 1:
-				return <LocationTab onClose={closeModal} />;
-			case 2:
-				return <CharacteristicsTab onClose={closeModal} />;
-			case 3:
-				return <OfficeHoursTab onClose={closeModal} />;
-			case 4:
-				return <PricesTab onClose={closeModal} />;
-			case 5:
-				return <ServicesTab onClose={closeModal} />;
-			case 6:
-				return <GalleryTab />;
-			default:
-				return null;
-		}
-	};
-
-	// Conteúdo condicional baseado no estado do onboarding
-	let onboardingContent: React.ReactNode;
-
-	// Se onboarding já foi completo mas perfil está incompleto, mostrar avisos específicos
-	if (profile?.is_onboarding_complete && !isOnboardingComplete) {
-		onboardingContent = (
+	// Renderizar conteúdo baseado no modo
+	const onboardingContent =
+		mode === 'alerts' ? (
 			<Stack className="gap-5">
 				<Stack className="gap-1">
 					<Text size="xl" weight="bold">
@@ -302,14 +178,10 @@ export const Onboarding = ({ profile }: OnboardingProps) => {
 									variant="flat"
 									className="px-10"
 									onPress={() => {
-										console.log('open modal', {
-											idx,
-											modalRef: modalRef.current,
+										navigate({
+											to: '/{-$locale}/dashboard/profile',
+											search: { tab: stepToTabMap[idx] },
 										});
-										setSelectedIdx(idx);
-										console.log('calling modalRef.current?.open()');
-										modalRef.current?.open();
-										console.log('modal open called');
 									}}
 								>
 									{hasServicesWarning
@@ -323,10 +195,7 @@ export const Onboarding = ({ profile }: OnboardingProps) => {
 					);
 				})}
 			</Stack>
-		);
-	} else {
-		// Tela normal de onboarding
-		onboardingContent = (
+		) : (
 			<Stack className="gap-5">
 				<Stack className="gap-1">
 					<Text size="xl" weight="bold">
@@ -337,17 +206,6 @@ export const Onboarding = ({ profile }: OnboardingProps) => {
 						olhares e transforma interesse em ação instantânea.
 					</Text>
 				</Stack>
-
-				{/* Feedback quando onboarding está sendo completado */}
-				{isOnboardingComplete && !profile?.is_onboarding_complete && (
-					<Alert
-						color="success"
-						title="🎉 Parabéns! Onboarding Completo!"
-						description="Seu perfil está sendo ativado automaticamente. Em instantes você estará visível para o público!"
-						variant="faded"
-						className="border-success-300 bg-success-50"
-					/>
-				)}
 
 				{steps.map((step, idx) => {
 					const s = stepsState[idx];
@@ -390,8 +248,10 @@ export const Onboarding = ({ profile }: OnboardingProps) => {
 									disabled={!s.isActive && !s.isCompleted && !hasWarning}
 									onPress={() => {
 										if (s.isActive || s.isCompleted || hasWarning) {
-											setSelectedIdx(idx);
-											modalRef.current?.open();
+											navigate({
+												to: '/{-$locale}/dashboard/profile',
+												search: { tab: stepToTabMap[idx] },
+											});
 										}
 									}}
 								>
@@ -409,29 +269,6 @@ export const Onboarding = ({ profile }: OnboardingProps) => {
 				})}
 			</Stack>
 		);
-	}
 
-	return (
-		<>
-			{onboardingContent}
-			<Modal
-				ref={modalRef}
-				title={selectedIdx !== null ? steps[selectedIdx].title : 'Onboarding'}
-				size="3xl"
-				isDismissable={false}
-			>
-				<Modal.Content>
-					<Modal.Body className="px-5 py-6 pb-20">
-						<Stack className="gap-5">
-							<Badge>
-								<Icon name="Stars" variant="bulk" size="20" />
-								{selectedIdx !== null ? steps[selectedIdx].title : ''}
-							</Badge>
-							{renderSelectedTab()}
-						</Stack>
-					</Modal.Body>
-				</Modal.Content>
-			</Modal>
-		</>
-	);
+	return onboardingContent;
 };

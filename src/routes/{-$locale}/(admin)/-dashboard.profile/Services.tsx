@@ -16,9 +16,7 @@ import { api } from '@/lib/api';
 import { cn } from '@/lib/utils';
 import { DATA_SERVICES } from '@/utils/services';
 
-type ServicesTabProps = { onClose?: () => void };
-
-export const ServicesTab = ({ onClose }: ServicesTabProps) => {
+export const ServicesTab = () => {
 	const router = useRouter();
 	const modalRef = useRef<ModalRef>(null);
 	const [modalService, setModalService] = useState<{
@@ -32,7 +30,6 @@ export const ServicesTab = ({ onClose }: ServicesTabProps) => {
 		api.queries.profile.update.mutationOptions(),
 	);
 
-	// Deriva ids selecionados iniciais do profile.services (pode ser number[] ou {id,is_available}[])
 	const initialSelectedIds = useMemo(() => {
 		const existing = (profile as any)?.services as unknown;
 		let selected: number[] = [];
@@ -66,7 +63,6 @@ export const ServicesTab = ({ onClose }: ServicesTabProps) => {
 						// rollback
 						setSelected(prev);
 						toast.error('Falha ao salvar serviços');
-						onClose?.();
 					},
 					onSuccess: () => {
 						router.invalidate();

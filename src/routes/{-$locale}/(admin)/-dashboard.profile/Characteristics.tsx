@@ -17,9 +17,7 @@ import { characteristicsSchema } from './schema';
 
 const schema = characteristicsSchema;
 
-type CharacteristicsTabProps = { onClose?: () => void };
-
-export const CharacteristicsTab = ({ onClose }: CharacteristicsTabProps) => {
+export const CharacteristicsTab = () => {
 	const router = useRouter();
 	const { session } = useRouteContext({ from: '/{-$locale}' });
 	const { profile } = useLoaderData({ from: '/{-$locale}/(admin)/dashboard' });
@@ -72,7 +70,9 @@ export const CharacteristicsTab = ({ onClose }: CharacteristicsTabProps) => {
 				onSuccess: () => {
 					toast.success('Profile updated');
 					router.invalidate();
-					onClose?.();
+					if (!profile?.is_onboarding_complete) {
+						router.navigate({ to: '/{-$locale}/dashboard' });
+					}
 				},
 				onError: (error) => {
 					console.error(error);

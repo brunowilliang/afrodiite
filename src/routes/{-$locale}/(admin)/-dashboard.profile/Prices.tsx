@@ -20,8 +20,6 @@ import { pricesSchema } from './schema';
 
 const schema = pricesSchema;
 
-type PricesTabProps = { onClose?: () => void };
-
 const slotLabels: Record<Slot, string> = {
 	'30m': '30 minutos',
 	'1h': '1 hora',
@@ -33,7 +31,7 @@ const slotLabels: Record<Slot, string> = {
 	outcall: 'Outcall',
 };
 
-export const PricesTab = ({ onClose }: PricesTabProps) => {
+export const PricesTab = () => {
 	const router = useRouter();
 	const { session } = useRouteContext({ from: '/{-$locale}' });
 	const { profile } = useLoaderData({ from: '/{-$locale}/(admin)/dashboard' });
@@ -59,7 +57,9 @@ export const PricesTab = ({ onClose }: PricesTabProps) => {
 				onSuccess: () => {
 					toast.success('Profile updated');
 					router.invalidate();
-					onClose?.();
+					if (!profile?.is_onboarding_complete) {
+						router.navigate({ to: '/{-$locale}/dashboard' });
+					}
 				},
 				onError: (error) => {
 					console.error(error);

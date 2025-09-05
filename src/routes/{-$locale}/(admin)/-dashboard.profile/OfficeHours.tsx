@@ -20,9 +20,7 @@ import { officeHoursSchema } from './schema';
 
 const schema = officeHoursSchema;
 
-type OfficeHoursTabProps = { onClose?: () => void };
-
-export const OfficeHoursTab = ({ onClose }: OfficeHoursTabProps) => {
+export const OfficeHoursTab = () => {
 	const router = useRouter();
 	const { session } = useRouteContext({ from: '/{-$locale}' });
 	const { profile } = useLoaderData({ from: '/{-$locale}/(admin)/dashboard' });
@@ -47,7 +45,9 @@ export const OfficeHoursTab = ({ onClose }: OfficeHoursTabProps) => {
 				onSuccess: () => {
 					toast.success('Profile updated');
 					router.invalidate();
-					onClose?.();
+					if (!profile?.is_onboarding_complete) {
+						router.navigate({ to: '/{-$locale}/dashboard' });
+					}
 				},
 				onError: (error) => {
 					console.error(error);
