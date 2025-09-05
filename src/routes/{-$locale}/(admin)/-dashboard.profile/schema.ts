@@ -70,17 +70,16 @@ export const pricesSchema = z
 				z
 					.object({
 						is_available: z.boolean(),
-						amount: z.number().min(0).optional(),
+						amount: z.number().optional(),
 						negotiated: z.boolean().optional(),
 						currency: z.literal('EUR').optional(),
 					})
 					.superRefine((val, ctx) => {
-						// Se está ativo e NÃO é negociado, então deve ter valor > 0
-						if (val.is_available && !val.negotiated && (val.amount ?? 0) <= 0) {
+						if (val.is_available && !val.negotiated && (val.amount ?? 0) < 40) {
 							ctx.addIssue({
 								code: 'custom',
 								message:
-									'Quando ativo, o valor deve ser maior que 0 ou marque "A combinar".',
+									'Quando ativo, o valor deve ser pelo menos €40 ou marque "A combinar".',
 								path: ['amount'],
 							});
 						}
@@ -89,9 +88,9 @@ export const pricesSchema = z
 		) as Record<Slot, z.ZodObject<any>>,
 	)
 	.superRefine((val, ctx) => {
-		// Pelo menos um slot deve estar ativo (com valor ou negociado)
+		// Pelo menos um slot deve estar ativo (com valor >= 40 ou negociado)
 		const anyValid = Object.values(val).some(
-			(v: any) => !!v.is_available && ((v.amount ?? 0) > 0 || !!v.negotiated),
+			(v: any) => !!v.is_available && ((v.amount ?? 0) >= 40 || !!v.negotiated),
 		);
 		if (!anyValid) {
 			const firstSlot = (SLOTS as readonly Slot[])[0];
@@ -141,7 +140,7 @@ export function isPricesComplete(profile: ProfileSelect): boolean {
 	return prices.some(
 		(p) =>
 			Boolean(p?.is_available) &&
-			((p?.amount ?? 0) > 0 || Boolean(p?.negotiated)),
+			((p?.amount ?? 0) >= 40 || Boolean(p?.negotiated)),
 	);
 }
 

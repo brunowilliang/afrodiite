@@ -490,7 +490,7 @@ export const CharacteristicsTab = () => {
 				/>
 			</div>
 
-			<Button type="submit" isLoading={updateProfile.isPending}>
+			<Button size="md" type="submit" isLoading={updateProfile.isPending}>
 				Salvar
 			</Button>
 		</Form>

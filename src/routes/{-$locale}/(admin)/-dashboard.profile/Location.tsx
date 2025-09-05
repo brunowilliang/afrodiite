@@ -168,7 +168,7 @@ export const LocationTab = () => {
 				)}
 			/>
 
-			<Button isLoading={updateProfile.isPending} type="submit">
+			<Button size="md" isLoading={updateProfile.isPending} type="submit">
 				Salvar
 			</Button>
 		</Form>

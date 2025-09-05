@@ -1,4 +1,4 @@
-import { Form } from '@heroui/react';
+import { Card, Form } from '@heroui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { I18nProvider } from '@react-aria/i18n';
 import { useMutation } from '@tanstack/react-query';
@@ -11,7 +11,9 @@ import { Controller, useForm } from 'react-hook-form';
 import z from 'zod';
 import { DEFAULT_PRICES, SLOTS } from '@/api/utils/defaults/escort';
 import type { Slot } from '@/api/utils/types/escort';
+import { Icon } from '@/components/core/Icon';
 import { Stack } from '@/components/core/Stack';
+import { Badge } from '@/components/heroui/Badge';
 import { Button } from '@/components/heroui/Button';
 import { Input } from '@/components/heroui/Input';
 import { toast } from '@/components/heroui/Toast';
@@ -116,13 +118,17 @@ export const PricesTab = () => {
 				onSubmit={form.handleSubmit(handleSubmit as any, onInvalid)}
 				className="w-full space-y-6"
 			>
-				<Stack direction="column" className="w-full gap-6">
+				<Stack className="grid w-full grid-cols-1 gap-5 md:grid-cols-2">
 					{(SLOTS as readonly Slot[]).map((slot) => {
-						const active = form.watch(`${slot}.is_available`);
+						const isActive = form.watch(`${slot}.is_available`);
 						const negotiated = form.watch(`${slot}.negotiated`);
 						return (
-							<Stack key={slot} direction="column" className="w-full gap-3">
-								<div className="flex items-center justify-between">
+							<Card key={slot} className="flex w-full flex-col gap-3 p-4">
+								<Stack direction="row" className="w-full justify-between">
+									<Badge>
+										<Icon name="Stars" variant="bulk" size="20" />
+										{slotLabels[slot]}
+									</Badge>
 									<Controller
 										control={form.control}
 										name={`${slot}.is_available` as const}
@@ -131,60 +137,63 @@ export const PricesTab = () => {
 												isSelected={field.value}
 												onValueChange={field.onChange}
 											>
-												{slotLabels[slot]}
+												{isActive ? 'Ativado' : 'Desativado'}
 											</Input.Switch>
 										)}
 									/>
-									{active && (
-										<Controller
-											control={form.control}
-											name={`${slot}.negotiated` as const}
-											render={({ field }) => (
-												<Input.Switch
-													isSelected={field.value}
-													onValueChange={field.onChange}
-													size="sm"
-												>
-													A combinar?
-												</Input.Switch>
-											)}
-										/>
-									)}
-								</div>
-								<Controller
-									control={form.control}
-									name={`${slot}.amount` as const}
-									render={({ field, fieldState }) => (
-										<Input.Number
-											isRequired={active && !negotiated}
-											label="Valor"
-											minValue={0}
-											maxValue={999999}
-											formatOptions={{
-												style: 'currency',
-												currency: 'EUR',
-												currencyDisplay: 'symbol',
-											}}
-											isDisabled={!active || negotiated}
-											value={field.value as number}
-											onValueChange={field.onChange}
-											onBlur={field.onBlur}
-											isInvalid={
-												active && !negotiated ? !!fieldState.error : false
-											}
-											errorMessage={
-												active && !negotiated
-													? fieldState.error?.message
-													: undefined
-											}
-										/>
-									)}
-								/>
-							</Stack>
+								</Stack>
+								<Stack direction="row" className="w-full gap-4">
+									<Controller
+										control={form.control}
+										name={`${slot}.amount` as const}
+										render={({ field, fieldState }) => (
+											<Input.Number
+												isRequired={isActive && !negotiated}
+												label="Valor"
+												minValue={0}
+												variant="faded"
+												maxValue={999999}
+												formatOptions={{
+													style: 'currency',
+													currency: 'EUR',
+													currencyDisplay: 'symbol',
+												}}
+												isDisabled={!isActive || negotiated}
+												value={field.value as number}
+												onValueChange={field.onChange}
+												onBlur={field.onBlur}
+												isInvalid={
+													isActive && !negotiated ? !!fieldState.error : false
+												}
+												errorMessage={
+													isActive && !negotiated
+														? fieldState.error?.message
+														: undefined
+												}
+											/>
+										)}
+									/>
+									<Controller
+										control={form.control}
+										name={`${slot}.negotiated` as const}
+										render={({ field }) => (
+											<Input.Switch
+												isSelected={isActive && field.value}
+												className="w-full"
+												onValueChange={field.onChange}
+												isDisabled={!isActive}
+												size="sm"
+											>
+												A combinar?
+											</Input.Switch>
+										)}
+									/>
+								</Stack>
+							</Card>
 						);
 					})}
 				</Stack>
-				<Button isLoading={updateProfile.isPending} type="submit">
+				<Button size="md" isLoading={updateProfile.isPending} type="submit">
 					Salvar
 				</Button>
 			</Form>
