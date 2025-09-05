@@ -1,5 +1,9 @@
-import { useMutation } from '@tanstack/react-query';
-import { createFileRoute, useLoaderData } from '@tanstack/react-router';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import {
+	createFileRoute,
+	useLoaderData,
+	useRouter,
+} from '@tanstack/react-router';
 import { useEffect, useRef } from 'react';
 import { Container, Stack } from '@/components/core/Stack';
 import { Text } from '@/components/core/Text';
@@ -14,29 +18,69 @@ export const Route = createFileRoute('/{-$locale}/(admin)/dashboard/')({
 
 function RouteComponent() {
 	const { profile } = useLoaderData({ from: '/{-$locale}/(admin)/dashboard' });
+	const queryClient = useQueryClient();
+	const router = useRouter();
 
 	const completed = computeOnboardingCompletion((profile ?? {}) as any);
 	const isOnboardingComplete = completed.every(Boolean);
 
-	// Ref para evitar loops infinitos - guarda o último valor de is_visible que foi atualizado
 	const lastVisibilityUpdate = useRef<boolean | null>(null);
+	const lastOnboardingUpdate = useRef<boolean | null>(null);
 
-	// Mutation para atualizar visibilidade do perfil
-	const updateVisibility = useMutation(
+	const updateProfile = useMutation(
 		api.queries.profile.update.mutationOptions(),
 	);
 
-	// Effect para atualizar is_visible baseado na completude do perfil
+	// Effect para atualizar is_onboarding_complete quando o onboarding é completado
 	useEffect(() => {
-		// Só executa se:
-		// 1. Perfil existe
-		// 2. Onboarding foi marcado como completo pelo menos uma vez
-		// 3. O valor de is_visible precisa ser atualizado
-		// 4. Não estamos em processo de atualização
+		if (
+			!profile?.id ||
+			updateProfile.isPending ||
+			profile?.is_onboarding_complete // Se já está marcado como completo, não precisa atualizar
+		) {
+			return;
+		}
+
+		// Se o onboarding foi completado mas ainda não foi marcado na API
+		if (
+			isOnboardingComplete &&
+			lastOnboardingUpdate.current !== isOnboardingComplete
+		) {
+			console.log('Updating onboarding completion status:', {
+				isOnboardingComplete,
+				currentStatus: profile.is_onboarding_complete,
+			});
+
+			lastOnboardingUpdate.current = isOnboardingComplete;
+
+			// Atualizar is_onboarding_complete na API
+			tryCatch(async () => {
+				await updateProfile.mutateAsync({
+					id: profile.id,
+					is_onboarding_complete: true,
+				});
+
+				// Invalidar o cache e recarregar a rota
+				await queryClient.invalidateQueries();
+				router.invalidate();
+			});
+		}
+	}, [
+		profile?.id,
+		profile?.is_onboarding_complete,
+		isOnboardingComplete,
+		updateProfile.isPending,
+		updateProfile.mutateAsync,
+		queryClient,
+		router,
+	]);
+
+	// Effect para atualizar visibilidade quando necessário
+	useEffect(() => {
 		if (
 			!profile?.id ||
 			!profile?.is_onboarding_complete ||
-			updateVisibility.isPending
+			updateProfile.isPending
 		) {
 			return;
 		}
@@ -44,9 +88,6 @@ function RouteComponent() {
 		const shouldBeVisible = isOnboardingComplete;
 		const currentVisibility = profile.is_visible;
 
-		// Só atualiza se:
-		// 1. A visibilidade atual é diferente do que deveria ser
-		// 2. Não é o mesmo valor que acabamos de atualizar (evita loop)
 		if (
 			currentVisibility !== shouldBeVisible &&
 			lastVisibilityUpdate.current !== shouldBeVisible
@@ -61,10 +102,14 @@ function RouteComponent() {
 
 			// Usar tryCatch para atualizar a visibilidade
 			tryCatch(async () => {
-				await updateVisibility.mutateAsync({
+				await updateProfile.mutateAsync({
 					id: profile.id,
 					is_visible: shouldBeVisible,
 				});
+
+				// Invalidar o cache e recarregar a rota
+				await queryClient.invalidateQueries();
+				router.invalidate();
 			});
 		}
 	}, [
@@ -72,8 +117,10 @@ function RouteComponent() {
 		profile?.is_onboarding_complete,
 		profile?.is_visible,
 		isOnboardingComplete,
-		updateVisibility.isPending,
-		updateVisibility.mutateAsync,
+		updateProfile.isPending,
+		updateProfile.mutateAsync,
+		queryClient,
+		router,
 	]);
 
 	// Lógica condicional principal
