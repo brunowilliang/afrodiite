@@ -2,11 +2,8 @@ import { faker } from '@faker-js/faker';
 import { sql } from 'drizzle-orm';
 import { drizzle } from 'drizzle-orm/libsql';
 import { reset, seed } from 'drizzle-seed';
-import {
-	DEFAULT_OFFICE_HOURS,
-	DEFAULT_PRICES,
-} from '@/api/utils/defaults/escort';
-import type { GalleryItem } from '@/api/utils/types/escort';
+import type { GalleryItem } from '@/api/utils/schemas/escort-core';
+import { createDefaults } from '@/api/utils/schemas/escort-core';
 import { env } from '@/utils/env';
 import { PortugalDistricts } from '@/utils/lists/Portugal';
 import { tryCatch } from '@/utils/tryCatch';
@@ -148,8 +145,8 @@ export async function seedDatabase() {
 				is_active: f.boolean(),
 				is_verified: f.boolean(),
 				links: f.default({ defaultValue: {} }),
-				office_hours: f.default({ defaultValue: DEFAULT_OFFICE_HOURS }),
-				prices: f.default({ defaultValue: DEFAULT_PRICES }),
+				office_hours: f.default({ defaultValue: createDefaults.officeHours() }),
+				prices: f.default({ defaultValue: createDefaults.prices() }),
 				characteristics: f.default({
 					defaultValue: {
 						gender: 'feminino',

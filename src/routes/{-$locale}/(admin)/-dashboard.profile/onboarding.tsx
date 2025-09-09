@@ -1,7 +1,7 @@
 import { Alert } from '@heroui/react';
 import { useNavigate } from '@tanstack/react-router';
 import { useMemo } from 'react';
-import type { ProfileSelect } from '@/api/utils/types/escort';
+import type { ProfileSelect } from '@/api/utils/schemas/escort-forms';
 import { Stack } from '@/components/core/Stack';
 import { Text } from '@/components/core/Text';
 import { Button } from '@/components/heroui/Button';

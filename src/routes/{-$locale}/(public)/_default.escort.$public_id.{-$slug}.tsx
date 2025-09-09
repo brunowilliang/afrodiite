@@ -7,13 +7,17 @@ import {
 	useCanGoBack,
 	useRouter,
 } from '@tanstack/react-router';
-import type { OfficeHour, Price } from '@/api/utils/types/escort';
-import { Characteristics } from '@/api/utils/types/escort';
+import type {
+	Characteristics,
+	OfficeHour,
+	Price,
+} from '@/api/utils/schemas/escort-core';
 import { Icon } from '@/components/core/Icon';
 import { ImageCarousel } from '@/components/core/ImageCarousel';
 import { Container, Stack } from '@/components/core/Stack';
 import { Text } from '@/components/core/Text';
 import { Button } from '@/components/heroui/Button';
+import { useAnalytics } from '@/hooks/useAnalytics';
 import { api } from '@/lib/api';
 import { DATA_SERVICES } from '@/utils/services';
 
@@ -53,11 +57,15 @@ function RouteComponent() {
 
 	const { public_id } = Route.useParams();
 
+	// ✅ Analytics - auto-track page view + trackEvent
+
 	const { data: profile } = useSuspenseQuery(
 		api.queries.escorts.detail.queryOptions({ input: { public_id } }),
 	);
 
 	if (!profile) throw notFound();
+
+	const { trackEvent } = useAnalytics(profile.id);
 
 	const caracteristicsTranslations: Record<keyof Characteristics, string> = {
 		gender: 'Gênero',
@@ -294,8 +302,18 @@ function RouteComponent() {
 							</Accordion>
 
 							<Stack direction="row" className="w-full gap-2">
-								<Button className="w-full">Telefone</Button>
-								<Button className="w-full">WhatsApp</Button>
+								<Button
+									className="w-full"
+									onPress={() => trackEvent('phone_click')}
+								>
+									Telefone
+								</Button>
+								<Button
+									className="w-full"
+									onPress={() => trackEvent('whatsapp_click')}
+								>
+									WhatsApp
+								</Button>
 							</Stack>
 						</Card>
 						<Card className="gap-4 p-5">

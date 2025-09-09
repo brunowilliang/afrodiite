@@ -1,3 +1,4 @@
+import { Card } from '@heroui/react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
 	createFileRoute,
@@ -7,6 +8,7 @@ import {
 import { useEffect, useRef } from 'react';
 import { Container, Stack } from '@/components/core/Stack';
 import { Text } from '@/components/core/Text';
+import { Input } from '@/components/heroui/Input';
 import { api } from '@/lib/api';
 import { tryCatch } from '@/utils/tryCatch';
 import { Onboarding } from './-dashboard.profile/onboarding';
@@ -145,19 +147,43 @@ function RouteComponent() {
 				{!isOnboardingComplete && (
 					<Onboarding profile={profile as any} mode="alerts" />
 				)}
-
+			</Stack>
+			<Stack direction="row" className="justify-between gap-4">
 				<Text size="2xl" weight="bold">
 					Olá, {profile?.name} 👋
 				</Text>
-
-				<Stack className="gap-1">
-					<Text size="xl" weight="bold">
-						Dashboard
-					</Text>
-					<Text size="md" weight="light">
-						Bem-vinda ao seu painel. (Conteúdo do dashboard aqui)
-					</Text>
-				</Stack>
+				<Text size="2xl" weight="bold">
+					<Input.Switch
+						checked={profile?.is_visible ?? false}
+						defaultChecked={profile?.is_visible}
+						onChange={() =>
+							updateProfile.mutate({
+								id: profile?.id,
+								is_visible: !profile?.is_visible,
+							})
+						}
+					>
+						Pefil Ativo
+					</Input.Switch>
+				</Text>
+			</Stack>
+			<Stack className="grid grid-cols-4 gap-4">
+				<Card className="p-4">
+					<Text>Visitações</Text>
+					<Text>100</Text>
+				</Card>
+				<Card className="p-4">
+					<Text>Visitações</Text>
+					<Text>100</Text>
+				</Card>
+				<Card className="p-4">
+					<Text>Visitações</Text>
+					<Text>100</Text>
+				</Card>
+				<Card className="p-4">
+					<Text>Visitações</Text>
+					<Text>100</Text>
+				</Card>
 			</Stack>
 		</Container>
 	);

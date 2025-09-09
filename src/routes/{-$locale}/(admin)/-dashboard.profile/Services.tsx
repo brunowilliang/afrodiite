@@ -6,7 +6,7 @@ import {
 	useRouter,
 } from '@tanstack/react-router';
 import { Fragment, useMemo, useRef, useState } from 'react';
-import type { ProfileUpdate } from '@/api/utils/types/escort';
+import type { ProfileUpdate } from '@/api/utils/schemas/escort-forms';
 import { Icon } from '@/components/core/Icon';
 import { Text } from '@/components/core/Text';
 import { Input } from '@/components/heroui/Input';

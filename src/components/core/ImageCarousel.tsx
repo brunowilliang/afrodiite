@@ -3,7 +3,7 @@ import useEmblaCarousel from 'embla-carousel-react';
 import { useCallback, useEffect, useState } from 'react';
 import { PhotoSlider } from 'react-photo-view';
 import { useStyled } from 'use-styled';
-import { GalleryItem } from '@/api/utils/types/escort';
+import { GalleryItem } from '@/api/utils/schemas/escort-core';
 import { cn } from '@/utils/cn';
 
 export const DATA_IMAGES = [

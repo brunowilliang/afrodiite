@@ -29,6 +29,20 @@
       "when": 1756787446591,
       "tag": "0003_awesome_fallen_one",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1757456475671,
+      "tag": "0004_overconfident_titanium_man",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "6",
+      "when": 1757456676312,
+      "tag": "0005_greedy_marten_broadcloak",
+      "breakpoints": true
     }
   ]
 }

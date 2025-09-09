@@ -1,7 +1,8 @@
 import { z } from 'zod';
-import { DAYS, SLOTS } from '@/api/utils/defaults/escort';
-import { escortProfileSchema } from '@/api/utils/schemas/escort';
-import type { Day, ProfileSelect, Slot } from '@/api/utils/types/escort';
+import type { Day, Slot } from '@/api/utils/schemas/escort-core';
+import { DayEnum, SlotEnum } from '@/api/utils/schemas/escort-core';
+import type { ProfileSelect } from '@/api/utils/schemas/escort-forms';
+import { escortProfileSchema } from '@/api/utils/schemas/escort-forms';
 
 export const informationSchema = escortProfileSchema.pick({
 	artist_name: true,
@@ -28,7 +29,7 @@ const timeRegex = /^([01]\d|2[0-3]):([0-5]\d)$/;
 export const officeHoursSchema = z
 	.object(
 		Object.fromEntries(
-			(DAYS as readonly Day[]).map((day) => [
+			(DayEnum.options as readonly Day[]).map((day) => [
 				day,
 				z
 					.object({
@@ -52,7 +53,7 @@ export const officeHoursSchema = z
 	.superRefine((val, ctx) => {
 		const anyActive = Object.values(val).some((v: any) => !!v.is_available);
 		if (!anyActive) {
-			const firstDay = (DAYS as readonly Day[])[0];
+			const firstDay = (DayEnum.options as readonly Day[])[0];
 			ctx.addIssue({
 				code: 'custom',
 				message: 'Ative pelo menos um dia para salvar os horários.',
@@ -65,7 +66,7 @@ export const officeHoursSchema = z
 export const pricesSchema = z
 	.object(
 		Object.fromEntries(
-			(SLOTS as readonly Slot[]).map((slot) => [
+			(SlotEnum.options as readonly Slot[]).map((slot) => [
 				slot,
 				z
 					.object({
@@ -93,7 +94,7 @@ export const pricesSchema = z
 			(v: any) => !!v.is_available && ((v.amount ?? 0) >= 40 || !!v.negotiated),
 		);
 		if (!anyValid) {
-			const firstSlot = (SLOTS as readonly Slot[])[0];
+			const firstSlot = (SlotEnum.options as readonly Slot[])[0];
 			ctx.addIssue({
 				code: 'custom',
 				message: 'Pelo menos um item deve estar ativo.',

@@ -1,7 +1,7 @@
 import { createCrud } from '@/api/db';
 import { escortProfiles } from '@/api/db/schemas';
 import { authProcedure } from '@/api/http/middlewares';
-import { profileUpdateSchema } from '@/api/utils/types/escort';
+import { profileUpdateSchema } from '@/api/utils/schemas/escort-forms';
 
 const profile = createCrud(escortProfiles);
 

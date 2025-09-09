@@ -9,8 +9,8 @@ import {
 } from '@tanstack/react-router';
 import { Controller, useForm } from 'react-hook-form';
 import z from 'zod';
-import { DAYS, DEFAULT_OFFICE_HOURS } from '@/api/utils/defaults/escort';
-import type { Day } from '@/api/utils/types/escort';
+import type { Day } from '@/api/utils/schemas/escort-core';
+import { createDefaults, DayEnum } from '@/api/utils/schemas/escort-core';
 import { Icon } from '@/components/core/Icon';
 import { Stack } from '@/components/core/Stack';
 import { Badge } from '@/components/heroui/Badge';
@@ -32,7 +32,7 @@ export const OfficeHoursTab = () => {
 	);
 
 	const handleSubmit = (values: z.infer<typeof schema>) => {
-		const office_hours = (DAYS as readonly Day[]).map((day) => ({
+		const office_hours = (DayEnum.options as readonly Day[]).map((day) => ({
 			day,
 			is_available: values[day].is_available as boolean,
 			start: values[day].start as string,
@@ -72,15 +72,17 @@ export const OfficeHoursTab = () => {
 					]),
 				)
 			: Object.fromEntries(
-					DEFAULT_OFFICE_HOURS.map(({ day, is_available, start, end }) => [
-						day,
-						{ is_available, start, end },
-					]),
+					createDefaults
+						.officeHours()
+						.map(({ day, is_available, start, end }) => [
+							day,
+							{ is_available, start, end },
+						]),
 				),
 	});
 
 	const onInvalid = () => {
-		const anySelected = (DAYS as readonly Day[]).some((d) =>
+		const anySelected = (DayEnum.options as readonly Day[]).some((d) =>
 			form.getValues(`${d}.is_available` as const),
 		);
 		if (!anySelected) {

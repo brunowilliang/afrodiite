@@ -9,7 +9,7 @@ import { nanoid } from 'nanoid';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { MAX_FILE_SIZE_GALLERY } from '@/api/http/routes/storage';
 import { buildGalleryItems } from '@/api/utils/buildGalleryItems';
-import type { GalleryItem } from '@/api/utils/types/escort';
+import type { GalleryItem } from '@/api/utils/schemas/escort-core';
 import { Stack } from '@/components/core/Stack';
 import { SortableGallery } from '@/components/dashboard/SortableGallery';
 import { Input } from '@/components/heroui/Input';

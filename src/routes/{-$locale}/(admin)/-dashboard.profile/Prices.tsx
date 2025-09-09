@@ -9,8 +9,8 @@ import {
 } from '@tanstack/react-router';
 import { Controller, useForm } from 'react-hook-form';
 import z from 'zod';
-import { DEFAULT_PRICES, SLOTS } from '@/api/utils/defaults/escort';
-import type { Slot } from '@/api/utils/types/escort';
+import type { Slot } from '@/api/utils/schemas/escort-core';
+import { createDefaults, SlotEnum } from '@/api/utils/schemas/escort-core';
 import { Icon } from '@/components/core/Icon';
 import { Stack } from '@/components/core/Stack';
 import { Badge } from '@/components/heroui/Badge';
@@ -43,7 +43,7 @@ export const PricesTab = () => {
 	);
 
 	const handleSubmit = (values: z.infer<typeof schema>) => {
-		const prices = (SLOTS as readonly Slot[]).map((slot) => ({
+		const prices = (SlotEnum.options as readonly Slot[]).map((slot) => ({
 			slot,
 			is_available: values[slot].is_available as boolean,
 			amount: (values[slot].amount as number) || 0,
@@ -89,21 +89,23 @@ export const PricesTab = () => {
 					),
 				)
 			: Object.fromEntries(
-					DEFAULT_PRICES.map(
-						({
-							slot,
-							is_available,
-							amount = 0,
-							negotiated = false,
-							currency = 'EUR',
-						}) => [slot, { is_available, amount, negotiated, currency }],
-					),
+					createDefaults
+						.prices()
+						.map(
+							({
+								slot,
+								is_available,
+								amount = 0,
+								negotiated = false,
+								currency = 'EUR',
+							}) => [slot, { is_available, amount, negotiated, currency }],
+						),
 				),
 	});
 
 	const onInvalid = () => {
 		// Show toast only when no slot is active; otherwise, let field errors guide the user
-		const anyActive = (SLOTS as readonly Slot[]).some((slot) =>
+		const anyActive = (SlotEnum.options as readonly Slot[]).some((slot) =>
 			form.getValues(`${slot}.is_available` as const),
 		);
 		if (!anyActive) {
@@ -119,7 +121,7 @@ export const PricesTab = () => {
 				className="w-full space-y-6"
 			>
 				<Stack className="grid w-full grid-cols-1 gap-5 md:grid-cols-2">
-					{(SLOTS as readonly Slot[]).map((slot) => {
+					{(SlotEnum.options as readonly Slot[]).map((slot) => {
 						const isActive = form.watch(`${slot}.is_available`);
 						const negotiated = form.watch(`${slot}.negotiated`);
 						return (

@@ -2,7 +2,7 @@ import { Card, Image } from '@heroui/react';
 import { Link } from '@tanstack/react-router';
 import { motion } from 'motion/react';
 import { useMemo, useState } from 'react';
-import { ProfileSelect } from '@/api/utils/types/escort';
+import { ProfileSelect } from '@/api/utils/schemas/escort-forms';
 import { cn } from '@/utils/cn';
 import { Icon } from '../core/Icon';
 import { Stack } from '../core/Stack';

@@ -1,5 +1,5 @@
 import { nanoid } from 'nanoid';
-import { GalleryItem } from './types/escort';
+import { GalleryItem } from './schemas/escort-core';
 
 export function buildGalleryItems(list: Partial<GalleryItem>[]): GalleryItem[] {
 	const now = new Date().toISOString();
