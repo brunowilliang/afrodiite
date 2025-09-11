@@ -1,26 +1,16 @@
+import { getWebRequest } from '@tanstack/react-start/server';
+import { geolocation } from '@vercel/functions';
 import { auth } from '@/lib/auth/auth.server';
 
-export async function createContextFromHeaders(headers: Headers) {
+export async function createContext() {
+	const { headers } = getWebRequest();
+
 	const session = await auth.api.getSession({ headers });
+	const geoData = geolocation({ headers });
 
-	const vercelCountry = headers.get('x-vercel-ip-country');
-	const vercelCity = headers.get('x-vercel-ip-city');
-	const vercelRegion = headers.get('x-vercel-ip-region');
+	console.log(geoData);
 
-	const forwardedFor = headers.get('x-forwarded-for');
-	const realIP = headers.get('x-real-ip');
-
-	const geo = {
-		country: vercelCountry,
-		city: vercelCity,
-		region: vercelRegion,
-		forwardedFor,
-		realIP,
-	};
-
-	console.log(geo);
-
-	return { session, geo };
+	return { session, geoData };
 }
 
 // export async function createContextFromRequest(request: Request) {
@@ -37,8 +27,8 @@ export async function createContextFromHeaders(headers: Headers) {
 // 	return { session };
 // }
 
-export async function createContext({ request }: { request: Request }) {
-	return createContextFromHeaders(request.headers);
-}
+// export async function createContext() {
+// 	return createContextFromHeaders();
+// }
 
-export type Context = Awaited<ReturnType<typeof createContextFromHeaders>>;
+export type Context = Awaited<ReturnType<typeof createContext>>;
