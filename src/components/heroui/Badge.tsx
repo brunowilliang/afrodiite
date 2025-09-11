@@ -1,4 +1,5 @@
 import { Chip } from '@heroui/react';
+import { ComponentProps } from 'react';
 import { useStyled } from 'use-styled';
 
 export const Badge = useStyled(Chip, {
@@ -13,3 +14,5 @@ export const Badge = useStyled(Chip, {
 		},
 	},
 });
+
+export type BadgeProps = ComponentProps<typeof Badge>;

@@ -61,6 +61,7 @@ export const Icon = useStyled('i', {
 			Info: { className: 'hgi-information-circle' },
 			Refresh: { className: 'hgi-arrow-reload-horizontal' },
 			Anonymous: { className: 'hgi-anonymous' },
+			Link: { className: 'hgi-link-square-02' },
 		},
 	},
 	defaultVariants: {

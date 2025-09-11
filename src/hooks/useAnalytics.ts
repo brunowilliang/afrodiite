@@ -5,7 +5,7 @@ import { api } from '@/lib/api';
 
 // ✅ Types direto do schema
 type TrackInput = z.infer<typeof TrackSchema.input>;
-type AnalyticsEventType = TrackInput['event_type'];
+export type AnalyticsEventType = TrackInput['event_type'];
 type AnalyticsMetadata = TrackInput['metadata'];
 
 // ✅ Session management

@@ -20,6 +20,8 @@ export const Route = createFileRoute('/{-$locale}/(admin)/dashboard')({
 
 		return { profile };
 	},
+	// ✅ SEMPRE recarregar dados do profile (sem cache)
+	staleTime: 0,
 });
 
 function RouteComponent() {

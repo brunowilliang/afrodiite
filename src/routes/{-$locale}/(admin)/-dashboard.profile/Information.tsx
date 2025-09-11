@@ -2,11 +2,7 @@ import { Form } from '@heroui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { parseDate, toCalendarDate } from '@internationalized/date';
 import { useMutation } from '@tanstack/react-query';
-import {
-	useLoaderData,
-	useRouteContext,
-	useRouter,
-} from '@tanstack/react-router';
+import { useLoaderData, useRouter } from '@tanstack/react-router';
 import { useMemo, useRef } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import slugify from 'slugify';
@@ -23,7 +19,6 @@ const schema = informationSchema;
 
 export const InformationTab = () => {
 	const router = useRouter();
-	const { session } = useRouteContext({ from: '/{-$locale}' });
 	const { profile } = useLoaderData({ from: '/{-$locale}/(admin)/dashboard' });
 
 	// Lista de nacionalidades usando o JSON local (gentílicos!)
@@ -37,40 +32,33 @@ export const InformationTab = () => {
 	}, []);
 
 	const updateProfile = useMutation(
-		api.queries.profile.update.mutationOptions(),
+		api.queries.profile.update.mutationOptions({
+			onSuccess: () => {
+				toast.success('Profile updated');
+				router.invalidate();
+				if (!profile?.is_onboarding_complete) {
+					router.navigate({ to: '/{-$locale}/dashboard' });
+				}
+			},
+			onError: (error) => {
+				const message = error instanceof Error ? error.message : String(error);
+				console.error(error);
+				if (/slug/i.test(message) && /(unique|duplic)/i.test(message)) {
+					toast.error('Slug já em uso', {
+						description: 'Escolha outro slug, ele precisa ser único.',
+					});
+					return;
+				}
+				toast.error('Error updating profile', {
+					description: message,
+				});
+			},
+		}),
 	);
 
 	const handleSubmit = (values: z.infer<typeof schema>) => {
 		console.log(values);
-		updateProfile.mutateAsync(
-			{
-				id: session?.user.id,
-				...values,
-			},
-			{
-				onSuccess: () => {
-					toast.success('Profile updated');
-					router.invalidate();
-					if (!profile?.is_onboarding_complete) {
-						router.navigate({ to: '/{-$locale}/dashboard' });
-					}
-				},
-				onError: (error) => {
-					const message =
-						error instanceof Error ? error.message : String(error);
-					console.error(error);
-					if (/slug/i.test(message) && /(unique|duplic)/i.test(message)) {
-						toast.error('Slug já em uso', {
-							description: 'Escolha outro slug, ele precisa ser único.',
-						});
-						return;
-					}
-					toast.error('Error updating profile', {
-						description: message,
-					});
-				},
-			},
-		);
+		updateProfile.mutateAsync({ ...values });
 	};
 
 	const form = useForm({

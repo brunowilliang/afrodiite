@@ -1,9 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
-import {
-	useLoaderData,
-	useRouteContext,
-	useRouter,
-} from '@tanstack/react-router';
+import { useLoaderData, useRouter } from '@tanstack/react-router';
 import { useUploadFiles } from 'better-upload/client';
 import { nanoid } from 'nanoid';
 import { useEffect, useMemo, useRef, useState } from 'react';
@@ -21,9 +17,7 @@ export const GalleryTab = () => {
 	const { control } = useUploadFiles({ route: 'gallery' });
 
 	const router = useRouter();
-	const { session } = useRouteContext({ from: '/{-$locale}' });
 	const { profile } = useLoaderData({ from: '/{-$locale}/(admin)/dashboard' });
-	const id = session?.user.id as string;
 
 	const updateProfile = useMutation(
 		api.queries.profile.update.mutationOptions(),
@@ -65,7 +59,7 @@ export const GalleryTab = () => {
 			const normalized = serverItems.slice().sort((a, b) => a.order - b.order);
 			setItems(normalized);
 		}
-	}, [id]);
+	}, [profile?.id]);
 
 	const preloadImage = (url: string) =>
 		new Promise<void>((resolve) => {
@@ -82,7 +76,7 @@ export const GalleryTab = () => {
 		);
 		if (toPersist.length) {
 			const [err] = await tryCatch(
-				updateProfile.mutateAsync({ id, gallery: toPersist } as any),
+				updateProfile.mutateAsync({ gallery: toPersist } as any),
 			);
 			if (!err) {
 				await tryCatch(router.invalidate());
@@ -139,7 +133,7 @@ export const GalleryTab = () => {
 				if (!file) return;
 
 				const ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
-				const key = `${id}/${fileId}.${ext}`;
+				const key = `${profile?.id}/${fileId}.${ext}`;
 
 				const [presignErr, presign] = await tryCatch(
 					api.client.storage.upload({
@@ -237,7 +231,7 @@ export const GalleryTab = () => {
 		const nextItems = reindex(items.filter((it) => it.id !== key));
 		setItems(nextItems);
 		const [err] = await tryCatch(
-			updateProfile.mutateAsync({ id, gallery: nextItems } as any),
+			updateProfile.mutateAsync({ gallery: nextItems } as any),
 		);
 		if (!err) {
 			await tryCatch(router.invalidate());
@@ -250,7 +244,7 @@ export const GalleryTab = () => {
 				<Input.File
 					control={control}
 					accept="image/*"
-					metadata={{ profile_id: id }}
+					metadata={{ profile_id: profile?.id }}
 					description={{
 						maxFiles: MAX_FILES,
 						maxFileSize: `${MAX_SIZE / 1024 / 1024}MB`,
@@ -287,7 +281,6 @@ export const GalleryTab = () => {
 					reorderTimerRef.current = setTimeout(async () => {
 						const [err] = await tryCatch(
 							updateProfile.mutateAsync({
-								id,
 								gallery: toPersist,
 							} as any),
 						);

@@ -9,10 +9,8 @@ import {
 	NavbarBrand,
 	NavbarContent,
 	NavbarItem,
-	useDisclosure,
 } from '@heroui/react';
 import { useLoaderData, useRouter } from '@tanstack/react-router';
-import { useThemeController } from '@/hooks/useThemeController';
 import { api } from '@/lib/api';
 import { links } from '@/utils/navigation';
 import { Icon } from '../core/Icon';
@@ -21,13 +19,6 @@ import { Logo } from '../core/Logo';
 export function Header() {
 	const router = useRouter();
 	const { profile } = useLoaderData({ from: '/{-$locale}/(admin)/dashboard' });
-
-	const { isOpen, onOpen, onOpenChange } = useDisclosure();
-	const { themeName, setThemeDirect } = useThemeController({
-		withTransition: true,
-		variant: 'circle-blur',
-		start: 'top-left',
-	});
 
 	const handleLogout = async () => {
 		await api.auth.signOut();
@@ -75,7 +66,24 @@ export function Header() {
 								aria-label="Profile Actions"
 								variant="flat"
 								selectedKeys={['2']}
+								disabledKeys={!profile?.is_visible ? ['ver-perfil'] : []}
 							>
+								<DropdownItem
+									showDivider
+									aria-label="Ver perfil"
+									key="ver-perfil"
+									onPress={() =>
+										router.navigate({
+											to: '/{-$locale}/escort/$public_id/{-$slug}',
+											params: {
+												public_id: profile?.public_id?.toString() ?? '',
+											},
+										})
+									}
+									endContent={<Icon name="Link" size="20" />}
+								>
+									Ver perfil
+								</DropdownItem>
 								<DropdownItem
 									showDivider
 									aria-label="Dashboard"
@@ -89,7 +97,9 @@ export function Header() {
 								<DropdownSection
 									title="Perfil"
 									showDivider
-									className="font-light text-foreground/50"
+									classNames={{
+										heading: 'font-light text-foreground/50',
+									}}
 								>
 									{profileSubmenu.map((s) => (
 										<DropdownItem
@@ -105,40 +115,6 @@ export function Header() {
 											{s.name}
 										</DropdownItem>
 									))}
-								</DropdownSection>
-								<DropdownSection
-									title="Theme"
-									showDivider
-									className="font-light text-foreground/50"
-								>
-									<DropdownItem
-										aria-label="Light Theme"
-										key="theme-light"
-										onPress={() => setThemeDirect('light')}
-										color={themeName === 'light' ? 'primary' : 'default'}
-										className={
-											themeName === 'light' ? 'text-primary' : 'text-foreground'
-										}
-										classNames={{
-											title: 'flex items-center gap-2',
-										}}
-									>
-										<Icon name="Sun" size="20" />
-										<span>Light</span>
-									</DropdownItem>
-									<DropdownItem
-										aria-label="Dark Theme"
-										key="theme-dark"
-										onPress={() => setThemeDirect('dark')}
-										color={themeName === 'dark' ? 'primary' : 'default'}
-										className={themeName === 'dark' ? 'text-primary' : ''}
-										classNames={{
-											title: 'flex items-center gap-2',
-										}}
-									>
-										<Icon name="Moon" size="20" />
-										<span>Dark</span>
-									</DropdownItem>
 								</DropdownSection>
 								<DropdownSection
 									title="Ações"

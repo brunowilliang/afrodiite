@@ -1,11 +1,7 @@
 import { Form } from '@heroui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
-import {
-	useLoaderData,
-	useRouteContext,
-	useRouter,
-} from '@tanstack/react-router';
+import { useLoaderData, useRouter } from '@tanstack/react-router';
 import { useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import z from 'zod';
@@ -20,7 +16,6 @@ const schema = locationSchema;
 
 export const LocationTab = () => {
 	const router = useRouter();
-	const { session } = useRouteContext({ from: '/{-$locale}' });
 	const { profile } = useLoaderData({ from: '/{-$locale}/(admin)/dashboard' });
 
 	// Lista de distritos únicos
@@ -42,31 +37,25 @@ export const LocationTab = () => {
 	};
 
 	const updateProfile = useMutation(
-		api.queries.profile.update.mutationOptions(),
+		api.queries.profile.update.mutationOptions({
+			onSuccess: () => {
+				toast.success('Profile updated');
+				router.invalidate();
+				if (!profile?.is_onboarding_complete) {
+					router.navigate({ to: '/{-$locale}/dashboard' });
+				}
+			},
+			onError: (error) => {
+				console.error(error);
+				toast.error('Error updating profile', {
+					description: error.message,
+				});
+			},
+		}),
 	);
 
 	const handleSubmit = (values: z.infer<typeof schema>) => {
-		updateProfile.mutateAsync(
-			{
-				id: session?.user.id,
-				...values,
-			},
-			{
-				onSuccess: () => {
-					toast.success('Profile updated');
-					router.invalidate();
-					if (!profile?.is_onboarding_complete) {
-						router.navigate({ to: '/{-$locale}/dashboard' });
-					}
-				},
-				onError: (error) => {
-					console.error(error);
-					toast.error('Error updating profile', {
-						description: error.message,
-					});
-				},
-			},
-		);
+		updateProfile.mutateAsync({ ...values });
 	};
 
 	const form = useForm({

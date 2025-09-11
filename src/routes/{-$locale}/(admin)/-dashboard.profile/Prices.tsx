@@ -2,11 +2,7 @@ import { Card, Form } from '@heroui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { I18nProvider } from '@react-aria/i18n';
 import { useMutation } from '@tanstack/react-query';
-import {
-	useLoaderData,
-	useRouteContext,
-	useRouter,
-} from '@tanstack/react-router';
+import { useLoaderData, useRouter } from '@tanstack/react-router';
 import { Controller, useForm } from 'react-hook-form';
 import z from 'zod';
 import type { Slot } from '@/api/utils/schemas/escort-core';
@@ -35,11 +31,24 @@ const slotLabels: Record<Slot, string> = {
 
 export const PricesTab = () => {
 	const router = useRouter();
-	const { session } = useRouteContext({ from: '/{-$locale}' });
 	const { profile } = useLoaderData({ from: '/{-$locale}/(admin)/dashboard' });
 
 	const updateProfile = useMutation(
-		api.queries.profile.update.mutationOptions(),
+		api.queries.profile.update.mutationOptions({
+			onSuccess: () => {
+				toast.success('Profile updated');
+				router.invalidate();
+				if (!profile?.is_onboarding_complete) {
+					router.navigate({ to: '/{-$locale}/dashboard' });
+				}
+			},
+			onError: (error) => {
+				console.error(error);
+				toast.error('Error updating profile', {
+					description: error.message,
+				});
+			},
+		}),
 	);
 
 	const handleSubmit = (values: z.infer<typeof schema>) => {
@@ -50,27 +59,7 @@ export const PricesTab = () => {
 			negotiated: values[slot].negotiated as boolean,
 			currency: (values[slot].currency as 'EUR') || 'EUR',
 		}));
-		updateProfile.mutateAsync(
-			{
-				id: session?.user.id,
-				prices,
-			},
-			{
-				onSuccess: () => {
-					toast.success('Profile updated');
-					router.invalidate();
-					if (!profile?.is_onboarding_complete) {
-						router.navigate({ to: '/{-$locale}/dashboard' });
-					}
-				},
-				onError: (error) => {
-					console.error(error);
-					toast.error('Error updating profile', {
-						description: error.message,
-					});
-				},
-			},
-		);
+		updateProfile.mutateAsync({ prices });
 	};
 
 	const form = useForm({

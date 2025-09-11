@@ -27,16 +27,6 @@ export const TrackSchema = {
 	}),
 };
 
-const StatsSchema = {
-	input: z.object({
-		start_date: z.iso.datetime(),
-		end_date: z.iso.datetime(),
-		event_type: z
-			.enum(['profile_view', 'whatsapp_click', 'phone_click'])
-			.optional(),
-	}),
-};
-
 const DashboardSchema = {
 	input: z.object({
 		period: z.enum(['7d', '30d', '90d']).default('30d'),
@@ -44,7 +34,6 @@ const DashboardSchema = {
 };
 
 export const analyticsRoutes = {
-	// ✅ Público - simples como escorts
 	track: publicProcedure.input(TrackSchema.input).handler(async ({ input }) => {
 		const result = await analytics.create({
 			escort_id: input.escort_id,
@@ -55,36 +44,6 @@ export const analyticsRoutes = {
 
 		return { success: true, id: result.id };
 	}),
-
-	// ✅ Autenticado - stats por período (usa context)
-	stats: authProcedure
-		.input(StatsSchema.input)
-		.handler(async ({ input, context }) => {
-			const events = await analytics.list({
-				filters: {
-					escort_id: context.session.user.id, // ✅ ID do context, não do input
-					created_at: { gte: input.start_date, lte: input.end_date },
-					...(input.event_type && { event_type: input.event_type }),
-				},
-				perPage: 10000,
-			});
-
-			// Agregar dados
-			const stats = events.results.reduce(
-				(acc: Record<string, number>, event: any) => {
-					acc[event.event_type] = (acc[event.event_type] || 0) + 1;
-					return acc;
-				},
-				{},
-			);
-
-			return Object.entries(stats).map(([event_type, count]) => ({
-				event_type,
-				count,
-			}));
-		}),
-
-	// ✅ Dashboard da escort
 	dashboard: authProcedure
 		.input(DashboardSchema.input)
 		.handler(async ({ input, context }) => {
@@ -100,7 +59,7 @@ export const analyticsRoutes = {
 					escort_id: context.session.user.id,
 					created_at: { gte: startDate },
 				},
-				perPage: 10000,
+				perPage: 100000,
 			});
 
 			// Agregar dados

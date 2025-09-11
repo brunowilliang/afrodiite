@@ -1,12 +1,7 @@
 import { Card, Divider } from '@heroui/react';
 import { useMutation } from '@tanstack/react-query';
-import {
-	useLoaderData,
-	useRouteContext,
-	useRouter,
-} from '@tanstack/react-router';
+import { useLoaderData, useRouter } from '@tanstack/react-router';
 import { Fragment, useMemo, useRef, useState } from 'react';
-import type { ProfileUpdate } from '@/api/utils/schemas/escort-forms';
 import { Icon } from '@/components/core/Icon';
 import { Text } from '@/components/core/Text';
 import { Input } from '@/components/heroui/Input';
@@ -23,11 +18,18 @@ export const ServicesTab = () => {
 		label: string;
 		description: string;
 	} | null>(null);
-	const { session } = useRouteContext({ from: '/{-$locale}' });
 	const { profile } = useLoaderData({ from: '/{-$locale}/(admin)/dashboard' });
 
 	const updateProfile = useMutation(
-		api.queries.profile.update.mutationOptions(),
+		api.queries.profile.update.mutationOptions({
+			onSuccess: () => {
+				router.invalidate();
+			},
+			onError: () => {
+				setSelected((prev) => prev);
+				toast.error('Falha ao salvar serviços');
+			},
+		}),
 	);
 
 	const initialSelectedIds = useMemo(() => {
@@ -53,22 +55,7 @@ export const ServicesTab = () => {
 			if (checked) next.add(id);
 			else next.delete(id);
 
-			updateProfile.mutate(
-				{
-					id: session?.user.id,
-					services: Array.from(next),
-				} as ProfileUpdate,
-				{
-					onError: () => {
-						// rollback
-						setSelected(prev);
-						toast.error('Falha ao salvar serviços');
-					},
-					onSuccess: () => {
-						router.invalidate();
-					},
-				},
-			);
+			updateProfile.mutate({ services: Array.from(next) });
 			return next;
 		});
 	};
@@ -93,7 +80,7 @@ export const ServicesTab = () => {
 								className="h-full pt-1"
 								onClick={(e) => {
 									e.preventDefault();
-									e.stopPropagation(); // não toggle
+									e.stopPropagation();
 									modalRef.current?.open();
 									setModalService({ label, description });
 								}}

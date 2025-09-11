@@ -1,11 +1,7 @@
 import { Form } from '@heroui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
-import {
-	useLoaderData,
-	useRouteContext,
-	useRouter,
-} from '@tanstack/react-router';
+import { useLoaderData, useRouter } from '@tanstack/react-router';
 
 import { Controller, useForm } from 'react-hook-form';
 import z from 'zod';
@@ -19,7 +15,6 @@ const schema = characteristicsSchema;
 
 export const CharacteristicsTab = () => {
 	const router = useRouter();
-	const { session } = useRouteContext({ from: '/{-$locale}' });
 	const { profile } = useLoaderData({ from: '/{-$locale}/(admin)/dashboard' });
 
 	const languageOptions = [
@@ -56,32 +51,28 @@ export const CharacteristicsTab = () => {
 	].sort();
 
 	const updateProfile = useMutation(
-		api.queries.profile.update.mutationOptions(),
+		api.queries.profile.update.mutationOptions({
+			onSuccess: () => {
+				toast.success('Profile updated');
+				router.invalidate();
+				if (!profile?.is_onboarding_complete) {
+					router.navigate({ to: '/{-$locale}/dashboard' });
+				}
+			},
+			onError: (error) => {
+				console.error(error);
+				toast.error('Error updating profile', {
+					description: error.message,
+				});
+			},
+		}),
 	);
 
 	const handleSubmit = (values: z.infer<typeof schema>) => {
 		console.log(values);
-		updateProfile.mutateAsync(
-			{
-				id: session?.user.id,
-				characteristics: values.characteristics,
-			},
-			{
-				onSuccess: () => {
-					toast.success('Profile updated');
-					router.invalidate();
-					if (!profile?.is_onboarding_complete) {
-						router.navigate({ to: '/{-$locale}/dashboard' });
-					}
-				},
-				onError: (error) => {
-					console.error(error);
-					toast.error('Error updating profile', {
-						description: error.message,
-					});
-				},
-			},
-		);
+		updateProfile.mutateAsync({
+			characteristics: values.characteristics,
+		});
 	};
 
 	const form = useForm({
