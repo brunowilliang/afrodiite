@@ -1,0 +1,1 @@
+ALTER TABLE `escort_profiles` ADD `blocked_countries` text DEFAULT '[]';

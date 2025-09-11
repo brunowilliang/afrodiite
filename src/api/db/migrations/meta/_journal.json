@@ -43,6 +43,13 @@
       "when": 1757456676312,
       "tag": "0005_greedy_marten_broadcloak",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "6",
+      "when": 1757610071607,
+      "tag": "0006_tricky_meltdown",
+      "breakpoints": true
     }
   ]
 }

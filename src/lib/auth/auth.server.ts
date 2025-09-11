@@ -18,7 +18,7 @@ export type IUser = typeof auth.$Infer.Session.user & {
 };
 
 export const stripeClient = new Stripe(env.STRIPE_SECRET_KEY, {
-	apiVersion: '2025-07-30.basil',
+	apiVersion: '2025-08-27.basil',
 });
 
 export const auth = betterAuth({

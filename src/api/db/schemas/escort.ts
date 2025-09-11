@@ -138,6 +138,10 @@ export const escortProfiles = sqliteTable('escort_profiles', {
 
 	gallery: text('gallery', { mode: 'json' }).$type<GalleryItem[]>().default([]),
 
+	blocked_countries: text('blocked_countries', { mode: 'json' })
+		.$type<string[]>()
+		.default([]),
+
 	created_at: integer('created_at', { mode: 'timestamp' }).$defaultFn(
 		() => /* @__PURE__ */ new Date(),
 	),

@@ -8,6 +8,8 @@ const escorts = createCrud(escortProfiles, {
 	searchFields: ['artist_name', 'city', 'district'],
 	allowedFilters: ['artist_name', 'city', 'district'],
 	scopeFilters: {
+		is_onboarding_complete: () =>
+			eq(escortProfiles.is_onboarding_complete, true),
 		is_visible: () => eq(escortProfiles.is_visible, true),
 	},
 });
@@ -31,13 +33,20 @@ export const escortRoutes = {
 
 		return profile;
 	}),
-	list: publicProcedure.input(List.input).handler(async ({ input }) => {
-		const profiles = await escorts.list({
-			page: input.page,
-			perPage: 20,
-			search: input.search,
-		});
+	list: publicProcedure
+		.input(List.input)
+		.handler(async ({ input, context }) => {
+			const country = context.geoData.country;
 
-		return profiles;
-	}),
+			const profiles = await escorts.list({
+				page: input.page,
+				perPage: 20,
+				search: input.search,
+				filters: {
+					blocked_countries: { notIn: [country] } as any,
+				},
+			});
+
+			return profiles;
+		}),
 };
