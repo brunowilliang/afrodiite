@@ -6,7 +6,7 @@ import { publicProcedure } from '@/api/http/middlewares';
 
 const escorts = createCrud(escortProfiles, {
 	searchFields: ['artist_name', 'city', 'district'],
-	allowedFilters: ['artist_name', 'city', 'district'],
+	allowedFilters: ['artist_name', 'city', 'district', 'blocked_countries'],
 	scopeFilters: {
 		is_onboarding_complete: () =>
 			eq(escortProfiles.is_onboarding_complete, true),
@@ -43,7 +43,9 @@ export const escortRoutes = {
 				perPage: 20,
 				search: input.search,
 				filters: {
-					blocked_countries: { notIn: [country] } as any,
+					blocked_countries: {
+						notLike: `%"${country}"%`,
+					},
 				},
 			});
 
