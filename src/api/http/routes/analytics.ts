@@ -29,7 +29,7 @@ export const TrackSchema = {
 
 const StatsSchema = {
 	input: z.object({
-		period: z.enum(['7d', '14d', '30d', '60d', '90d']).default('30d'),
+		period: z.enum(['7d', '14d', '30d', '60d', '90d']).default('7d'),
 	}),
 };
 

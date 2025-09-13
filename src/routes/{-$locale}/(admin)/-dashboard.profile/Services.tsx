@@ -62,7 +62,7 @@ export const ServicesTab = () => {
 
 	return (
 		<div className="w-full space-y-3">
-			<div className="grid w-full grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
+			<div className="grid w-full grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-2">
 				{DATA_SERVICES.map(({ id, label, description, short_description }) => (
 					<Fragment key={id}>
 						<Card

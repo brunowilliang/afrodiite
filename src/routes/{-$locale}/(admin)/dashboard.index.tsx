@@ -7,9 +7,11 @@ import {
 import { useEffect, useRef, useState } from 'react';
 import { IStats } from '@/api/http/routes/analytics';
 import { CardChart } from '@/components/charts/CardChart';
+import { Icon } from '@/components/core/Icon';
 import { Container, Stack } from '@/components/core/Stack';
 import { Text } from '@/components/core/Text';
-import { Input } from '@/components/heroui/Input';
+import { Badge } from '@/components/heroui/Badge';
+import { Tabs } from '@/components/heroui/Tabs';
 import { api } from '@/lib/api';
 import { tryCatch } from '@/utils/tryCatch';
 import { Onboarding } from './-dashboard.profile/onboarding';
@@ -28,7 +30,7 @@ function RouteComponent() {
 	const isOnboardingComplete = completed.every(Boolean);
 
 	const lastOnboardingUpdate = useRef<boolean | null>(null);
-	const visibilityRef = useRef(profile?.is_visible ?? false);
+	// const visibilityRef = useRef(profile?.is_visible ?? false);
 
 	const [period, setPeriod] = useState<IStats>('7d');
 
@@ -37,8 +39,6 @@ function RouteComponent() {
 			input: { period },
 		}),
 	);
-
-	console.log(JSON.stringify(stats, null, 2));
 
 	const updateProfile = useMutation(
 		api.queries.profile.update.mutationOptions({
@@ -157,139 +157,121 @@ function RouteComponent() {
 
 	// Se onboarding foi completado, mostrar dashboard
 	return (
-		<Container>
+		<Stack>
 			<Stack className="gap-10">
 				{!isOnboardingComplete && (
 					<Onboarding profile={profile as any} mode="alerts" />
 				)}
 			</Stack>
-			<Stack direction="row" className="items-center justify-between gap-4">
-				<Text size="2xl" weight="bold">
-					Olá, {profile?.name} 👋
-				</Text>
+			<Stack className="gap-5">
+				{/* header */}
+				<Stack direction="column" className="justify-between gap-5">
+					<Badge>
+						<Icon name="Stars" variant="bulk" size="20" />
+						Dashboard
+					</Badge>
 
-				<Stack direction="row" className="w-1/2 items-center gap-4">
-					<Input.Select
-						label="Selecione o período"
-						aria-label="Selecionar período de Stats"
-						size="sm"
-						isClearable={false}
-						value={period}
-						selectedKeys={[period]}
-						onChange={(e) => {
-							setPeriod(e.target.value as '7d' | '30d' | '90d');
+					<Tabs
+						aria-label="Filter Stats"
+						selectedKey={period}
+						onSelectionChange={(key) => {
+							setPeriod(key as IStats);
 						}}
 					>
-						<Input.Select.Item key="7d">7 dias</Input.Select.Item>
-						<Input.Select.Item key="30d">30 dias</Input.Select.Item>
-						<Input.Select.Item key="90d">90 dias</Input.Select.Item>
-					</Input.Select>
-
-					<Input.Switch
-						className="w-full"
-						isSelected={visibilityRef.current}
-						onValueChange={(isVisible) => {
-							visibilityRef.current = isVisible;
-							updateProfile.mutate({
-								is_visible: isVisible,
-							});
-						}}
-					>
-						Perfil Ativo
-					</Input.Switch>
+						<Tabs.Tab key="7d" title="7 dias" />
+						<Tabs.Tab key="30d" title="30 dias" />
+						<Tabs.Tab key="90d" title="90 dias" />
+					</Tabs>
 				</Stack>
-			</Stack>
-			{/* Primeira linha: Métricas de Engajamento */}
-			<Stack className="grid grid-cols-3 gap-4">
-				<CardChart
-					title="Visitas no perfil"
-					value={stats?.summary.views || 0}
-					isLoading={isStatsLoading}
-					modalTitle="Visualizações"
-					modalText="Visualizações"
-				/>
-				<CardChart
-					title="Cliques no WhatsApp"
-					value={stats?.summary.whatsapp_clicks || 0}
-					isLoading={isStatsLoading}
-					modalTitle="Cliques WhatsApp"
-					modalText="Cliques WhatsApp"
-				/>
-				<CardChart
-					title="Cliques no Telefone"
-					value={stats?.summary.phone_clicks || 0}
-					isLoading={isStatsLoading}
-					modalTitle="Cliques Telefone"
-					modalText="Cliques Telefone"
-				/>
-			</Stack>
 
-			{/* Segunda linha: Performance e Conversão */}
-			<Stack className="grid grid-cols-3 gap-4">
-				<CardChart
-					title="Taxa de conversão"
-					value={
-						stats?.summary.conversion_rate
-							? `${stats.summary.conversion_rate}%`
-							: '0%'
-					}
-					isLoading={isStatsLoading}
-					modalTitle="Taxa Conversão"
-					modalText="Taxa Conversão"
-				/>
-				<CardChart
-					title="Melhor Horário"
-					value={stats?.performance.insights.peak_hours[0]?.hour || '-'}
-					isLoading={isStatsLoading}
-					modalTitle="Horários de Pico"
-					modalText={`Top 3: ${stats?.performance.insights.peak_hours.map((h) => h.hour).join(', ') || 'Sem dados'}`}
-				/>
-				<CardChart
-					title="Melhor Dia"
-					value={stats?.performance.insights.best_days[0]?.day || '-'}
-					isLoading={isStatsLoading}
-					modalTitle="Dias com Mais Atividade"
-					modalText={`Top 3: ${stats?.performance.insights.best_days.map((d) => d.day).join(', ') || 'Sem dados'}`}
-				/>
-			</Stack>
-
-			{/* Terceira linha: Ranking e Dispositivos */}
-			<Stack className="grid grid-cols-3 gap-4">
-				<CardChart
-					title="Ranking Geral"
-					value={stats?.ranking.position ? `#${stats.ranking.position}` : '-'}
-					isLoading={isStatsLoading}
-					modalTitle="Posição no Ranking"
-					modalText={
-						stats?.ranking.is_top_30
-							? 'Você está no Top 30! 🏆'
-							: `Você está na posição #${stats?.ranking.position}`
-					}
-				/>
-				<CardChart
-					title="Acessos Mobile"
-					value={`${stats?.devices.mobile.percentage || '0'}%`}
-					isLoading={isStatsLoading}
-					modalTitle="Dispositivos Móveis"
-					modalText={`${stats?.devices.mobile.count || 0} acessos via mobile (${stats?.devices.mobile.percentage || 0}%)`}
-				/>
-				<CardChart
-					title="Acessos Desktop"
-					value={`${stats?.devices.desktop.percentage || '0'}%`}
-					isLoading={isStatsLoading}
-					modalTitle="Dispositivos Desktop"
-					modalText={`${stats?.devices.desktop.count || 0} acessos via desktop (${stats?.devices.desktop.percentage || 0}%)`}
-				/>
+				<Stack className="gap-4">
+					<Stack className="grid grid-cols-3 gap-4">
+						<CardChart
+							title="Visitas no perfil"
+							value={stats?.summary.views || 0}
+							isLoading={isStatsLoading}
+							modalTitle="Visualizações"
+							modalText="Visualizações"
+						/>
+						<CardChart
+							title="Cliques no WhatsApp"
+							value={stats?.summary.whatsapp_clicks || 0}
+							isLoading={isStatsLoading}
+							modalTitle="Cliques WhatsApp"
+							modalText="Cliques WhatsApp"
+						/>
+						<CardChart
+							title="Cliques no Telefone"
+							value={stats?.summary.phone_clicks || 0}
+							isLoading={isStatsLoading}
+							modalTitle="Cliques Telefone"
+							modalText="Cliques Telefone"
+						/>
+					</Stack>
+					<Stack className="grid grid-cols-2 gap-4">
+						<CardChart
+							title="Ranking Geral"
+							value={
+								stats?.ranking.position ? `#${stats.ranking.position}` : '-'
+							}
+							isLoading={isStatsLoading}
+							modalTitle="Posição no Ranking"
+							modalText={
+								stats?.ranking.is_top_30
+									? 'Você está no Top 30! 🏆'
+									: `Você está na posição #${stats?.ranking.position}`
+							}
+						/>
+						<CardChart
+							title="Taxa de conversão"
+							value={
+								stats?.summary.conversion_rate
+									? `${stats.summary.conversion_rate}%`
+									: '0%'
+							}
+							isLoading={isStatsLoading}
+							modalTitle="Taxa Conversão"
+							modalText="Taxa Conversão"
+						/>
+						<CardChart
+							title="Melhor Horário"
+							value={stats?.performance.insights.peak_hours[0]?.hour || '-'}
+							isLoading={isStatsLoading}
+							modalTitle="Horários de Pico"
+							modalText={`Top 3: ${stats?.performance.insights.peak_hours.map((h) => h.hour).join(', ') || 'Sem dados'}`}
+						/>
+						<CardChart
+							title="Melhor Dia"
+							value={stats?.performance.insights.best_days[0]?.day || '-'}
+							isLoading={isStatsLoading}
+							modalTitle="Dias com Mais Atividade"
+							modalText={`Top 3: ${stats?.performance.insights.best_days.map((d) => d.day).join(', ') || 'Sem dados'}`}
+						/>
+						<CardChart
+							title="Acessos Mobile"
+							value={`${stats?.devices.mobile.percentage || '0'}%`}
+							isLoading={isStatsLoading}
+							modalTitle="Dispositivos Móveis"
+							modalText={`${stats?.devices.mobile.count || 0} acessos via mobile (${stats?.devices.mobile.percentage || 0}%)`}
+						/>
+						<CardChart
+							title="Acessos Desktop"
+							value={`${stats?.devices.desktop.percentage || '0'}%`}
+							isLoading={isStatsLoading}
+							modalTitle="Dispositivos Desktop"
+							modalText={`${stats?.devices.desktop.count || 0} acessos via desktop (${stats?.devices.desktop.percentage || 0}%)`}
+						/>
+					</Stack>
+				</Stack>
 			</Stack>
 
 			{/* Seção de Performance Detalhada */}
-			{stats?.performance && (
+			{/* {stats?.performance && (
 				<Stack className="gap-6">
 					<Text size="xl" weight="bold">
 						Performance Detalhada
 					</Text>
 
-					{/* Top 5 Horários */}
 					<Stack className="gap-4">
 						<Text size="lg" weight="bold">
 							🕐 Melhores Horários
@@ -312,7 +294,6 @@ function RouteComponent() {
 						</Stack>
 					</Stack>
 
-					{/* Performance por Dia da Semana */}
 					<Stack className="gap-4">
 						<Text size="lg" weight="bold">
 							📅 Performance por Dia
@@ -331,7 +312,7 @@ function RouteComponent() {
 						</Stack>
 					</Stack>
 				</Stack>
-			)}
-		</Container>
+			)} */}
+		</Stack>
 	);
 }

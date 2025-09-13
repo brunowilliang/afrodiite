@@ -4,7 +4,7 @@ export const Logo = useStyled('img', {
 	base: {
 		src: '/assets/logo.svg',
 		alt: 'Logo',
-		className: 'size-28',
+		className: 'w-30',
 	},
 	variants: {
 		size: {

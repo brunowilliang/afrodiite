@@ -10,8 +10,13 @@
   * {
     @apply border-border outline-ring/50;
   }
-  body {
-    @apply bg-background text-foreground;
+  html {
+    min-height: 100vh;
+    background-color: var(--color-background) !important;
+    color: var(--color-foreground) !important;
+    scrollbar-gutter: stable;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 }
 

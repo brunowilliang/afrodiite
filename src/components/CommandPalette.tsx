@@ -2,9 +2,9 @@ import { useRouter } from '@tanstack/react-router';
 import { type RefObject, useState } from 'react';
 import { Badge } from '@/components/core/Badge';
 import { Input } from '@/components/core/Input';
-import { Modal, type ModalRef } from '@/components/core/Modal';
 import { Navigation } from '@/components/core/Navigation';
 import { Stack } from '@/components/core/Stack';
+import { Modal, type ModalRef } from '@/components/heroui/Modal';
 import { NavigationMenu } from '@/utils/data';
 import { Text } from './core/Text';
 
@@ -32,8 +32,7 @@ export const CommandPalette = ({ ref }: LocationSelectorProps) => {
 			ref={ref}
 			onClose={() => setSearchTerm('')}
 			size="lg"
-			position="top"
-			topOffset="top-30"
+			placement="top"
 		>
 			<Input
 				placeholder="Pesquise por região, cidade ou modelo"

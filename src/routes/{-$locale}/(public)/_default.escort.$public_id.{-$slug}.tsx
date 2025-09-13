@@ -16,6 +16,7 @@ import { Button } from '@/components/heroui/Button';
 import { Modal, ModalRef } from '@/components/heroui/Modal';
 import { useAnalytics } from '@/hooks/useAnalytics';
 import { api } from '@/lib/api';
+import { Reviews } from '../../../components/heroui/Reviews';
 import { AccordionPrice } from './-_default.escort.$public_id.{-$slug}/AccordionPrice';
 import { CharacteristicsCard } from './-_default.escort.$public_id.{-$slug}/CharacteristicsCard';
 import { OfficeHoursCard } from './-_default.escort.$public_id.{-$slug}/OfficeHoursCard';
@@ -138,6 +139,17 @@ function RouteComponent() {
 							setModalService(service);
 						}}
 					/>
+
+					<Reviews>
+						<Reviews.Header />
+						<Reviews.Card
+							reviewer_name="John Doe"
+							created_at={new Date()}
+							rating={4}
+							title="Review title"
+							comment="Review content"
+						/>
+					</Reviews>
 				</div>
 				<div className="col-span-full lg:col-span-4">
 					<Stack className="hidden gap-4 lg:sticky lg:top-20 lg:flex">

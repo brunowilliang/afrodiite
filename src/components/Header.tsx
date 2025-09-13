@@ -81,7 +81,7 @@ export function Header() {
 										? 'danger'
 										: 'foreground'
 							}
-							href="#"
+							href="/{-$locale}"
 							size="lg"
 						>
 							{item}

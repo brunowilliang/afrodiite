@@ -36,7 +36,7 @@ export const escortRoutes = {
 	list: publicProcedure
 		.input(List.input)
 		.handler(async ({ input, context }) => {
-			const country = context.geoData.country;
+			const country = context.location.country;
 
 			const profiles = await escorts.list({
 				page: input.page,

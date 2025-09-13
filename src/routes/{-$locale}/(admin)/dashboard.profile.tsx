@@ -1,8 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { z } from 'zod';
 import { Icon } from '@/components/core/Icon';
-import { Container, Stack } from '@/components/core/Stack';
-import { Text } from '@/components/core/Text';
+import { Stack } from '@/components/core/Stack';
 import { Badge } from '@/components/heroui/Badge';
 import { CharacteristicsTab } from './-dashboard.profile/Characteristics';
 import { GalleryTab } from './-dashboard.profile/Gallery';
@@ -33,75 +32,70 @@ function RouteComponent() {
 	const { tab } = Route.useSearch();
 
 	return (
-		<Container>
-			<Stack className="gap-10">
-				<Text size="2xl" weight="bold">
-					Meu Perfil
-				</Text>
-				{tab === 'information' && (
-					<Stack className="gap-5">
-						<Badge>
-							<Icon name="Stars" variant="bulk" size="20" />
-							Informações
-						</Badge>
-						<InformationTab />
-					</Stack>
-				)}
-				{tab === 'location' && (
-					<Stack className="gap-5">
-						<Badge>
-							<Icon name="Stars" variant="bulk" size="20" />
-							Localização
-						</Badge>
-						<LocationTab />
-					</Stack>
-				)}
-				{tab === 'characteristics' && (
-					<Stack className="gap-5">
-						<Badge>
-							<Icon name="Stars" variant="bulk" size="20" />
-							Características
-						</Badge>
-						<CharacteristicsTab />
-					</Stack>
-				)}
-				{tab === 'schedule' && (
-					<Stack className="gap-5">
-						<Badge>
-							<Icon name="Stars" variant="bulk" size="20" />
-							Horários
-						</Badge>
-						<OfficeHoursTab />
-					</Stack>
-				)}
-				{tab === 'prices' && (
-					<Stack className="gap-5">
-						<Badge>
-							<Icon name="Stars" variant="bulk" size="20" />
-							Preços
-						</Badge>
-						<PricesTab />
-					</Stack>
-				)}
-				{tab === 'services' && (
-					<Stack className="gap-5">
-						<Badge>
-							<Icon name="Stars" variant="bulk" size="20" />
-							Serviços
-						</Badge>
-						<ServicesTab />
-					</Stack>
-				)}
-				{tab === 'gallery' && (
-					<Stack className="gap-5">
-						<Badge>
-							<Icon name="Stars" variant="bulk" size="20" />
-							Galeria
-						</Badge>
-						<GalleryTab />
-					</Stack>
-				)}
-			</Stack>
-		</Container>
+		<Stack className="gap-10">
+			{tab === 'information' && (
+				<Stack className="gap-5">
+					<Badge>
+						<Icon name="Stars" variant="bulk" size="20" />
+						Informações
+					</Badge>
+					<InformationTab />
+				</Stack>
+			)}
+			{tab === 'location' && (
+				<Stack className="gap-5">
+					<Badge>
+						<Icon name="Stars" variant="bulk" size="20" />
+						Localização
+					</Badge>
+					<LocationTab />
+				</Stack>
+			)}
+			{tab === 'characteristics' && (
+				<Stack className="gap-5">
+					<Badge>
+						<Icon name="Stars" variant="bulk" size="20" />
+						Características
+					</Badge>
+					<CharacteristicsTab />
+				</Stack>
+			)}
+			{tab === 'schedule' && (
+				<Stack className="gap-5">
+					<Badge>
+						<Icon name="Stars" variant="bulk" size="20" />
+						Horários
+					</Badge>
+					<OfficeHoursTab />
+				</Stack>
+			)}
+			{tab === 'prices' && (
+				<Stack className="gap-5">
+					<Badge>
+						<Icon name="Stars" variant="bulk" size="20" />
+						Preços
+					</Badge>
+					<PricesTab />
+				</Stack>
+			)}
+			{tab === 'services' && (
+				<Stack className="gap-5">
+					<Badge>
+						<Icon name="Stars" variant="bulk" size="20" />
+						Serviços
+					</Badge>
+					<ServicesTab />
+				</Stack>
+			)}
+			{tab === 'gallery' && (
+				<Stack className="gap-5">
+					<Badge>
+						<Icon name="Stars" variant="bulk" size="20" />
+						Galeria
+					</Badge>
+					<GalleryTab />
+				</Stack>
+			)}
+		</Stack>
 	);
 }

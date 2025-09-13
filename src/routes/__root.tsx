@@ -1,7 +1,6 @@
 /// <reference types="vite/client" />
 
-import { HeroUIProvider, ToastProvider } from '@heroui/react';
-import { I18nProvider } from '@react-aria/i18n';
+import { ToastProvider } from '@heroui/react';
 import type { QueryClient } from '@tanstack/react-query';
 import {
 	createRootRouteWithContext,
@@ -13,6 +12,7 @@ import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
 import { PhotoProvider } from 'react-photo-view';
 import reactPhotoViewCss from 'react-photo-view/dist/react-photo-view.css?url';
 import { api } from '@/lib/api';
+import { HeroProvider } from '@/providers/HeroUIProvider';
 import { ThemeProvider } from '@/providers/ThemeProvider';
 import appCss from '@/styles/app.css?url';
 import { seo } from '@/utils/seo';
@@ -104,11 +104,11 @@ export const Route = createRootRouteWithContext<RootContext>()({
 
 function RootDocument() {
 	return (
-		<html lang="pt-PT" className="bg-background" suppressHydrationWarning>
+		<html lang="pt-PT" suppressHydrationWarning>
 			<head>
 				<HeadContent />
 			</head>
-			<body className="antialiased">
+			<body>
 				<ThemeProvider
 					attribute="class"
 					defaultTheme="dark"
@@ -117,16 +117,14 @@ function RootDocument() {
 					storageKey="afrodite-theme"
 				>
 					<PhotoProvider>
-						<HeroUIProvider>
-							<I18nProvider locale="pt-PT">
-								<Outlet />
-								<ToastProvider
-									toastOffset={20}
-									maxVisibleToasts={2}
-									placement="top-center"
-								/>
-							</I18nProvider>
-						</HeroUIProvider>
+						<HeroProvider>
+							<Outlet />
+							<ToastProvider
+								toastOffset={20}
+								maxVisibleToasts={2}
+								placement="top-center"
+							/>
+						</HeroProvider>
 					</PhotoProvider>
 				</ThemeProvider>
 				<TanStackRouterDevtools position="bottom-right" />

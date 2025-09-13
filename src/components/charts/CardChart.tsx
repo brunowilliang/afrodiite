@@ -2,7 +2,6 @@ import { useRef } from 'react';
 import { Card } from '@/components/heroui/Card';
 import { Icon } from '../core/Icon';
 import { Skeleton } from '../core/Skeleton';
-import { Text } from '../core/Text';
 import { Modal, ModalRef } from '../heroui/Modal';
 
 type Props = {
@@ -18,9 +17,9 @@ export const CardChart = (props: Props) => {
 
 	return (
 		<>
-			<Card radius="md">
+			<Card radius="md" className="bg-default/10" shadow="none">
 				<Card.Header className="items-center gap-2 pb-0">
-					<Text weight="normal">{props.title}</Text>
+					<p className="font-light text-default-500">{props.title}</p>
 
 					<Icon
 						name="Info"
@@ -34,9 +33,7 @@ export const CardChart = (props: Props) => {
 					{props.isLoading ? (
 						<Skeleton className="h-8 w-1/2" />
 					) : (
-						<Text size="2xl" weight="bold">
-							{props.value}
-						</Text>
+						<p className="font-bold text-2xl text-default-600">{props.value}</p>
 					)}
 				</Card.Body>
 			</Card>
