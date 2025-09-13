@@ -5,7 +5,7 @@ import {
 	createUpdateSchema,
 } from 'drizzle-zod';
 import { z } from 'zod';
-import { escortProfiles } from '@/api/db/schemas';
+import { escortProfiles } from '@/api/database/schemas';
 import {
 	CharacteristicsSchema,
 	GallerySchema,

@@ -1,7 +1,7 @@
 import { eq } from 'drizzle-orm';
 import { z } from 'zod';
-import { createCrud } from '@/api/db';
-import { escortProfiles } from '@/api/db/schemas';
+import { createCrud } from '@/api/database';
+import { escortProfiles } from '@/api/database/schemas';
 import { publicProcedure } from '@/api/http/middlewares';
 
 const escorts = createCrud(escortProfiles, {

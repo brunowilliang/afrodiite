@@ -1,5 +1,5 @@
-import { createCrud } from '@/api/db';
-import { escortProfiles } from '@/api/db/schemas';
+import { createCrud } from '@/api/database';
+import { escortProfiles } from '@/api/database/schemas';
 import { authProcedure } from '@/api/http/middlewares';
 import { profileUpdateSchema } from '@/api/utils/schemas/escort-forms';
 

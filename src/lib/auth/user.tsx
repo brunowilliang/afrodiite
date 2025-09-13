@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { db } from '@/api/db';
-import { escortProfiles } from '@/api/db/schemas';
+import { db } from '@/api/database';
+import { escortProfiles } from '@/api/database/schemas';
 import { stripeClient } from './auth.server';
 
 const CreateSchema = z.object({

@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { createCrud } from '@/api/db';
-import { analyticsEvents } from '@/api/db/schemas/analytics';
+import { createCrud } from '@/api/database';
+import { analyticsEvents } from '@/api/database/schemas/analytics';
 import { authProcedure, publicProcedure } from '@/api/http/middlewares';
 
 // ✅ Drizzle-CRUD setup

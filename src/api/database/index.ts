@@ -1,7 +1,7 @@
 import { drizzleCrud } from '@bwg-labs/drizzle-crud';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { drizzle } from 'drizzle-orm/libsql';
-import * as schemas from '@/api/db/schemas';
+import * as schemas from '@/api/database/schemas';
 import { env } from '@/utils/env';
 
 export const db = drizzle({
