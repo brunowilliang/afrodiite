@@ -74,6 +74,7 @@
         "noLabelWithoutControl": "off"
       },
       "suspicious": {
+        "noUnknownAtRules": "off",
         "useIterableCallbackReturn": "off",
         "noShadowRestrictedNames": "off",
         "noArrayIndexKey": "off",

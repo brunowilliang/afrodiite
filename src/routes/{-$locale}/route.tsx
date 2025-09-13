@@ -1,7 +1,6 @@
 import { createFileRoute, Outlet } from '@tanstack/react-router';
 import { useMemo } from 'react';
 import z from 'zod';
-import { NotFound } from '@/components/NotFound';
 import i18n from '@/i18n';
 
 export const localeSchema = z.object({

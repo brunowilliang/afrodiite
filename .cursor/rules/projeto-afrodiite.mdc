@@ -9,7 +9,7 @@ alwaysApply: true
 - **Frontend**: TanStack Start + TanStack Router + TanStack Query + React 19
 - **Backend**: TanStack Start (Full-stack)
 - **Autenticação**: Better Auth com plugin Stripe
-- **Banco de Dados**: PostgreSQL via Supabase
+- **Banco de Dados**: Turso DB LibSQL
 - **ORM**: Drizzle ORM
 - **Estilização**: TailwindCSS + use-styled
 - **Pagamentos**: Stripe

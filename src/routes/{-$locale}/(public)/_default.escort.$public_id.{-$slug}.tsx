@@ -123,9 +123,7 @@ function RouteComponent() {
 						</Card>
 					</Card>
 
-					<TextCard title="Acompanhante" text={profile.artist_name ?? ''} />
 					<TextCard title="Sobre Mim" text={profile.description ?? ''} />
-
 					<CharacteristicsCard characteristics={profile.characteristics} />
 
 					<div className="grid grid-cols-1 gap-4 lg:grid-cols-2">

@@ -3,8 +3,8 @@ import React from 'react';
 import type {
 	AnimationStart,
 	AnimationVariant,
-} from '@/components/ui/theme-animations';
-import { createAnimation } from '@/components/ui/theme-animations';
+} from '@/components/theme-animations';
+import { createAnimation } from '@/components/theme-animations';
 
 type ThemeName = 'light' | 'dark';
 type DesiredTheme = ThemeName | 'system';

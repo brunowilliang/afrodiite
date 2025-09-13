@@ -1,7 +1,7 @@
 import { createFileRoute, Outlet } from '@tanstack/react-router';
 import { motion } from 'motion/react';
 import { Text } from '@/components/core/Text';
-import MeshBackground from '@/components/ui/MeshBackground';
+// import MeshBackground from '@/components/MeshBackground';
 
 export const Route = createFileRoute('/{-$locale}/(public)/_app')({
 	component: RouteComponent,
@@ -17,7 +17,7 @@ function RouteComponent() {
 				className="absolute inset-0 z-0"
 				aria-hidden
 			>
-				<MeshBackground />
+				{/* <MeshBackground /> */}
 			</motion.div>
 			<div className="absolute inset-0 z-10">
 				<Outlet />

@@ -12,8 +12,8 @@ import {
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
 import { PhotoProvider } from 'react-photo-view';
 import reactPhotoViewCss from 'react-photo-view/dist/react-photo-view.css?url';
-import { ThemeProvider } from '@/components/ui/theme-provider';
 import { api } from '@/lib/api';
+import { ThemeProvider } from '@/providers/ThemeProvider';
 import appCss from '@/styles/app.css?url';
 import { seo } from '@/utils/seo';
 import { tryCatch } from '@/utils/tryCatch';
