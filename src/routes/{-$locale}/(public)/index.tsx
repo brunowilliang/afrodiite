@@ -2,7 +2,7 @@ import { Button } from '@heroui/react';
 import { createFileRoute, useRouter } from '@tanstack/react-router';
 import { Text } from '@/components/core/Text';
 
-export const Route = createFileRoute('/{-$locale}/(public)/_app/')({
+export const Route = createFileRoute('/{-$locale}/(public)/')({
 	component: RouteComponent,
 });
 
@@ -24,8 +24,8 @@ function RouteComponent() {
 			{session ? (
 				<Button
 					onPress={() => router.navigate({ to: '/{-$locale}/dashboard' })}
-					color="primary"
-					variant="flat"
+					color='primary'
+					variant='flat'
 				>
 					Ir para o dashboard
 				</Button>
@@ -36,8 +36,8 @@ function RouteComponent() {
 							to: '/{-$locale}/sign-in',
 						})
 					}
-					color="primary"
-					variant="flat"
+					color='primary'
+					variant='flat'
 				>
 					Realize seu cadastro
 				</Button>
@@ -81,8 +81,8 @@ function RouteComponent() {
 				}}
 				label="Pesquisar"
 				placeholder="Pesquise por região ou pela cidade"
-				radius="lg"
+				radius='lg'
 			/> */}
 		</div>
-	);
+	)
 }

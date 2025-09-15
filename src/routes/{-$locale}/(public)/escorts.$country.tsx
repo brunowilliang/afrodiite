@@ -12,7 +12,7 @@ import { Input } from '@/components/heroui/Input';
 import { api } from '@/lib/api';
 
 export const Route = createFileRoute(
-	'/{-$locale}/(public)/_default/escorts/$country',
+	'/{-$locale}/(public)/escorts/$country',
 )({
 	component: RouteComponent,
 	beforeLoad: async ({ params }) => {
@@ -35,7 +35,7 @@ export const Route = createFileRoute(
 			api.queries.escorts.list.queryOptions({
 				input: deps,
 			}),
-		);
+		)
 	},
 });
 
@@ -51,7 +51,7 @@ function RouteComponent() {
 				search: search.search,
 			},
 		}),
-	);
+	)
 
 	return (
 		<Container className="py-20">
@@ -82,19 +82,19 @@ function RouteComponent() {
 										page: 1,
 										search: typedSearch || undefined,
 									}),
-								});
+								})
 							}
 						}}
 						onClear={() => {
-							setTypedSearch('');
+							setTypedSearch('')
 							navigate({
 								search: (prev) => ({ ...prev, page: 1, search: undefined }),
-							});
+							})
 						}}
 					/>
 					<Button
 						className="min-h-[56px] min-w-[56px]"
-						color="default"
+						color='default'
 						onClick={() => {
 							navigate({
 								search: (prev) => ({
@@ -102,7 +102,7 @@ function RouteComponent() {
 									page: 1,
 									search: typedSearch || undefined,
 								}),
-							});
+							})
 						}}
 					>
 						<Icon name="Search" variant="solid" size="20" />
@@ -114,16 +114,16 @@ function RouteComponent() {
 					<div className="flex flex-wrap gap-1">
 						<Text>Filtros ativos:</Text>
 						<Chip
-							color="primary"
-							variant="flat"
+							color='primary'
+							variant='flat'
 							onClose={() => {
 								navigate({
 									search: (prev) => ({
 										...prev,
 										search: undefined,
 									}),
-								});
-								setTypedSearch('');
+								})
+								setTypedSearch('')
 							}}
 						>
 							Busca: {search.search}
@@ -149,11 +149,11 @@ function RouteComponent() {
 						onChange={(page: number) => {
 							navigate({
 								search: (prev) => ({ ...prev, page }),
-							});
+							})
 						}}
 					/>
 				)}
 			</Stack>
 		</Container>
-	);
+	)
 }

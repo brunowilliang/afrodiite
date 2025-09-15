@@ -2,6 +2,8 @@ import { createFileRoute, Outlet } from '@tanstack/react-router';
 import { useMemo } from 'react';
 import z from 'zod';
 import i18n from '@/i18n';
+import { api } from '@/lib/api';
+import { tryCatch } from '@/utils/tryCatch';
 
 export const localeSchema = z.object({
 	locale: z
@@ -22,6 +24,20 @@ export const validateLocale = (
 export const Route = createFileRoute('/{-$locale}')({
 	params: localeSchema,
 	beforeLoad: async ({ params }) => ({ locale: params.locale }),
+	loader: async ({ context }) => {
+		if (context.session) {
+			const [profileError, profile] = await tryCatch(api.client.profile.get());
+
+			if (profileError) {
+				console.warn('Profile error in locale loader:', profileError.message);
+				return { profile: null };
+			}
+
+			return { profile };
+		}
+
+		return { profile: null };
+	},
 	component: () => {
 		const { locale } = Route.useParams();
 

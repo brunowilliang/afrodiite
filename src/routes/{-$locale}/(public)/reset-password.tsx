@@ -31,7 +31,7 @@ const resetPasswordSchema = z.object({
 		}),
 });
 
-export const Route = createFileRoute('/{-$locale}/(public)/_app/reset-password')({
+export const Route = createFileRoute('/{-$locale}/(public)/reset-password')({
 	validateSearch: Schema,
 	component: RouteComponent,
 	beforeLoad: ({ search }) => {

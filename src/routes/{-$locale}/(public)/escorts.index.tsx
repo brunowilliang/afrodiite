@@ -1,6 +1,6 @@
 import { createFileRoute, Outlet, redirect } from '@tanstack/react-router';
 
-export const Route = createFileRoute('/{-$locale}/(public)/_default/escorts/')({
+export const Route = createFileRoute('/{-$locale}/(public)/escorts/')({
 	component: Outlet,
 	beforeLoad: () => {
 		throw redirect({

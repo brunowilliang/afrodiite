@@ -18,7 +18,7 @@ export const ServicesTab = () => {
 		label: string;
 		description: string;
 	} | null>(null);
-	const { profile } = useLoaderData({ from: '/{-$locale}/(admin)/dashboard' });
+	const { profile } = useLoaderData({ from: '/{-$locale}' });
 
 	const updateProfile = useMutation(
 		api.queries.profile.update.mutationOptions({

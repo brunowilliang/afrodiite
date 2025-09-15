@@ -1,17 +1,19 @@
 import { createFileRoute, Outlet } from '@tanstack/react-router';
+import { Header } from '@/components/core/Header';
 import { Footer } from '@/components/Footer';
-import { Header } from '@/components/Header';
 
-export const Route = createFileRoute('/{-$locale}/(public)/_default')({
+export const Route = createFileRoute('/{-$locale}/(public)')({
 	component: RouteComponent,
 });
 
 function RouteComponent() {
 	return (
 		<>
-			<Header />
+			<section className="mx-auto px-4">
+				<Header />
+			</section>
 			<Outlet />
 			<Footer />
 		</>
-	)
+	);
 }

@@ -22,7 +22,7 @@ export const Route = createFileRoute('/{-$locale}/(admin)/dashboard/')({
 });
 
 function RouteComponent() {
-	const { profile } = useLoaderData({ from: '/{-$locale}/(admin)/dashboard' });
+	const { profile } = useLoaderData({ from: '/{-$locale}' });
 	const queryClient = useQueryClient();
 	const router = useRouter();
 

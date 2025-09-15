@@ -16,7 +16,7 @@ const schema = locationSchema;
 
 export const LocationTab = () => {
 	const router = useRouter();
-	const { profile } = useLoaderData({ from: '/{-$locale}/(admin)/dashboard' });
+	const { profile } = useLoaderData({ from: '/{-$locale}' });
 
 	// Lista de distritos únicos
 	const districtOptions = useMemo(() => {

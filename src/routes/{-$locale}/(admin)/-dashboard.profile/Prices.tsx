@@ -31,7 +31,7 @@ const slotLabels: Record<Slot, string> = {
 
 export const PricesTab = () => {
 	const router = useRouter();
-	const { profile } = useLoaderData({ from: '/{-$locale}/(admin)/dashboard' });
+	const { profile } = useLoaderData({ from: '/{-$locale}' });
 
 	const updateProfile = useMutation(
 		api.queries.profile.update.mutationOptions({

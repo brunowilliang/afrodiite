@@ -17,15 +17,15 @@ import { Modal, ModalRef } from '@/components/heroui/Modal';
 import { useAnalytics } from '@/hooks/useAnalytics';
 import { api } from '@/lib/api';
 import { Reviews } from '../../../components/heroui/Reviews';
-import { AccordionPrice } from './-_default.escort.$public_id.{-$slug}/AccordionPrice';
-import { CharacteristicsCard } from './-_default.escort.$public_id.{-$slug}/CharacteristicsCard';
-import { OfficeHoursCard } from './-_default.escort.$public_id.{-$slug}/OfficeHoursCard';
-import { PricesCard } from './-_default.escort.$public_id.{-$slug}/PricesCard';
-import { ServicesCard } from './-_default.escort.$public_id.{-$slug}/ServicesCard';
-import { TextCard } from './-_default.escort.$public_id.{-$slug}/TextCard';
+import { AccordionPrice } from './escort.$public_id.{-$slug}/AccordionPrice';
+import { CharacteristicsCard } from './escort.$public_id.{-$slug}/CharacteristicsCard';
+import { OfficeHoursCard } from './escort.$public_id.{-$slug}/OfficeHoursCard';
+import { PricesCard } from './escort.$public_id.{-$slug}/PricesCard';
+import { ServicesCard } from './escort.$public_id.{-$slug}/ServicesCard';
+import { TextCard } from './escort.$public_id.{-$slug}/TextCard';
 
 export const Route = createFileRoute(
-	'/{-$locale}/(public)/_default/escort/$public_id/{-$slug}',
+	'/{-$locale}/(public)/escort/$public_id/{-$slug}',
 )({
 	loader: async ({ context: { queryClient }, params }) => {
 		const { public_id, slug } = params;

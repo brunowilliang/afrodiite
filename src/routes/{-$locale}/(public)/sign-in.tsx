@@ -22,7 +22,7 @@ import {
 	signUpSchema,
 } from '@/lib/auth/auth.client';
 
-export const Route = createFileRoute('/{-$locale}/(public)/_app/sign-in')({
+export const Route = createFileRoute('/{-$locale}/(public)/sign-in')({
 	component: RouteComponent,
 	beforeLoad: async ({ context }) => {
 		if (context.session) {
@@ -42,7 +42,7 @@ function RouteComponent() {
 			return new URL(loc.href, window.location.origin).toString();
 		}
 		return '';
-	};
+	}
 
 	const callbackURL = buildCallbackURL('/{-$locale}/activate');
 	const resetPasswordURL = buildCallbackURL('/{-$locale}/reset-password');
@@ -50,71 +50,71 @@ function RouteComponent() {
 	const signInForm = useForm({
 		resolver: zodResolver(signInSchema),
 		defaultValues: { email: '', password: '' },
-	});
+	})
 
 	const forgotForm = useForm({
 		resolver: zodResolver(forgotSchema),
 		defaultValues: { email: '' },
-	});
+	})
 
 	const signUpForm = useForm({
 		resolver: zodResolver(signUpSchema),
 		defaultValues: { name: '', email: '', password: '' },
-	});
+	})
 
 	const onSubmitSignIn = async () => {
 		const { error } = await api.auth.signIn.email({
 			...signInForm.getValues(),
 			callbackURL,
-		});
+		})
 
 		if (error) {
 			if (error.status === 403) {
 				toast.primary('Quase lá! Verifique seu e-mail', {
 					description:
 						'Enviamos um link de verificação para sua caixa de entrada.',
-				});
-				return;
+				})
+				return
 			}
 			toast.error(error.message ?? 'Erro ao fazer login');
-			return;
+			return
 		}
 
 		await router.invalidate();
-	};
+	}
 
 	const onSubmitForgot = async () => {
 		const { error } = await api.auth.forgetPassword({
 			...forgotForm.getValues(),
 			redirectTo: resetPasswordURL,
-		});
+		})
 
 		if (error) {
 			toast.error(error.message ?? 'Erro ao recuperar senha');
-			return;
+			return
 		}
 
 		forgotModalRef.current?.close();
 		toast.success('Se um usuário existir, enviaremos um e-mail de recuperação');
-	};
+	}
 
 	const onSubmitSignUp = async () => {
 		const { error } = await api.auth.signUp.email({
 			...signUpForm.getValues(),
 			callbackURL,
-		});
+		})
 
 		signUpModalRef.current?.close();
 
 		if (error) {
 			toast.error(error.message ?? 'Erro ao criar conta');
-			return;
+			return
 		}
 
 		toast.primary('Quase lá! Verifique seu e-mail', {
 			description: 'Enviamos um link de verificação para sua caixa de entrada.',
-		});
-	};
+		})
+	}
 
 	return (
 		<div className="centered mx-auto flex min-h-[100dvh] max-w-lg flex-col gap-14 overflow-hidden px-4">
@@ -131,19 +131,19 @@ function RouteComponent() {
 				>
 					<Controller
 						control={signInForm.control}
-						name="email"
+						name='email'
 						render={({ field, fieldState }) => (
 							<Input
-								label="E-mail"
-								size="md"
-								type="email"
+								label='E-mail'
+								size='md'
+								type='email'
 								customVariant="transparent"
 								value={field.value ?? ''}
 								onValueChange={field.onChange}
 								onBlur={field.onBlur}
 								ref={field.ref}
 								name={field.name}
-								autoComplete="email"
+								autoComplete='email'
 								isInvalid={!!fieldState.error}
 								errorMessage={fieldState.error?.message}
 							/>
@@ -151,12 +151,12 @@ function RouteComponent() {
 					/>
 					<Controller
 						control={signInForm.control}
-						name="password"
+						name='password'
 						render={({ field, fieldState }) => (
 							<Input
-								label="Senha"
-								size="md"
-								type="password"
+								label='Senha'
+								size='md'
+								type='password'
 								customVariant="transparent"
 								value={field.value ?? ''}
 								onValueChange={field.onChange}
@@ -172,14 +172,14 @@ function RouteComponent() {
 					<div className="w-full space-y-3">
 						<Button
 							fullWidth
-							type="submit"
+							type='submit'
 							isLoading={signInForm.formState.isSubmitting}
 						>
 							Entrar
 						</Button>
 						<Button
 							fullWidth
-							variant="flat"
+							variant='flat'
 							onPress={() => signUpModalRef.current?.open()}
 						>
 							Criar Conta
@@ -219,22 +219,22 @@ function RouteComponent() {
 						<Form
 							validationBehavior="aria"
 							onSubmit={forgotForm.handleSubmit(onSubmitForgot)}
-							className="space-y-3"
+							className='space-y-3'
 						>
 							<Controller
 								control={forgotForm.control}
-								name="email"
+								name='email'
 								render={({ field, fieldState }) => (
 									<Input
-										label="E-mail"
-										size="md"
-										type="email"
+										label='E-mail'
+										size='md'
+										type='email'
 										value={field.value ?? ''}
 										onValueChange={field.onChange}
 										onBlur={field.onBlur}
 										ref={field.ref}
 										name={field.name}
-										autoComplete="email"
+										autoComplete='email'
 										isInvalid={!!fieldState.error}
 										errorMessage={fieldState.error?.message}
 									/>
@@ -242,8 +242,8 @@ function RouteComponent() {
 							/>
 							<Modal.Footer className="w-full px-0">
 								<Button
-									color="danger"
-									variant="light"
+									color='danger'
+									variant='light'
 									fullWidth
 									onPress={() => forgotModalRef.current?.close()}
 								>
@@ -251,7 +251,7 @@ function RouteComponent() {
 								</Button>
 								<Button
 									fullWidth
-									type="submit"
+									type='submit'
 									isLoading={forgotForm.formState.isSubmitting}
 								>
 									Recuperar Senha
@@ -276,15 +276,15 @@ function RouteComponent() {
 						<Form
 							validationBehavior="aria"
 							onSubmit={signUpForm.handleSubmit(onSubmitSignUp)}
-							className="space-y-3"
+							className='space-y-3'
 						>
 							<Controller
 								control={signUpForm.control}
-								name="name"
+								name='name'
 								render={({ field, fieldState }) => (
 									<Input
-										label="Nome"
-										size="md"
+										label='Nome'
+										size='md'
 										value={field.value ?? ''}
 										onValueChange={field.onChange}
 										onBlur={field.onBlur}
@@ -297,18 +297,18 @@ function RouteComponent() {
 							/>
 							<Controller
 								control={signUpForm.control}
-								name="email"
+								name='email'
 								render={({ field, fieldState }) => (
 									<Input
-										label="E-mail"
-										size="md"
-										type="email"
+										label='E-mail'
+										size='md'
+										type='email'
 										value={field.value ?? ''}
 										onValueChange={field.onChange}
 										onBlur={field.onBlur}
 										ref={field.ref}
 										name={field.name}
-										autoComplete="email"
+										autoComplete='email'
 										isInvalid={!!fieldState.error}
 										errorMessage={fieldState.error?.message}
 									/>
@@ -316,18 +316,18 @@ function RouteComponent() {
 							/>
 							<Controller
 								control={signUpForm.control}
-								name="password"
+								name='password'
 								render={({ field, fieldState }) => (
 									<Input
-										label="Senha"
-										size="md"
-										type="password"
+										label='Senha'
+										size='md'
+										type='password'
 										value={field.value ?? ''}
 										onValueChange={field.onChange}
 										onBlur={field.onBlur}
 										ref={field.ref}
 										name={field.name}
-										autoComplete="new-password"
+										autoComplete='new-password'
 										isInvalid={!!fieldState.error}
 										errorMessage={fieldState.error?.message}
 									/>
@@ -336,8 +336,8 @@ function RouteComponent() {
 
 							<Modal.Footer className="w-full px-0">
 								<Button
-									color="danger"
-									variant="light"
+									color='danger'
+									variant='light'
 									fullWidth
 									onPress={() => signUpModalRef.current?.close()}
 								>
@@ -345,7 +345,7 @@ function RouteComponent() {
 								</Button>
 								<Button
 									fullWidth
-									type="submit"
+									type='submit'
 									isLoading={signUpForm.formState.isSubmitting}
 								>
 									Criar Conta
@@ -356,5 +356,5 @@ function RouteComponent() {
 				</Modal.Content>
 			</Modal>
 		</div>
-	);
+	)
 }

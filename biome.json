@@ -39,6 +39,7 @@
     "rules": {
       "recommended": true,
       "correctness": {
+        "useUniqueElementIds": "off",
         "noUnknownProperty": "off",
         "useHookAtTopLevel": "off",
         "useExhaustiveDependencies": "off",

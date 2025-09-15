@@ -14,7 +14,6 @@ import { Card } from '@/components/heroui/Card';
 import { Dropdown } from '@/components/heroui/Dropdown';
 import { Profile } from '@/components/heroui/Profile';
 import { Tabs } from '@/components/heroui/Tabs';
-import { api } from '@/lib/api';
 
 export type Navigation = {
 	key?: string;
@@ -25,7 +24,7 @@ export type Navigation = {
 	search?: NavigateOptions['search'];
 };
 
-export const MenuDashboard: Navigation[] = [
+export const items: Navigation[] = [
 	{
 		key: '/dashboard',
 		label: 'Dashboard',
@@ -88,84 +87,40 @@ export const MenuDashboard: Navigation[] = [
 	},
 ];
 
-export const MenuPublic: Navigation[] = [
-	{
-		key: '/',
-		label: 'Home',
-		href: '/{-$locale}',
-	},
-	{
-		key: '/sign-in',
-		label: 'Cadastre-se Gratuitamente',
-		href: '/{-$locale}/sign-in',
-	},
-];
-
 export const MenuTabs = ({ onTabClick }: { onTabClick?: () => void }) => {
 	const location = useLocation();
-	const { profile } = useLoaderData({ from: '/{-$locale}' });
 
 	return (
 		<Tabs aria-label="tabs-menu-web" isMenu selectedKey={location.href}>
-			{profile
-				? MenuDashboard.map((item) => (
-						<Tabs.Tab
-							key={item.key}
-							isDisabled={item.isSection}
-							className={
-								'data-[disabled=true]:cursor-default data-[disabled=true]:opacity-100'
-							}
-							title={
-								item.isSection ? (
-									<Tabs.Menu label={item.label} isSection />
-								) : (
-									<Tabs.Menu
-										label={item.label}
-										isActive={item.key === location.href}
-										icon={item.icon}
-									/>
-								)
-							}
-							href={item.href}
-							routerOptions={{
-								search: item.search,
-							}}
-							onClick={() => {
-								if (!item.isSection && onTabClick) {
-									onTabClick();
-								}
-							}}
-						/>
-					))
-				: MenuPublic.map((item) => (
-						<Tabs.Tab
-							key={item.key}
-							isDisabled={item.isSection}
-							className={
-								'data-[disabled=true]:cursor-default data-[disabled=true]:opacity-100'
-							}
-							title={
-								item.isSection ? (
-									<Tabs.Menu label={item.label} isSection />
-								) : (
-									<Tabs.Menu
-										label={item.label}
-										isActive={item.key === location.href}
-										icon={item.icon}
-									/>
-								)
-							}
-							href={item.href}
-							routerOptions={{
-								search: item.search,
-							}}
-							onClick={() => {
-								if (!item.isSection && onTabClick) {
-									onTabClick();
-								}
-							}}
-						/>
-					))}
+			{items.map((item) => (
+				<Tabs.Tab
+					key={item.key}
+					isDisabled={item.isSection}
+					className={
+						'data-[disabled=true]:cursor-default data-[disabled=true]:opacity-100'
+					}
+					title={
+						item.isSection ? (
+							<Tabs.Menu label={item.label} isSection />
+						) : (
+							<Tabs.Menu
+								label={item.label}
+								isActive={item.key === location.href}
+								icon={item.icon}
+							/>
+						)
+					}
+					href={item.href}
+					routerOptions={{
+						search: item.search,
+					}}
+					onClick={() => {
+						if (!item.isSection && onTabClick) {
+							onTabClick();
+						}
+					}}
+				/>
+			))}
 		</Tabs>
 	);
 };
@@ -173,13 +128,8 @@ export const MenuTabs = ({ onTabClick }: { onTabClick?: () => void }) => {
 export const Header = () => {
 	const router = useRouter();
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
-
+	// Pegar os dados do profile da rota locale (que é pai de todas as rotas)
 	const { profile } = useLoaderData({ from: '/{-$locale}' });
-
-	const signOut = async () => {
-		await api.auth.signOut();
-		await router.invalidate({ sync: true });
-	};
 
 	return (
 		<Navbar
@@ -208,49 +158,48 @@ export const Header = () => {
 				</div>
 
 				<div className="flex items-center justify-end">
-					{profile && (
-						<Dropdown
-							placement="bottom-end"
-							backdrop="blur"
-							classNames={{ backdrop: 'bg-black/20' }}
-						>
-							<Dropdown.Trigger>
-								<Profile
-									name={profile?.artist_name ?? ''}
-									description="Acompanhante"
-									avatar={profile?.gallery?.[0]?.url ?? ''}
-								/>
-							</Dropdown.Trigger>
-							<Dropdown.Menu>
-								<Dropdown.Item
-									key="ver-perfil"
-									color="default"
-									className="py-3 text-default-600"
-									endContent={<Icon name="Link" size="20" />}
-									onPress={() => {
-										router.navigate({
-											to: '/{-$locale}/escort/$public_id/{-$slug}',
-											replace: true,
-											params: {
-												public_id: profile?.public_id?.toString() ?? '',
-											},
-										});
-									}}
-								>
-									Ver perfil
-								</Dropdown.Item>
-								<Dropdown.Item
-									key="fazer-logout"
-									color="danger"
-									className="py-3 text-danger"
-									onPress={() => signOut()}
-									endContent={<Icon name="Logout" size="20" />}
-								>
-									Fazer logout
-								</Dropdown.Item>
-							</Dropdown.Menu>
-						</Dropdown>
-					)}
+					<Dropdown
+						placement="bottom-end"
+						backdrop="blur"
+						classNames={{
+							backdrop: 'bg-black/20',
+						}}
+					>
+						<Dropdown.Trigger>
+							<Profile
+								name={profile?.artist_name ?? ''}
+								description="Acompanhante"
+								avatar={profile?.gallery?.[0]?.url ?? ''}
+							/>
+						</Dropdown.Trigger>
+						<Dropdown.Menu>
+							<Dropdown.Item
+								key="ver-perfil"
+								color="default"
+								className="py-3 text-default-600"
+								endContent={<Icon name="Link" size="20" />}
+								onPress={() => {
+									router.navigate({
+										to: '/{-$locale}/escort/$public_id/{-$slug}',
+										replace: true,
+										params: {
+											public_id: profile?.public_id?.toString() ?? '',
+										},
+									});
+								}}
+							>
+								Ver perfil
+							</Dropdown.Item>
+							<Dropdown.Item
+								key="fazer-logout"
+								color="danger"
+								className="py-3 text-danger"
+								endContent={<Icon name="Logout" size="20" />}
+							>
+								Fazer logout
+							</Dropdown.Item>
+						</Dropdown.Menu>
+					</Dropdown>
 				</div>
 			</Card>
 

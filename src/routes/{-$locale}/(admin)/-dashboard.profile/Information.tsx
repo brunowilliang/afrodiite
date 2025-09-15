@@ -19,7 +19,7 @@ const schema = informationSchema;
 
 export const InformationTab = () => {
 	const router = useRouter();
-	const { profile } = useLoaderData({ from: '/{-$locale}/(admin)/dashboard' });
+	const { profile } = useLoaderData({ from: '/{-$locale}' });
 
 	// Lista de nacionalidades usando o JSON local (gentílicos!)
 	const nationalityOptions = useMemo(() => {

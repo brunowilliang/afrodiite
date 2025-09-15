@@ -35,7 +35,6 @@ export const Profile = ({
 				)}
 			</div>
 			<Avatar
-				as="button"
 				showFallback
 				alt={name}
 				src={avatar}

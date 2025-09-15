@@ -15,7 +15,7 @@ const schema = characteristicsSchema;
 
 export const CharacteristicsTab = () => {
 	const router = useRouter();
-	const { profile } = useLoaderData({ from: '/{-$locale}/(admin)/dashboard' });
+	const { profile } = useLoaderData({ from: '/{-$locale}' });
 
 	const languageOptions = [
 		'Português',
