@@ -20,12 +20,12 @@ export type Navigation = {
 	key?: string;
 	label?: string;
 	icon?: IconProps['name'];
-	isSection?: boolean;
 	href?: NavigateOptions['to'] | undefined;
 	search?: NavigateOptions['search'];
+	sections?: Navigation[]; // If has sections, it's a section header
 };
 
-export const MenuDashboard: Navigation[] = [
+export const AuthMenu: Navigation[] = [
 	{
 		key: '/dashboard',
 		label: 'Dashboard',
@@ -34,158 +34,171 @@ export const MenuDashboard: Navigation[] = [
 	},
 	{
 		label: 'Perfil',
-		isSection: true,
-		href: '/{-$locale}/dashboard/profile',
-	},
-	{
-		key: '/dashboard/profile?tab=information',
-		label: 'Informações',
-		icon: 'Profile',
-		href: '/{-$locale}/dashboard/profile',
-		search: { tab: 'information' },
-	},
-	{
-		key: '/dashboard/profile?tab=location',
-		label: 'Localização',
-		icon: 'Location',
-		href: '/{-$locale}/dashboard/profile',
-		search: { tab: 'location' },
-	},
-	{
-		key: '/dashboard/profile?tab=characteristics',
-		label: 'Características',
-		icon: 'Diamond',
-		href: '/{-$locale}/dashboard/profile',
-		search: { tab: 'characteristics' },
-	},
-	{
-		key: '/dashboard/profile?tab=schedule',
-		label: 'Horários',
-		icon: 'ClockSquare',
-		href: '/{-$locale}/dashboard/profile',
-		search: { tab: 'schedule' },
-	},
-	{
-		key: '/dashboard/profile?tab=prices',
-		label: 'Preços',
-		icon: 'MoneyBag',
-		href: '/{-$locale}/dashboard/profile',
-		search: { tab: 'prices' },
-	},
-	{
-		key: '/dashboard/profile?tab=services',
-		label: 'Serviços',
-		icon: 'Services',
-		href: '/{-$locale}/dashboard/profile',
-		search: { tab: 'services' },
-	},
-	{
-		key: '/dashboard/profile?tab=gallery',
-		label: 'Imagens',
-		icon: 'Gallery',
-		href: '/{-$locale}/dashboard/profile',
-		search: { tab: 'gallery' },
+		sections: [
+			{
+				key: '/dashboard/profile?tab=information',
+				label: 'Informações',
+				icon: 'Profile',
+				href: '/{-$locale}/dashboard/profile',
+				search: { tab: 'information' },
+			},
+			{
+				key: '/dashboard/profile?tab=location',
+				label: 'Localização',
+				icon: 'Location',
+				href: '/{-$locale}/dashboard/profile',
+				search: { tab: 'location' },
+			},
+			{
+				key: '/dashboard/profile?tab=characteristics',
+				label: 'Características',
+				icon: 'Diamond',
+				href: '/{-$locale}/dashboard/profile',
+				search: { tab: 'characteristics' },
+			},
+			{
+				key: '/dashboard/profile?tab=schedule',
+				label: 'Horários',
+				icon: 'ClockSquare',
+				href: '/{-$locale}/dashboard/profile',
+				search: { tab: 'schedule' },
+			},
+			{
+				key: '/dashboard/profile?tab=prices',
+				label: 'Preços',
+				icon: 'MoneyBag',
+				href: '/{-$locale}/dashboard/profile',
+				search: { tab: 'prices' },
+			},
+			{
+				key: '/dashboard/profile?tab=services',
+				label: 'Serviços',
+				icon: 'Services',
+				href: '/{-$locale}/dashboard/profile',
+				search: { tab: 'services' },
+			},
+			{
+				key: '/dashboard/profile?tab=gallery',
+				label: 'Imagens',
+				icon: 'Gallery',
+				href: '/{-$locale}/dashboard/profile',
+				search: { tab: 'gallery' },
+			},
+		],
 	},
 ];
 
-export const MenuPublic: Navigation[] = [
+export const PublicMenu: Navigation[] = [
 	{
 		key: '/',
 		label: 'Home',
+		icon: 'Home',
 		href: '/{-$locale}',
 	},
 	{
 		key: '/sign-in',
 		label: 'Cadastre-se Gratuitamente',
+		icon: 'User',
 		href: '/{-$locale}/sign-in',
 	},
 	{
 		label: 'Informações',
-		isSection: true,
-		href: '/{-$locale}',
-	},
-	{
-		key: '/terms-and-conditions',
-		label: 'Termos e Condições',
-		href: '/{-$locale}/terms-and-conditions',
-	},
-	{
-		key: '/privacy-policy',
-		label: 'Política de Privacidade',
-		href: '/{-$locale}/privacy-policy',
-	},
-	{
-		key: '/cookie-policy',
-		label: 'Política de Cookies',
-		href: '/{-$locale}/cookie-policy',
+		sections: [
+			{
+				key: '/terms-and-conditions',
+				label: 'Termos e Condições',
+				icon: 'Services',
+				href: '/{-$locale}/terms-and-conditions',
+			},
+			{
+				key: '/privacy-policy',
+				label: 'Política de Privacidade',
+				icon: 'Services',
+				href: '/{-$locale}/privacy-policy',
+			},
+			{
+				key: '/cookie-policy',
+				label: 'Política de Cookies',
+				icon: 'Services',
+				href: '/{-$locale}/cookie-policy',
+			},
+		],
 	},
 ];
+
+// Helper function to get menu items based on authentication status
+const getMenuItems = (profile: any): Navigation[] => {
+	if (profile) {
+		// User is authenticated: show dashboard + filtered public menu (remove sign-in)
+		const publicMenuFiltered = PublicMenu.filter(
+			(item) => item.key !== '/sign-in',
+		);
+		return [...AuthMenu, ...publicMenuFiltered];
+	}
+
+	// User is not authenticated: show only public menu
+	return PublicMenu;
+};
+
+// Helper function to render a single menu item
+const renderMenuItem = (
+	item: Navigation,
+	location: any,
+	onTabClick?: () => void,
+) => {
+	const isSection = Boolean(item.sections?.length);
+
+	return (
+		<Tabs.Tab
+			key={item.key || item.label}
+			isDisabled={isSection}
+			className="text-left data-[disabled=true]:cursor-default data-[disabled=true]:opacity-100"
+			title={
+				isSection ? (
+					<Tabs.Menu label={item.label} isSection />
+				) : (
+					<Tabs.Menu
+						label={item.label}
+						isActive={item.key === location.href}
+						icon={item.icon}
+					/>
+				)
+			}
+			href={item.href}
+			routerOptions={{ search: item.search }}
+			onClick={() => {
+				if (!isSection && onTabClick) {
+					onTabClick();
+				}
+			}}
+		/>
+	);
+};
 
 export const MenuTabs = ({ onTabClick }: { onTabClick?: () => void }) => {
 	const location = useLocation();
 	const { profile } = useLoaderData({ from: '/{-$locale}' });
 
+	const menuItems = getMenuItems(profile);
+
+	// Flatten sections into individual items for rendering
+	const flattenedItems: Navigation[] = [];
+
+	menuItems.forEach((item) => {
+		if (item.sections?.length) {
+			// Add section header
+			flattenedItems.push(item);
+			// Add section items
+			flattenedItems.push(...item.sections);
+		} else {
+			// Add regular item
+			flattenedItems.push(item);
+		}
+	});
+
 	return (
 		<Tabs aria-label="tabs-menu-web" isMenu selectedKey={location.href}>
-			{profile
-				? MenuDashboard.map((item) => (
-						<Tabs.Tab
-							key={item.key}
-							isDisabled={item.isSection}
-							className={
-								'data-[disabled=true]:cursor-default data-[disabled=true]:opacity-100'
-							}
-							title={
-								item.isSection ? (
-									<Tabs.Menu label={item.label} isSection />
-								) : (
-									<Tabs.Menu
-										label={item.label}
-										isActive={item.key === location.href}
-										icon={item.icon}
-									/>
-								)
-							}
-							href={item.href}
-							routerOptions={{
-								search: item.search,
-							}}
-							onClick={() => {
-								if (!item.isSection && onTabClick) {
-									onTabClick();
-								}
-							}}
-						/>
-					))
-				: MenuPublic.map((item) => (
-						<Tabs.Tab
-							key={item.key}
-							isDisabled={item.isSection}
-							className={
-								'data-[disabled=true]:cursor-default data-[disabled=true]:opacity-100'
-							}
-							title={
-								item.isSection ? (
-									<Tabs.Menu label={item.label} isSection />
-								) : (
-									<Tabs.Menu
-										label={item.label}
-										isActive={item.key === location.href}
-										icon={item.icon}
-									/>
-								)
-							}
-							href={item.href}
-							routerOptions={{
-								search: item.search,
-							}}
-							onClick={() => {
-								if (!item.isSection && onTabClick) {
-									onTabClick();
-								}
-							}}
-						/>
-					))}
+			{flattenedItems.map((item) => renderMenuItem(item, location, onTabClick))}
 		</Tabs>
 	);
 };
@@ -222,7 +235,7 @@ export const Header = () => {
 						className="h-10 w-10 text-default-600 md:hidden"
 						aria-label={'Toggle menu'}
 					/>
-					<Link to="/{-$locale}/dashboard">
+					<Link to="/{-$locale}/dashboard" onClick={() => setIsMenuOpen(false)}>
 						<Logo className="h-full cursor-pointer" />
 					</Link>
 				</div>
