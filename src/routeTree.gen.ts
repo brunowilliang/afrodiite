@@ -14,8 +14,11 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as Char123LocaleChar125RouteRouteImport } from './routes/{-$locale}/route'
 import { Route as Char123LocaleChar125publicRouteRouteImport } from './routes/{-$locale}/(public)/route'
 import { Route as Char123LocaleChar125publicIndexRouteImport } from './routes/{-$locale}/(public)/index'
+import { Route as Char123LocaleChar125publicTermsAndConditionsRouteImport } from './routes/{-$locale}/(public)/terms-and-conditions'
 import { Route as Char123LocaleChar125publicSignInRouteImport } from './routes/{-$locale}/(public)/sign-in'
 import { Route as Char123LocaleChar125publicResetPasswordRouteImport } from './routes/{-$locale}/(public)/reset-password'
+import { Route as Char123LocaleChar125publicPrivacyPolicyRouteImport } from './routes/{-$locale}/(public)/privacy-policy'
+import { Route as Char123LocaleChar125publicCookiePolicyRouteImport } from './routes/{-$locale}/(public)/cookie-policy'
 import { Route as Char123LocaleChar125publicActivateRouteImport } from './routes/{-$locale}/(public)/activate'
 import { Route as Char123LocaleChar125adminDashboardRouteImport } from './routes/{-$locale}/(admin)/dashboard'
 import { Route as Char123LocaleChar125publicEscortsIndexRouteImport } from './routes/{-$locale}/(public)/escorts.index'
@@ -49,6 +52,12 @@ const Char123LocaleChar125publicIndexRoute =
     path: '/',
     getParentRoute: () => Char123LocaleChar125publicRouteRoute,
   } as any)
+const Char123LocaleChar125publicTermsAndConditionsRoute =
+  Char123LocaleChar125publicTermsAndConditionsRouteImport.update({
+    id: '/terms-and-conditions',
+    path: '/terms-and-conditions',
+    getParentRoute: () => Char123LocaleChar125publicRouteRoute,
+  } as any)
 const Char123LocaleChar125publicSignInRoute =
   Char123LocaleChar125publicSignInRouteImport.update({
     id: '/sign-in',
@@ -59,6 +68,18 @@ const Char123LocaleChar125publicResetPasswordRoute =
   Char123LocaleChar125publicResetPasswordRouteImport.update({
     id: '/reset-password',
     path: '/reset-password',
+    getParentRoute: () => Char123LocaleChar125publicRouteRoute,
+  } as any)
+const Char123LocaleChar125publicPrivacyPolicyRoute =
+  Char123LocaleChar125publicPrivacyPolicyRouteImport.update({
+    id: '/privacy-policy',
+    path: '/privacy-policy',
+    getParentRoute: () => Char123LocaleChar125publicRouteRoute,
+  } as any)
+const Char123LocaleChar125publicCookiePolicyRoute =
+  Char123LocaleChar125publicCookiePolicyRouteImport.update({
+    id: '/cookie-policy',
+    path: '/cookie-policy',
     getParentRoute: () => Char123LocaleChar125publicRouteRoute,
   } as any)
 const Char123LocaleChar125publicActivateRoute =
@@ -145,8 +166,11 @@ export interface FileRoutesByFullPath {
   '/{-$locale}/': typeof Char123LocaleChar125publicIndexRoute
   '/{-$locale}/dashboard': typeof Char123LocaleChar125adminDashboardRouteWithChildren
   '/{-$locale}/activate': typeof Char123LocaleChar125publicActivateRoute
+  '/{-$locale}/cookie-policy': typeof Char123LocaleChar125publicCookiePolicyRoute
+  '/{-$locale}/privacy-policy': typeof Char123LocaleChar125publicPrivacyPolicyRoute
   '/{-$locale}/reset-password': typeof Char123LocaleChar125publicResetPasswordRoute
   '/{-$locale}/sign-in': typeof Char123LocaleChar125publicSignInRoute
+  '/{-$locale}/terms-and-conditions': typeof Char123LocaleChar125publicTermsAndConditionsRoute
   '/{-$locale}/dashboard/adverts': typeof Char123LocaleChar125adminDashboardAdvertsRoute
   '/{-$locale}/dashboard/my-account': typeof Char123LocaleChar125adminDashboardMyAccountRoute
   '/{-$locale}/dashboard/profile': typeof Char123LocaleChar125adminDashboardProfileRoute
@@ -159,8 +183,11 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/{-$locale}/activate': typeof Char123LocaleChar125publicActivateRoute
+  '/{-$locale}/cookie-policy': typeof Char123LocaleChar125publicCookiePolicyRoute
+  '/{-$locale}/privacy-policy': typeof Char123LocaleChar125publicPrivacyPolicyRoute
   '/{-$locale}/reset-password': typeof Char123LocaleChar125publicResetPasswordRoute
   '/{-$locale}/sign-in': typeof Char123LocaleChar125publicSignInRoute
+  '/{-$locale}/terms-and-conditions': typeof Char123LocaleChar125publicTermsAndConditionsRoute
   '/{-$locale}': typeof Char123LocaleChar125publicIndexRoute
   '/{-$locale}/dashboard/adverts': typeof Char123LocaleChar125adminDashboardAdvertsRoute
   '/{-$locale}/dashboard/my-account': typeof Char123LocaleChar125adminDashboardMyAccountRoute
@@ -178,8 +205,11 @@ export interface FileRoutesById {
   '/{-$locale}/(public)': typeof Char123LocaleChar125publicRouteRouteWithChildren
   '/{-$locale}/(admin)/dashboard': typeof Char123LocaleChar125adminDashboardRouteWithChildren
   '/{-$locale}/(public)/activate': typeof Char123LocaleChar125publicActivateRoute
+  '/{-$locale}/(public)/cookie-policy': typeof Char123LocaleChar125publicCookiePolicyRoute
+  '/{-$locale}/(public)/privacy-policy': typeof Char123LocaleChar125publicPrivacyPolicyRoute
   '/{-$locale}/(public)/reset-password': typeof Char123LocaleChar125publicResetPasswordRoute
   '/{-$locale}/(public)/sign-in': typeof Char123LocaleChar125publicSignInRoute
+  '/{-$locale}/(public)/terms-and-conditions': typeof Char123LocaleChar125publicTermsAndConditionsRoute
   '/{-$locale}/(public)/': typeof Char123LocaleChar125publicIndexRoute
   '/{-$locale}/(admin)/dashboard/adverts': typeof Char123LocaleChar125adminDashboardAdvertsRoute
   '/{-$locale}/(admin)/dashboard/my-account': typeof Char123LocaleChar125adminDashboardMyAccountRoute
@@ -198,8 +228,11 @@ export interface FileRouteTypes {
     | '/{-$locale}/'
     | '/{-$locale}/dashboard'
     | '/{-$locale}/activate'
+    | '/{-$locale}/cookie-policy'
+    | '/{-$locale}/privacy-policy'
     | '/{-$locale}/reset-password'
     | '/{-$locale}/sign-in'
+    | '/{-$locale}/terms-and-conditions'
     | '/{-$locale}/dashboard/adverts'
     | '/{-$locale}/dashboard/my-account'
     | '/{-$locale}/dashboard/profile'
@@ -212,8 +245,11 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/{-$locale}/activate'
+    | '/{-$locale}/cookie-policy'
+    | '/{-$locale}/privacy-policy'
     | '/{-$locale}/reset-password'
     | '/{-$locale}/sign-in'
+    | '/{-$locale}/terms-and-conditions'
     | '/{-$locale}'
     | '/{-$locale}/dashboard/adverts'
     | '/{-$locale}/dashboard/my-account'
@@ -230,8 +266,11 @@ export interface FileRouteTypes {
     | '/{-$locale}/(public)'
     | '/{-$locale}/(admin)/dashboard'
     | '/{-$locale}/(public)/activate'
+    | '/{-$locale}/(public)/cookie-policy'
+    | '/{-$locale}/(public)/privacy-policy'
     | '/{-$locale}/(public)/reset-password'
     | '/{-$locale}/(public)/sign-in'
+    | '/{-$locale}/(public)/terms-and-conditions'
     | '/{-$locale}/(public)/'
     | '/{-$locale}/(admin)/dashboard/adverts'
     | '/{-$locale}/(admin)/dashboard/my-account'
@@ -296,6 +335,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Char123LocaleChar125publicIndexRouteImport
       parentRoute: typeof Char123LocaleChar125publicRouteRoute
     }
+    '/{-$locale}/(public)/terms-and-conditions': {
+      id: '/{-$locale}/(public)/terms-and-conditions'
+      path: '/terms-and-conditions'
+      fullPath: '/{-$locale}/terms-and-conditions'
+      preLoaderRoute: typeof Char123LocaleChar125publicTermsAndConditionsRouteImport
+      parentRoute: typeof Char123LocaleChar125publicRouteRoute
+    }
     '/{-$locale}/(public)/sign-in': {
       id: '/{-$locale}/(public)/sign-in'
       path: '/sign-in'
@@ -308,6 +354,20 @@ declare module '@tanstack/react-router' {
       path: '/reset-password'
       fullPath: '/{-$locale}/reset-password'
       preLoaderRoute: typeof Char123LocaleChar125publicResetPasswordRouteImport
+      parentRoute: typeof Char123LocaleChar125publicRouteRoute
+    }
+    '/{-$locale}/(public)/privacy-policy': {
+      id: '/{-$locale}/(public)/privacy-policy'
+      path: '/privacy-policy'
+      fullPath: '/{-$locale}/privacy-policy'
+      preLoaderRoute: typeof Char123LocaleChar125publicPrivacyPolicyRouteImport
+      parentRoute: typeof Char123LocaleChar125publicRouteRoute
+    }
+    '/{-$locale}/(public)/cookie-policy': {
+      id: '/{-$locale}/(public)/cookie-policy'
+      path: '/cookie-policy'
+      fullPath: '/{-$locale}/cookie-policy'
+      preLoaderRoute: typeof Char123LocaleChar125publicCookiePolicyRouteImport
       parentRoute: typeof Char123LocaleChar125publicRouteRoute
     }
     '/{-$locale}/(public)/activate': {
@@ -410,8 +470,11 @@ declare module '@tanstack/react-start/server' {
 
 interface Char123LocaleChar125publicRouteRouteChildren {
   Char123LocaleChar125publicActivateRoute: typeof Char123LocaleChar125publicActivateRoute
+  Char123LocaleChar125publicCookiePolicyRoute: typeof Char123LocaleChar125publicCookiePolicyRoute
+  Char123LocaleChar125publicPrivacyPolicyRoute: typeof Char123LocaleChar125publicPrivacyPolicyRoute
   Char123LocaleChar125publicResetPasswordRoute: typeof Char123LocaleChar125publicResetPasswordRoute
   Char123LocaleChar125publicSignInRoute: typeof Char123LocaleChar125publicSignInRoute
+  Char123LocaleChar125publicTermsAndConditionsRoute: typeof Char123LocaleChar125publicTermsAndConditionsRoute
   Char123LocaleChar125publicIndexRoute: typeof Char123LocaleChar125publicIndexRoute
   Char123LocaleChar125publicEscortsCountryRoute: typeof Char123LocaleChar125publicEscortsCountryRoute
   Char123LocaleChar125publicEscortsIndexRoute: typeof Char123LocaleChar125publicEscortsIndexRoute
@@ -422,10 +485,16 @@ const Char123LocaleChar125publicRouteRouteChildren: Char123LocaleChar125publicRo
   {
     Char123LocaleChar125publicActivateRoute:
       Char123LocaleChar125publicActivateRoute,
+    Char123LocaleChar125publicCookiePolicyRoute:
+      Char123LocaleChar125publicCookiePolicyRoute,
+    Char123LocaleChar125publicPrivacyPolicyRoute:
+      Char123LocaleChar125publicPrivacyPolicyRoute,
     Char123LocaleChar125publicResetPasswordRoute:
       Char123LocaleChar125publicResetPasswordRoute,
     Char123LocaleChar125publicSignInRoute:
       Char123LocaleChar125publicSignInRoute,
+    Char123LocaleChar125publicTermsAndConditionsRoute:
+      Char123LocaleChar125publicTermsAndConditionsRoute,
     Char123LocaleChar125publicIndexRoute: Char123LocaleChar125publicIndexRoute,
     Char123LocaleChar125publicEscortsCountryRoute:
       Char123LocaleChar125publicEscortsCountryRoute,

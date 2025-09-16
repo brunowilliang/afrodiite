@@ -99,6 +99,26 @@ export const MenuPublic: Navigation[] = [
 		label: 'Cadastre-se Gratuitamente',
 		href: '/{-$locale}/sign-in',
 	},
+	{
+		label: 'Informações',
+		isSection: true,
+		href: '/{-$locale}',
+	},
+	{
+		key: '/terms-and-conditions',
+		label: 'Termos e Condições',
+		href: '/{-$locale}/terms-and-conditions',
+	},
+	{
+		key: '/privacy-policy',
+		label: 'Política de Privacidade',
+		href: '/{-$locale}/privacy-policy',
+	},
+	{
+		key: '/cookie-policy',
+		label: 'Política de Cookies',
+		href: '/{-$locale}/cookie-policy',
+	},
 ];
 
 export const MenuTabs = ({ onTabClick }: { onTabClick?: () => void }) => {

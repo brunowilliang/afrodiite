@@ -13,6 +13,7 @@ import { PhotoProvider } from 'react-photo-view';
 import reactPhotoViewCss from 'react-photo-view/dist/react-photo-view.css?url';
 import { api } from '@/lib/api';
 import { HeroProvider } from '@/providers/HeroUIProvider';
+import { MDXProvider } from '@/providers/MDXProvider';
 import { ThemeProvider } from '@/providers/ThemeProvider';
 import appCss from '@/styles/app.css?url';
 import { seo } from '@/utils/seo';
@@ -109,24 +110,26 @@ function RootDocument() {
 				<HeadContent />
 			</head>
 			<body>
-				<ThemeProvider
-					attribute="class"
-					defaultTheme="dark"
-					enableSystem
-					disableTransitionOnChange
-					storageKey="afrodite-theme"
-				>
-					<PhotoProvider>
-						<HeroProvider>
-							<Outlet />
-							<ToastProvider
-								toastOffset={20}
-								maxVisibleToasts={2}
-								placement="top-center"
-							/>
-						</HeroProvider>
-					</PhotoProvider>
-				</ThemeProvider>
+				<MDXProvider>
+					<ThemeProvider
+						attribute="class"
+						defaultTheme="dark"
+						enableSystem
+						disableTransitionOnChange
+						storageKey="afrodite-theme"
+					>
+						<PhotoProvider>
+							<HeroProvider>
+								<Outlet />
+								<ToastProvider
+									toastOffset={20}
+									maxVisibleToasts={2}
+									placement="top-center"
+								/>
+							</HeroProvider>
+						</PhotoProvider>
+					</ThemeProvider>
+				</MDXProvider>
 				<TanStackRouterDevtools position="bottom-right" />
 				<Scripts />
 			</body>
