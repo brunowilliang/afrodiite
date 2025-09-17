@@ -1,5 +1,5 @@
 import { Navbar, NavbarMenu, NavbarMenuToggle } from '@heroui/react';
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import {
 	Link,
 	NavigateOptions,
@@ -204,25 +204,11 @@ export const MenuTabs = ({ onTabClick }: { onTabClick?: () => void }) => {
 	const location = useLocation();
 	const { profile } = useLoaderData({ from: '/{-$locale}' });
 
-	// const { data: reviews, isLoading } = useQuery(
-	// 	api.queries.reviews.list.queryOptions({
-	// 		input: { status: 'pending' },
-	// 		select: (data) => data.totalItems,
-	// 		enabled: !!profile,
-	// 		staleTime: 1000 * 60 * 2, // 2 minutos
-	// 		refetchInterval: 1000 * 60 * 5, // Atualiza a cada 5 minutos
-	// 	}),
-	// );
-
-	const { data: reviews, isLoading } = useSuspenseQuery({
-		...api.queries.reviews.list.queryOptions({
+	const { data: reviews, isLoading } = useQuery(
+		api.queries.reviews.list.queryOptions({
 			input: { status: 'pending' },
 		}),
-	});
-
-	console.log('🎯 Final isLoading:', isLoading);
-	console.log('🎯 Final reviews:', reviews);
-	console.log('🎯 Final totalItems:', reviews?.totalItems);
+	);
 
 	const menuItems = getMenuItems(profile);
 
