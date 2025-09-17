@@ -293,7 +293,7 @@ const DrawerRoot = ({
 				onPointerCancel={handlePointerUp}
 			>
 				<div className="absolute top-7 right-3 h-10 w-10 cursor-pointer">
-					<Icon name="Close" size="24" onClick={handleSmoothClose} />
+					<Icon name="Cancel" size="24" onClick={handleSmoothClose} />
 				</div>
 				{children}
 			</div>

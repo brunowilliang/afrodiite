@@ -5,9 +5,16 @@ import {
 	DropdownSection as HeroDropdownSection,
 	DropdownTrigger as HeroDropdownTrigger,
 } from '@heroui/react';
-import { useSlot } from 'use-styled';
+import { useSlot, useStyled } from 'use-styled';
 
-export const Dropdown = useSlot(HeroDropdown, {
+const DropdownRoot = useStyled(HeroDropdown, {
+	base: {
+		children: null as never,
+		classNames: { backdrop: 'bg-black/20' },
+	},
+});
+
+export const Dropdown = useSlot(DropdownRoot, {
 	Item: HeroDropdownItem,
 	Menu: HeroDropdownMenu,
 	Trigger: HeroDropdownTrigger,

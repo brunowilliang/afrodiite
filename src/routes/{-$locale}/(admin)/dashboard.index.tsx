@@ -164,25 +164,22 @@ function RouteComponent() {
 				)}
 			</Stack>
 			<Stack className="gap-5">
-				{/* header */}
-				<Stack direction="column" className="justify-between gap-5">
-					<Badge>
-						<Icon name="Stars" variant="bulk" size="20" />
-						Dashboard
-					</Badge>
+				<Badge>
+					<Icon name="Stars" variant="bulk" size="20" />
+					Dashboard
+				</Badge>
 
-					<Tabs
-						aria-label="Filter Stats"
-						selectedKey={period}
-						onSelectionChange={(key) => {
-							setPeriod(key as IStats);
-						}}
-					>
-						<Tabs.Tab key="7d" title="7 dias" />
-						<Tabs.Tab key="30d" title="30 dias" />
-						<Tabs.Tab key="90d" title="90 dias" />
-					</Tabs>
-				</Stack>
+				<Tabs
+					aria-label="Filter Stats"
+					selectedKey={period}
+					onSelectionChange={(key) => {
+						setPeriod(key as IStats);
+					}}
+				>
+					<Tabs.Tab key="7d" title="7 dias" />
+					<Tabs.Tab key="30d" title="30 dias" />
+					<Tabs.Tab key="90d" title="90 dias" />
+				</Tabs>
 
 				<Stack className="gap-4">
 					<Stack className="grid grid-cols-3 gap-4">

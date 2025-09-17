@@ -14,7 +14,10 @@ import { Modal, ModalRef } from '@/components/heroui/Modal';
 import { toast } from '@/components/heroui/Toast';
 import { api } from '@/lib/api';
 
-export type ReviewsCardProps = CardProps & IReviews.Output;
+export type ReviewsCardProps = CardProps &
+	IReviews.Output & {
+		endContent?: React.ReactNode;
+	};
 
 const ReviewsRoot = useStyled('div', {
 	base: {
@@ -29,6 +32,7 @@ export const ReviewsCard = ({
 	comment,
 	rating,
 	created_at,
+	endContent,
 	...props
 }: ReviewsCardProps) => (
 	<Card className="p-4" {...props}>
@@ -70,6 +74,7 @@ export const ReviewsCard = ({
 						/>
 					);
 				})}
+				{endContent}
 			</div>
 		</div>
 		<div className="mt-4 w-full">

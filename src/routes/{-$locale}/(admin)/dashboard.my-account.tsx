@@ -1,6 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { Container } from '@/components/core/Stack';
-import { Text } from '@/components/core/Text';
+import { Icon } from '@/components/core/Icon';
+import { Stack } from '@/components/core/Stack';
+import { Badge } from '@/components/heroui/Badge';
 
 export const Route = createFileRoute(
 	'/{-$locale}/(admin)/dashboard/my-account',
@@ -10,10 +11,11 @@ export const Route = createFileRoute(
 
 function RouteComponent() {
 	return (
-		<Container hasHeader>
-			<Text size="2xl" weight="bold">
-				Dashboard - Minha Conta
-			</Text>
-		</Container>
+		<Stack className="gap-5">
+			<Badge>
+				<Icon name="Stars" variant="bulk" size="20" />
+				Minha conta
+			</Badge>
+		</Stack>
 	);
 }

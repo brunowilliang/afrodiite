@@ -70,11 +70,11 @@ function ModalRoot({
 			onOpenChange={handleOpenChange}
 			placement="top-center"
 			backdrop={'blur'}
-			className="bg-background"
+			className="bg-content1"
 			scrollBehavior="inside"
 			shouldBlockScroll={false}
 			classNames={{
-				backdrop: 'bg-black/20',
+				backdrop: 'bg-black/50',
 			}}
 			{...props}
 		/>

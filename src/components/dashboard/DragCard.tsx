@@ -90,7 +90,7 @@ export const DragCard = ({
 							variant="solid"
 							className="absolute top-2 right-2 bottom-1 z-10 overflow-hidden rounded-large border-1 border-white/20 bg-white/20 p-0 shadow-small backdrop-blur-xs"
 						>
-							<Icon name="Close" size="18" className="text-white" />
+							<Icon name="Cancel" size="18" className="text-white" />
 						</Button>
 					)}
 					{isPrimary && !isDragging && (

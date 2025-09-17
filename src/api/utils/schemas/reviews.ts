@@ -24,18 +24,9 @@ export const schema = createInsertSchema(escortReviews, {
 export const ReviewSchema = {
 	input: schema,
 	output: schema.omit({ escort_id: true }),
-	table: schema.pick({
-		reviewer_name: true,
-		rating: true,
-		title: true,
-		comment: true,
-		status: true,
-		created_at: true,
-	}),
 };
 
 export namespace IReviews {
 	export type Input = z.infer<typeof ReviewSchema.input>;
 	export type Output = z.infer<typeof ReviewSchema.output>;
-	export type Table = z.infer<typeof ReviewSchema.table>;
 }

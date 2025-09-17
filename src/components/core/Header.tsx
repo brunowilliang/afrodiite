@@ -84,6 +84,23 @@ export const AuthMenu: Navigation[] = [
 				href: '/{-$locale}/dashboard/profile',
 				search: { tab: 'gallery' },
 			},
+			{
+				key: '/dashboard/reviews',
+				label: 'Avaliações',
+				icon: 'Reviews',
+				href: '/{-$locale}/dashboard/reviews',
+			},
+		],
+	},
+	{
+		label: 'Geral',
+		sections: [
+			{
+				key: '/dashboard/settings',
+				label: 'Configurações',
+				icon: 'Settings',
+				href: '/{-$locale}/dashboard/settings',
+			},
 		],
 	},
 ];
@@ -130,10 +147,11 @@ export const PublicMenu: Navigation[] = [
 const getMenuItems = (profile: any): Navigation[] => {
 	if (profile) {
 		// User is authenticated: show dashboard + filtered public menu (remove sign-in)
-		const publicMenuFiltered = PublicMenu.filter(
-			(item) => item.key !== '/sign-in',
-		);
-		return [...AuthMenu, ...publicMenuFiltered];
+		// const publicMenuFiltered = PublicMenu.filter(
+		// 	(item) => item.key !== '/sign-in',
+		// );
+		return [...AuthMenu];
+		// return [...AuthMenu, ...publicMenuFiltered];
 	}
 
 	// User is not authenticated: show only public menu
@@ -181,7 +199,6 @@ export const MenuTabs = ({ onTabClick }: { onTabClick?: () => void }) => {
 
 	const menuItems = getMenuItems(profile);
 
-	// Flatten sections into individual items for rendering
 	const flattenedItems: Navigation[] = [];
 
 	menuItems.forEach((item) => {
@@ -242,11 +259,7 @@ export const Header = () => {
 
 				<div className="flex items-center justify-end">
 					{profile && (
-						<Dropdown
-							placement="bottom-end"
-							backdrop="blur"
-							classNames={{ backdrop: 'bg-black/20' }}
-						>
+						<Dropdown placement="bottom-end" backdrop="opaque">
 							<Dropdown.Trigger>
 								<Profile
 									name={profile?.artist_name ?? ''}
@@ -258,7 +271,7 @@ export const Header = () => {
 								<Dropdown.Item
 									key="ver-perfil"
 									color="default"
-									className="py-3 text-default-600"
+									className="px-3 py-2.5 text-default-600 data-[disabled=true]:opacity-40"
 									endContent={<Icon name="Link" size="20" />}
 									onPress={() => {
 										router.navigate({
@@ -275,7 +288,7 @@ export const Header = () => {
 								<Dropdown.Item
 									key="fazer-logout"
 									color="danger"
-									className="py-3 text-danger"
+									className="px-3 py-2.5 text-danger data-[disabled=true]:opacity-40"
 									onPress={() => signOut()}
 									endContent={<Icon name="Logout" size="20" />}
 								>
