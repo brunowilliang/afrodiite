@@ -1,6 +1,7 @@
 import { Tab as HeroTab, Tabs as HeroTabs } from '@heroui/react';
 import { useSlot, useStyled } from 'use-styled';
 import { Icon, IconProps } from '../core/Icon';
+import { Badge } from './Badge';
 
 const TabsRoot = useStyled(HeroTabs, {
 	base: {
@@ -33,9 +34,16 @@ type MenuProps = {
 	isActive?: boolean;
 	isSection?: boolean;
 	icon?: IconProps['name'];
+	badge?: string | number;
 };
 
-export const MenuItem = ({ label, isActive, icon, isSection }: MenuProps) => {
+export const MenuItem = ({
+	label,
+	isActive,
+	icon,
+	isSection,
+	badge,
+}: MenuProps) => {
 	return isSection ? (
 		<span className="text-default-400 text-small">{label}</span>
 	) : (
@@ -44,7 +52,13 @@ export const MenuItem = ({ label, isActive, icon, isSection }: MenuProps) => {
 				<Icon name={icon} size="18" variant={isActive ? 'bulk' : 'stroke'} />
 				<span>{label}</span>
 			</div>
-			<div className="flex items-center gap-2" />
+			{badge && (
+				<div className="flex items-center gap-2">
+					<Badge size="sm" className="py-1">
+						{badge}
+					</Badge>
+				</div>
+			)}
 		</div>
 	);
 };

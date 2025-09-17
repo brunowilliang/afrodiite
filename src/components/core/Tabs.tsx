@@ -1,37 +1,44 @@
 import { useSlot, useStyled } from 'use-styled';
-import { Stack } from './Stack';
-import { Text } from './Text';
+import { Icon } from './Icon';
 
-const TabsRoot = useStyled(Stack, {
+const TabsRoot = useStyled('div', {
 	base: {
-		direction: 'row',
+		className: 'flex flex-col gap-1 rounded-xl bg-default/10 p-2',
+	},
+});
+
+const TabsItem = useStyled('div', {
+	base: {
 		className:
-			'centered relative h-[60px] w-fit gap-1 overflow-hidden rounded-lg bg-accent-10 p-1',
+			'flex w-full items-center gap-1.5 rounded-lg bg-primary/10 px-3 py-2 text-primary-600',
 	},
 });
 
-const TabItemRoot = useStyled(Stack, {
+const TabsTitle = useStyled('span', {
 	base: {
-		className: 'centered relative h-full cursor-pointer rounded-md px-4',
+		className: '',
 	},
-	variants: {
-		isActive: {
-			true: {
-				className: 'bg-text-primary/10 text-text-primary',
-			},
-			false: {
-				className: 'text-text-secondary',
-			},
-		},
-	},
-});
-
-const TabItemText = useStyled(Text, {
-	base: {},
 });
 
 export const Tabs = useSlot(TabsRoot, {
-	Item: useSlot(TabItemRoot, {
-		Text: TabItemText,
-	}),
+	Item: TabsItem,
+	Title: TabsTitle,
+	Icon: Icon,
 });
+
+export const TabsExample = () => {
+	return (
+		<Tabs>
+			<Tabs.Item>
+				<Tabs.Icon name="Home" size="18" />
+				<Tabs.Title>Tab 1</Tabs.Title>
+			</Tabs.Item>
+			<Tabs.Item>
+				<Tabs.Title>Tab 2</Tabs.Title>
+			</Tabs.Item>
+			<Tabs.Item>
+				<Tabs.Title>Tab 3</Tabs.Title>
+			</Tabs.Item>
+		</Tabs>
+	);
+};

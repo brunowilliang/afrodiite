@@ -1,4 +1,5 @@
 import { Navbar, NavbarMenu, NavbarMenuToggle } from '@heroui/react';
+import { useSuspenseQuery } from '@tanstack/react-query';
 import {
 	Link,
 	NavigateOptions,
@@ -163,6 +164,7 @@ const renderMenuItem = (
 	item: Navigation,
 	location: any,
 	onTabClick?: () => void,
+	badge?: string | number,
 ) => {
 	const isSection = Boolean(item.sections?.length);
 
@@ -179,6 +181,11 @@ const renderMenuItem = (
 						label={item.label}
 						isActive={item.key === location.href}
 						icon={item.icon}
+						badge={
+							item.label === 'Avaliações' && badge && Number(badge) > 0
+								? badge
+								: undefined
+						}
 					/>
 				)
 			}
@@ -196,6 +203,26 @@ const renderMenuItem = (
 export const MenuTabs = ({ onTabClick }: { onTabClick?: () => void }) => {
 	const location = useLocation();
 	const { profile } = useLoaderData({ from: '/{-$locale}' });
+
+	// const { data: reviews, isLoading } = useQuery(
+	// 	api.queries.reviews.list.queryOptions({
+	// 		input: { status: 'pending' },
+	// 		select: (data) => data.totalItems,
+	// 		enabled: !!profile,
+	// 		staleTime: 1000 * 60 * 2, // 2 minutos
+	// 		refetchInterval: 1000 * 60 * 5, // Atualiza a cada 5 minutos
+	// 	}),
+	// );
+
+	const { data: reviews, isLoading } = useSuspenseQuery({
+		...api.queries.reviews.list.queryOptions({
+			input: { status: 'pending' },
+		}),
+	});
+
+	console.log('🎯 Final isLoading:', isLoading);
+	console.log('🎯 Final reviews:', reviews);
+	console.log('🎯 Final totalItems:', reviews?.totalItems);
 
 	const menuItems = getMenuItems(profile);
 
@@ -215,7 +242,9 @@ export const MenuTabs = ({ onTabClick }: { onTabClick?: () => void }) => {
 
 	return (
 		<Tabs aria-label="tabs-menu-web" isMenu selectedKey={location.href}>
-			{flattenedItems.map((item) => renderMenuItem(item, location, onTabClick))}
+			{flattenedItems.map((item) =>
+				renderMenuItem(item, location, onTabClick, reviews?.totalItems),
+			)}
 		</Tabs>
 	);
 };

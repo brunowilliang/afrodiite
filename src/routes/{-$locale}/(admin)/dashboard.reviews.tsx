@@ -28,10 +28,10 @@ function RouteComponent() {
 	const updateReview = useMutation(
 		api.queries.reviews.update.mutationOptions({
 			onSuccess: () => {
+				console.log('🔑 Invalidating Key:', api.queries.reviews.list.key());
+
 				queryClient.invalidateQueries({
-					queryKey: api.queries.reviews.list.queryKey({
-						input: { status },
-					}),
+					queryKey: api.queries.reviews.list.key(),
 				});
 			},
 			onError: (error) => console.error(error),
