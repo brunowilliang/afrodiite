@@ -1,0 +1,23 @@
+@import "tailwindcss";
+@plugin './hero.ts';
+@source '../../node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}';
+
+@custom-variant dark (&:is(.dark *));
+
+html {
+  min-height: 100vh;
+  background-color: hsl(var(--heroui-background) / .4);
+  scrollbar-gutter: stable;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+	font-family: var(--font-outfit), system-ui, sans-serif;
+  color: hsl(var(--heroui-default-600));
+}
+
+@utility centered {
+	align-items: center;
+	justify-content: center;
+}

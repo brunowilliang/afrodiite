@@ -1,0 +1,230 @@
+'use client';
+
+import { Card, Form } from '@heroui/react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { parseTime } from '@internationalized/date';
+import { useServerAction } from '@orpc/react/hooks';
+import { useRouter } from 'next/navigation';
+import { Controller, useForm } from 'react-hook-form';
+import { z } from 'zod';
+import type { Day } from '@/api/utils/schemas/escort-core';
+import { createDefaults, DayEnum } from '@/api/utils/schemas/escort-core';
+import { IProfile } from '@/api/utils/schemas/escort-forms';
+import { Badge } from '@/components/core/Badge';
+import { Button } from '@/components/core/Button';
+import { Icon } from '@/components/core/Icon';
+import { Input } from '@/components/core/Input';
+import { Stack } from '@/components/core/Stack';
+import { toast } from '@/components/core/Toast';
+import { updateProfile } from './Action';
+
+const timeRegex = /^([01]\d|2[0-3]):([0-5]\d)$/;
+const formSchema = z
+	.object(
+		Object.fromEntries(
+			(DayEnum.options as readonly Day[]).map((day) => [
+				day,
+				z
+					.object({
+						is_available: z.boolean(),
+						start: z.string().regex(timeRegex),
+						end: z.string().regex(timeRegex),
+					})
+					.superRefine((val, ctx) => {
+						if (!val.is_available) return;
+						if ((val.start ?? '') >= (val.end ?? '')) {
+							ctx.addIssue({
+								code: 'custom',
+								message: 'Hora de início deve ser menor que a hora de fim',
+								path: ['end'],
+							});
+						}
+					}),
+			]),
+		) as Record<Day, z.ZodObject<any>>,
+	)
+	.superRefine((val, ctx) => {
+		const anyActive = Object.values(val).some((v: any) => !!v.is_available);
+		if (!anyActive) {
+			const firstDay = (DayEnum.options as readonly Day[])[0];
+			ctx.addIssue({
+				code: 'custom',
+				message: 'Ative pelo menos um dia para salvar os horários.',
+				path: [firstDay, 'is_available'],
+			});
+		}
+	});
+
+type Props = {
+	profile?: IProfile.Select;
+};
+
+export default function SchedulesForm({ profile }: Props) {
+	const router = useRouter();
+	const { execute, status } = useServerAction(updateProfile);
+
+	const handleSubmit = async () => {
+		const values = form.getValues();
+		const office_hours = (DayEnum.options as readonly Day[]).map((day) => ({
+			day,
+			is_available: values[day].is_available as boolean,
+			start: values[day].start as string,
+			end: values[day].end as string,
+		}));
+
+		const [error] = await execute({ office_hours } as IProfile.Update);
+
+		if (error) {
+			toast.error(error?.message ?? 'Erro ao salvar horários');
+			return;
+		}
+
+		toast.success('Horários salvos com sucesso!');
+		router.refresh();
+	};
+
+	const form = useForm({
+		resolver: zodResolver(formSchema) as any,
+		mode: 'onChange',
+		defaultValues: profile?.office_hours?.length
+			? Object.fromEntries(
+					profile.office_hours.map(({ day, is_available, start, end }) => [
+						day,
+						{ is_available, start, end },
+					]),
+				)
+			: Object.fromEntries(
+					createDefaults
+						.officeHours()
+						.map(({ day, is_available, start, end }) => [
+							day,
+							{ is_available, start, end },
+						]),
+				),
+	});
+
+	const onInvalid = () => {
+		const anySelected = (DayEnum.options as readonly Day[]).some((d) =>
+			form.getValues(`${d}.is_available` as const),
+		);
+		if (!anySelected) {
+			toast.error('Ative pelo menos um dia para salvar os horários.');
+		}
+	};
+
+	// Helper para verificar se é "dia inteiro" baseado nos valores atuais
+	const isFullDay = (day: Day) => {
+		const values = form.watch();
+		return values[day]?.start === '00:00' && values[day]?.end === '23:59';
+	};
+
+	// Helper para definir dia inteiro
+	const setFullDay = (day: Day, enabled: boolean) => {
+		if (enabled) {
+			form.setValue(`${day}.start`, '00:00');
+			form.setValue(`${day}.end`, '23:59');
+		} else {
+			form.setValue(`${day}.start`, '08:00');
+			form.setValue(`${day}.end`, '18:00');
+		}
+	};
+
+	return (
+		<Form
+			validationBehavior="aria"
+			onSubmit={form.handleSubmit(handleSubmit, onInvalid)}
+			className="flex w-full flex-col gap-5"
+		>
+			<Stack className="grid w-full grid-cols-1 gap-5 md:grid-cols-2">
+				{(
+					[
+						['monday', 'Segunda-Feira'],
+						['tuesday', 'Terça-Feira'],
+						['wednesday', 'Quarta-Feira'],
+						['thursday', 'Quinta-Feira'],
+						['friday', 'Sexta-Feira'],
+						['saturday', 'Sábado'],
+						['sunday', 'Domingo'],
+					] as Array<[Day, string]>
+				).map(([day, label]) => {
+					const isActive = form.watch(`${day}.is_available`);
+					return (
+						<Card key={day} className="w-full gap-3 p-4 last:md:col-span-2">
+							<Badge>
+								<Icon name="Stars" variant="bulk" size="20" />
+								{label}
+							</Badge>
+							<Stack
+								direction="row"
+								className="centered w-full justify-between"
+							>
+								<Controller
+									control={form.control}
+									name={`${day}.is_available` as const}
+									render={({ field }) => (
+										<Input.Switch
+											isSelected={field.value}
+											onValueChange={field.onChange}
+										>
+											{isActive ? 'Disponível' : 'Indisponível'}
+										</Input.Switch>
+									)}
+								/>
+								{isActive && (
+									<Input.Switch
+										isSelected={isFullDay(day)}
+										onValueChange={(enabled) => setFullDay(day, enabled)}
+										size="sm"
+									>
+										Dia inteiro?
+									</Input.Switch>
+								)}
+							</Stack>
+							<Stack direction="row" className="w-full gap-4">
+								<Controller
+									control={form.control}
+									name={`${day}.start` as const}
+									render={({ field, fieldState }) => (
+										<Input.Time
+											label="Início"
+											variant="faded"
+											value={field.value ? parseTime(field.value) : null}
+											isRequired={isActive}
+											isDisabled={!isActive}
+											onChange={(t) =>
+												field.onChange(t ? t.toString().slice(0, 5) : '')
+											}
+											isInvalid={!!fieldState.error}
+											errorMessage={fieldState.error?.message}
+										/>
+									)}
+								/>
+								<Controller
+									control={form.control}
+									name={`${day}.end` as const}
+									render={({ field, fieldState }) => (
+										<Input.Time
+											label="Fim"
+											variant="faded"
+											isRequired={isActive}
+											isDisabled={!isActive}
+											value={field.value ? parseTime(field.value) : null}
+											onChange={(t) =>
+												field.onChange(t ? t.toString().slice(0, 5) : '')
+											}
+											isInvalid={!!fieldState.error}
+											errorMessage={fieldState.error?.message}
+										/>
+									)}
+								/>
+							</Stack>
+						</Card>
+					);
+				})}
+			</Stack>
+			<Button size="md" isLoading={status === 'pending'} type="submit">
+				Salvar
+			</Button>
+		</Form>
+	);
+}
