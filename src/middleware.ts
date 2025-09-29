@@ -12,6 +12,9 @@ const publicRoutes = [
 	{ path: '/cadastrar', whenAuthenticated: 'redirect' },
 	{ path: '/entrar', whenAuthenticated: 'redirect' },
 	{ path: '/esqueci-senha', whenAuthenticated: 'redirect' },
+	{ path: '/termos-e-condicoes', whenAuthenticated: 'next' },
+	{ path: '/politica-de-privacidade', whenAuthenticated: 'next' },
+	{ path: '/politica-de-cookies', whenAuthenticated: 'next' },
 ] as PublicRoute[];
 
 const REDIRECT_WHEN_NOT_AUTHENTICATED_ROUTE = '/' as Href;

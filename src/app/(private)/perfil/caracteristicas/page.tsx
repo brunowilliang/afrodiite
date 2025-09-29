@@ -1,16 +1,15 @@
-import { IProfile } from '@/api/utils/schemas/escort-forms';
 import { Stack } from '@/components/core/Stack';
-import { api } from '@/lib/orpc';
-import { Badge } from '../components/Badge';
-import CharacteristicsForm from '../components/CharacteristicsForm';
+import { getProfile } from '@/lib/server/profile-cache';
+import { Badge } from '../../components/Badge';
+import { Characteristics } from '../../components/Characteristics';
 
 export default async function Caracteristicas() {
-	const profile = (await api.orpc.profile.get()) as IProfile.Select | undefined;
+	const profile = await getProfile();
 
 	return (
 		<Stack className="gap-5">
 			<Badge icon="Diamond" label="Características" />
-			<CharacteristicsForm profile={profile} />
+			<Characteristics profile={profile} />
 		</Stack>
 	);
 }

@@ -1,16 +1,15 @@
-import { IProfile } from '@/api/utils/schemas/escort-forms';
 import { Stack } from '@/components/core/Stack';
-import { api } from '@/lib/orpc';
-import { Badge } from '../components/Badge';
-import SchedulesForm from '../components/SchedulesForm';
+import { getProfile } from '@/lib/server/profile-cache';
+import { Badge } from '../../components/Badge';
+import { Schedules } from '../../components/Schedules';
 
 export default async function Horarios() {
-	const profile = (await api.orpc.profile.get()) as IProfile.Select | undefined;
+	const profile = await getProfile();
 
 	return (
 		<Stack className="gap-5">
 			<Badge icon="ClockSquare" label="Horários" />
-			<SchedulesForm profile={profile} />
+			<Schedules profile={profile} />
 		</Stack>
 	);
 }

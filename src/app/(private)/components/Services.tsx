@@ -2,7 +2,6 @@
 
 import { Card, Divider } from '@heroui/react';
 import { useServerAction } from '@orpc/react/hooks';
-import { useRouter } from 'next/navigation';
 import { Fragment, useMemo, useRef, useState } from 'react';
 import { IProfile } from '@/api/utils/schemas/escort-forms';
 import { Icon } from '@/components/core/Icon';
@@ -11,14 +10,13 @@ import { Modal, ModalRef } from '@/components/core/Modal';
 import { toast } from '@/components/core/Toast';
 import { cn } from '@/lib/utils';
 import { DATA_SERVICES } from '@/utils/services';
-import { updateProfile } from './Action';
+import { updateProfile } from './actions/updateProfile';
 
 type Props = {
 	profile?: IProfile.Select;
 };
 
-export default function ServicesForm({ profile }: Props) {
-	const router = useRouter();
+export const Services = ({ profile }: Props) => {
 	const modalRef = useRef<ModalRef>(null);
 	const [modalService, setModalService] = useState<{
 		label: string;
@@ -69,8 +67,7 @@ export default function ServicesForm({ profile }: Props) {
 			return;
 		}
 
-		// Sucesso - sem toast para não ser intrusivo
-		router.refresh();
+		// toast.success('Serviços salvo com sucesso!');
 	};
 
 	return (
@@ -128,4 +125,4 @@ export default function ServicesForm({ profile }: Props) {
 			</Modal>
 		</div>
 	);
-}
+};

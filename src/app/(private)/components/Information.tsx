@@ -4,7 +4,6 @@ import { Form } from '@heroui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { parseDate, toCalendarDate } from '@internationalized/date';
 import { useServerAction } from '@orpc/react/hooks';
-import { useRouter } from 'next/navigation';
 import { useMemo, useRef } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import slugify from 'slugify';
@@ -16,9 +15,8 @@ import { Button } from '@/components/core/Button';
 import { Icon } from '@/components/core/Icon';
 import { Input } from '@/components/core/Input';
 import { toast } from '@/components/core/Toast';
-// import { toast } from '@/components/core/Toast'; // Descomente para usar toast
 import { Countries } from '@/utils/lists/Countries';
-import { updateProfile } from './Action';
+import { updateProfile } from './actions/updateProfile';
 
 const formSchema = escortProfileSchema.pick({
 	artist_name: true,
@@ -34,8 +32,7 @@ type Props = {
 	profile?: IProfile.Select;
 };
 
-export default function InformationForm({ profile }: Props) {
-	const router = useRouter();
+export const Information = ({ profile }: Props) => {
 	const { execute, status } = useServerAction(updateProfile);
 
 	const nationalityOptions = useMemo(() => {
@@ -56,7 +53,7 @@ export default function InformationForm({ profile }: Props) {
 		}
 
 		toast.success('Perfil salvo com sucesso!');
-		router.refresh();
+		// router.refresh();
 	};
 
 	const form = useForm({
@@ -253,4 +250,4 @@ export default function InformationForm({ profile }: Props) {
 			</Button>
 		</Form>
 	);
-}
+};

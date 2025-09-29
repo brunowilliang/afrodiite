@@ -3,7 +3,6 @@
 import { Form } from '@heroui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useServerAction } from '@orpc/react/hooks';
-import { useRouter } from 'next/navigation';
 import { Controller, useForm } from 'react-hook-form';
 import {
 	escortProfileSchema,
@@ -12,7 +11,7 @@ import {
 import { Button } from '@/components/core/Button';
 import { Input } from '@/components/core/Input';
 import { toast } from '@/components/core/Toast';
-import { updateProfile } from './Action';
+import { updateProfile } from './actions/updateProfile';
 
 const formSchema = escortProfileSchema.pick({
 	characteristics: true,
@@ -22,8 +21,7 @@ type Props = {
 	profile?: IProfile.Select;
 };
 
-export default function CharacteristicsForm({ profile }: Props) {
-	const router = useRouter();
+export const Characteristics = ({ profile }: Props) => {
 	const { execute, status } = useServerAction(updateProfile);
 
 	const languageOptions = [
@@ -68,7 +66,6 @@ export default function CharacteristicsForm({ profile }: Props) {
 		}
 
 		toast.success('Características salvas com sucesso!');
-		router.refresh();
 	};
 
 	const form = useForm({
@@ -482,4 +479,4 @@ export default function CharacteristicsForm({ profile }: Props) {
 			</Button>
 		</Form>
 	);
-}
+};

@@ -4,7 +4,6 @@ import { Card, Form } from '@heroui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { parseTime } from '@internationalized/date';
 import { useServerAction } from '@orpc/react/hooks';
-import { useRouter } from 'next/navigation';
 import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import type { Day } from '@/api/utils/schemas/escort-core';
@@ -16,7 +15,7 @@ import { Icon } from '@/components/core/Icon';
 import { Input } from '@/components/core/Input';
 import { Stack } from '@/components/core/Stack';
 import { toast } from '@/components/core/Toast';
-import { updateProfile } from './Action';
+import { updateProfile } from './actions/updateProfile';
 
 const timeRegex = /^([01]\d|2[0-3]):([0-5]\d)$/;
 const formSchema = z
@@ -59,8 +58,7 @@ type Props = {
 	profile?: IProfile.Select;
 };
 
-export default function SchedulesForm({ profile }: Props) {
-	const router = useRouter();
+export const Schedules = ({ profile }: Props) => {
 	const { execute, status } = useServerAction(updateProfile);
 
 	const handleSubmit = async () => {
@@ -80,7 +78,6 @@ export default function SchedulesForm({ profile }: Props) {
 		}
 
 		toast.success('Horários salvos com sucesso!');
-		router.refresh();
 	};
 
 	const form = useForm({
@@ -227,4 +224,4 @@ export default function SchedulesForm({ profile }: Props) {
 			</Button>
 		</Form>
 	);
-}
+};

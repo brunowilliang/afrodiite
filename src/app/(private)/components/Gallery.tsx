@@ -3,7 +3,6 @@
 import { useServerAction } from '@orpc/react/hooks';
 import { useUploadFiles } from 'better-upload/client';
 import { nanoid } from 'nanoid';
-import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { MAX_FILE_SIZE_GALLERY } from '@/api/http/routes/storage';
 import { buildGalleryItems } from '@/api/utils/buildGalleryItems';
@@ -15,15 +14,14 @@ import { toast } from '@/components/core/Toast';
 import { SortableGallery } from '@/components/SortableGallery';
 import { api } from '@/lib/orpc';
 import { tryCatch } from '@/utils/tryCatch';
-import { updateProfile } from './Action';
+import { updateProfile } from './actions/updateProfile';
 
 type Props = {
 	profile?: IProfile.Select;
 };
 
-export default function GalleryForm({ profile }: Props) {
+export const Gallery = ({ profile }: Props) => {
 	const { control } = useUploadFiles({ route: 'gallery' });
-	const router = useRouter();
 	const { execute } = useServerAction(updateProfile);
 
 	const [isSaving, setIsSaving] = useState(false);
@@ -79,8 +77,8 @@ export default function GalleryForm({ profile }: Props) {
 		);
 		if (toPersist.length) {
 			const [error] = await execute({ gallery: toPersist } as IProfile.Update);
-			if (!error) {
-				router.refresh();
+			if (error) {
+				toast.error(error?.message ?? 'Erro ao salvar galeria');
 			}
 		}
 	};
@@ -233,8 +231,8 @@ export default function GalleryForm({ profile }: Props) {
 		setItems(nextItems);
 
 		const [error] = await execute({ gallery: nextItems } as IProfile.Update);
-		if (!error) {
-			router.refresh();
+		if (error) {
+			toast.error(error?.message ?? 'Erro ao remover galeria');
 		}
 	};
 
@@ -282,8 +280,8 @@ export default function GalleryForm({ profile }: Props) {
 						const [error] = await execute({
 							gallery: toPersist,
 						} as IProfile.Update);
-						if (!error) {
-							router.refresh();
+						if (error) {
+							toast.error(error?.message ?? 'Erro ao reordenar galeria');
 						}
 					}, 400) as unknown as number;
 				}}
@@ -291,4 +289,4 @@ export default function GalleryForm({ profile }: Props) {
 			/>
 		</Stack>
 	);
-}
+};

@@ -1,3 +1,5 @@
+'use client';
+
 import { Chip } from '@heroui/react';
 import { ComponentProps } from 'react';
 import { useStyled } from 'use-styled';

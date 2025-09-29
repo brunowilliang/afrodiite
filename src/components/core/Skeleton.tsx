@@ -1,3 +1,5 @@
+'use client';
+
 import { Skeleton as HeroUiSkeleton } from '@heroui/react';
 import { ComponentProps } from 'react';
 import { useStyled } from 'use-styled';

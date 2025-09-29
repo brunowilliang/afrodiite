@@ -3,7 +3,6 @@
 import { Form } from '@heroui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useServerAction } from '@orpc/react/hooks';
-import { useRouter } from 'next/navigation';
 import { useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import {
@@ -14,7 +13,7 @@ import { Button } from '@/components/core/Button';
 import { Input } from '@/components/core/Input';
 import { toast } from '@/components/core/Toast';
 import { PortugalDistricts } from '@/utils/lists/Portugal';
-import { updateProfile } from './Action';
+import { updateProfile } from './actions/updateProfile';
 
 const formSchema = escortProfileSchema.pick({
 	country: true,
@@ -26,8 +25,7 @@ type Props = {
 	profile?: IProfile.Select;
 };
 
-export default function LocationForm({ profile }: Props) {
-	const router = useRouter();
+export const Location = ({ profile }: Props) => {
 	const { execute, status } = useServerAction(updateProfile);
 
 	// Lista de distritos únicos
@@ -57,7 +55,6 @@ export default function LocationForm({ profile }: Props) {
 		}
 
 		toast.success('Localização salva com sucesso!');
-		router.refresh();
 	};
 
 	const form = useForm({
@@ -164,4 +161,4 @@ export default function LocationForm({ profile }: Props) {
 			</Button>
 		</Form>
 	);
-}
+};

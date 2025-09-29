@@ -1,24 +1,22 @@
 'use client';
 
 import { useServerAction } from '@orpc/react/hooks';
-import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
 import { IReviews } from '@/api/utils/schemas/reviews';
 import { Button } from '@/components/core/Button';
 import { Dropdown } from '@/components/core/Dropdown';
 import { Icon } from '@/components/core/Icon';
-import { Reviews } from '@/components/core/Reviews';
+import { Reviews as ReviewsComponent } from '@/components/core/Reviews';
 import { Stack } from '@/components/core/Stack';
 import { Tabs } from '@/components/core/Tabs';
 import { toast } from '@/components/core/Toast';
-import { updateReview } from './Action';
+import { updateReview } from './actions/updateReview';
 
 type Props = {
-	reviews?: IReviews.List;
+	reviews?: IReviews.Output[];
 };
 
-export const ReviewsComponent = ({ reviews }: Props) => {
-	const router = useRouter();
+export const Reviews = ({ reviews }: Props) => {
 	const [status, setStatus] = useState<IReviews.Output['status']>('pending');
 
 	const { execute } = useServerAction(updateReview);
@@ -37,12 +35,11 @@ export const ReviewsComponent = ({ reviews }: Props) => {
 		}
 
 		toast.success('Avaliação atualizada com sucesso!');
-		router.refresh();
 	};
 
 	const filteredReviews = useMemo(() => {
-		if (!reviews?.results) return [];
-		return reviews.results.filter((review) => review.status === status);
+		if (!reviews) return [];
+		return reviews.filter((review) => review.status === status);
 	}, [reviews, status]);
 
 	return (
@@ -66,7 +63,7 @@ export const ReviewsComponent = ({ reviews }: Props) => {
 			)}
 
 			{filteredReviews.map((review) => (
-				<Reviews.Card
+				<ReviewsComponent.Card
 					shadow="none"
 					key={review.id}
 					title={review.title}

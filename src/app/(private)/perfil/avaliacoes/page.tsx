@@ -1,16 +1,16 @@
 import { IReviews } from '@/api/utils/schemas/reviews';
 import { Stack } from '@/components/core/Stack';
-import { api } from '@/lib/orpc';
-import { Badge } from '../components/Badge';
-import { ReviewsComponent } from '../components/Reviews';
+import { getReviews } from '../../components/actions/getReviews';
+import { Badge } from '../../components/Badge';
+import { Reviews } from '../../components/Reviews';
 
 export default async function Avaliacoes() {
-	const reviews = (await api.orpc.reviews.list()) as IReviews.List;
+	const reviews = await getReviews();
 
 	return (
 		<Stack className="gap-5">
 			<Badge icon="Reviews" label="Avaliações" />
-			<ReviewsComponent reviews={reviews} />
+			<Reviews reviews={reviews?.results as IReviews.Output[]} />
 		</Stack>
 	);
 }

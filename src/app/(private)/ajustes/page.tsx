@@ -1,7 +1,7 @@
 import { IProfile } from '@/api/utils/schemas/escort-forms';
 import { Stack } from '@/components/core/Stack';
 import { api } from '@/lib/orpc';
-import { Badge } from '../perfil/components/Badge';
+import { Badge } from '../components/Badge';
 import SettingsForm from './components/SettingsForm';
 
 export default async function Ajustes() {

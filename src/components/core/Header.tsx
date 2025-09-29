@@ -1,145 +1,44 @@
 'use client';
 
 import { Navbar, NavbarMenu, NavbarMenuToggle } from '@heroui/react';
-import { usePathname } from 'next/navigation';
+import Link from 'next/link';
+import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { IProfile } from '@/api/utils/schemas/escort-forms';
 import { Card } from '@/components/core/Card';
-import { IconProps } from '@/components/core/Icon';
-import { Link } from '@/components/core/Link';
+// import { Link } from '@/components/core/Link';
 import { Tabs } from '@/components/core/Tabs';
+import { AuthMenu, Navigation, PublicMenu } from '@/components/Header/Links';
 import { UserProfile } from '@/components/Header/UserProfile';
 import { Logo } from '@/components/Logo';
 import { Href } from '@/providers/HeroUIProvider';
 
-export type Navigation = {
-	key?: Href;
-	label?: string;
-	icon?: IconProps['name'];
-	href?: Href;
-	sections?: Navigation[];
-};
-
-export const AuthMenu: Navigation[] = [
-	{
-		key: '/painel',
-		href: '/painel',
-		label: 'Dashboard',
-		icon: 'Dashboard',
-	},
-	{
-		label: 'Perfil',
-		sections: [
-			{
-				key: '/perfil',
-				href: '/perfil',
-				label: 'Informações',
-				icon: 'Profile',
-			},
-			{
-				key: '/perfil/localizacao',
-				href: '/perfil/localizacao',
-				label: 'Localização',
-				icon: 'Location',
-			},
-			{
-				key: '/perfil/caracteristicas',
-				href: '/perfil/caracteristicas',
-				label: 'Características',
-				icon: 'Diamond',
-			},
-			{
-				key: '/perfil/horarios',
-				href: '/perfil/horarios',
-				label: 'Horários',
-				icon: 'ClockSquare',
-			},
-			{
-				key: '/perfil/precos',
-				href: '/perfil/precos',
-				label: 'Preços',
-				icon: 'MoneyBag',
-			},
-			{
-				key: '/perfil/servicos',
-				href: '/perfil/servicos',
-				label: 'Serviços',
-				icon: 'Services',
-			},
-			{
-				key: '/perfil/galeria',
-				href: '/perfil/galeria',
-				label: 'Imagens',
-				icon: 'Gallery',
-			},
-			{
-				key: '/perfil/avaliacoes',
-				href: '/perfil/avaliacoes',
-				label: 'Avaliações',
-				icon: 'Reviews',
-			},
-		],
-	},
-	{
-		label: 'Geral',
-		sections: [
-			{
-				key: '/ajustes',
-				href: '/ajustes',
-				label: 'Configurações',
-				icon: 'Settings',
-			},
-		],
-	},
-];
-
-export const PublicMenu: Navigation[] = [
-	{
-		key: '/',
-		href: '/',
-		label: 'Home',
-		icon: 'Home',
-	},
-	{
-		key: '/cadastrar',
-		href: '/cadastrar',
-		label: 'Cadastre-se Gratuitamente',
-		icon: 'User',
-	},
-	{
-		label: 'Informações',
-		sections: [
-			{
-				key: '/',
-				href: '/',
-				label: 'Termos e Condições',
-				icon: 'Services',
-			},
-			{
-				key: '/',
-				href: '/',
-				label: 'Política de Privacidade',
-				icon: 'Services',
-			},
-			{
-				key: '/',
-				href: '/',
-				label: 'Política de Cookies',
-				icon: 'Services',
-			},
-		],
-	},
-];
-
 // Helper function to get menu items based on authentication status
-const getMenuItems = (profile: boolean): Navigation[] => {
-	if (profile) {
-		// User is authenticated: show dashboard + filtered public menu (remove sign-in)
-		// const publicMenuFiltered = PublicMenu.filter(
-		// 	(item) => item.key !== '/sign-in',
-		// );
-		return [...AuthMenu];
-		// return [...AuthMenu, ...publicMenuFiltered];
+const getMenuItems = (showAuthMenu: boolean): Navigation[] => {
+	if (showAuthMenu) {
+		// Filter items to exclude auth-related routes
+		const authExcludeKeys = [
+			'/entrar',
+			'/esqueci-senha',
+			'/cadastrar',
+		] as Href[];
+
+		const publicMenuFiltered = PublicMenu.map((item) => {
+			if (item.sections) {
+				// Filter sections within the item
+				const filteredSections = item.sections.filter(
+					(section) => !authExcludeKeys.includes(section.key as Href),
+				);
+				return { ...item, sections: filteredSections };
+			}
+			// Filter top-level items
+			return authExcludeKeys.includes(item.key as Href) ? null : item;
+		}).filter(
+			(item): item is Navigation =>
+				item !== null && (!item.sections || item.sections.length > 0),
+		);
+
+		return [...AuthMenu, ...publicMenuFiltered];
 	}
 
 	// User is not authenticated: show only public menu
@@ -154,6 +53,7 @@ const renderMenuItem = (
 	badge?: string | number,
 ) => {
 	const isSection = Boolean(item.sections?.length);
+	const router = useRouter();
 
 	return (
 		<Tabs.Tab
@@ -186,10 +86,16 @@ const renderMenuItem = (
 	);
 };
 
-export const MenuTabs = ({ onTabClick }: { onTabClick?: () => void }) => {
+type Props = {
+	profile?: IProfile.Select;
+	showAuthMenu?: boolean;
+	onTabClick?: () => void;
+};
+
+export function MenuTabs({ showAuthMenu, onTabClick }: Props) {
 	const pathname = usePathname();
 
-	const menuItems = getMenuItems(true);
+	const menuItems = getMenuItems(Boolean(showAuthMenu));
 
 	const flattenedItems: Navigation[] = [];
 
@@ -213,11 +119,7 @@ export const MenuTabs = ({ onTabClick }: { onTabClick?: () => void }) => {
 			)}
 		</Tabs>
 	);
-};
-
-type Props = {
-	profile?: IProfile.Select;
-};
+}
 
 export const Header = ({ profile }: Props) => {
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -238,14 +140,20 @@ export const Header = ({ profile }: Props) => {
 			>
 				<div className="centered flex gap-2">
 					<NavbarMenuToggle
-						className="h-10 w-10 text-default-600 md:hidden"
+						className="h-10 w-10 text-default-600"
 						aria-label={'Toggle menu'}
 					/>
 					<Link href="/painel" onClick={() => setIsMenuOpen(false)}>
 						<Logo className="h-full cursor-pointer" />
 					</Link>
 				</div>
-				<UserProfile profile={profile} />
+				{profile ? (
+					<UserProfile profile={profile} />
+				) : (
+					<Link href="/entrar" onClick={() => setIsMenuOpen(false)}>
+						Entar
+					</Link>
+				)}
 			</Card>
 
 			<NavbarMenu
@@ -270,7 +178,10 @@ export const Header = ({ profile }: Props) => {
 				}}
 				className="mx-auto w-full max-w-5xl bg-tranparent p-4 pt-5"
 			>
-				<MenuTabs onTabClick={() => setIsMenuOpen(false)} />
+				<MenuTabs
+					showAuthMenu={Boolean(profile)}
+					onTabClick={() => setIsMenuOpen(false)}
+				/>
 			</NavbarMenu>
 		</Navbar>
 	);
