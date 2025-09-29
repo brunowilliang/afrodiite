@@ -1,5 +1,6 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { useRef, useState } from 'react';
 import { IProfile } from '@/api/utils/schemas/escort-forms';
 import { Badge } from '@/components/core/Badge';
@@ -8,7 +9,7 @@ import { Card } from '@/components/core/Card';
 import { Icon } from '@/components/core/Icon';
 import { ImageCarousel } from '@/components/core/ImageCarousel';
 import { Modal, ModalRef } from '@/components/core/Modal';
-import { Container, Stack } from '@/components/core/Stack';
+import { Stack } from '@/components/core/Stack';
 import { AccordionPrice } from './AccordionPrice';
 import { CharacteristicsCard } from './CharacteristicsCard';
 import { OfficeHoursCard } from './OfficeHoursCard';
@@ -23,19 +24,20 @@ type Props = {
 
 export const EscortPage = ({ profile }: Props) => {
 	const modalServiceRef = useRef<ModalRef>(null);
+	const router = useRouter();
 	const [modalService, setModalService] = useState<{
 		label: string;
 		description: string;
 	} | null>(null);
 
 	return (
-		<Container>
+		<div className="space-y-4">
 			<Stack direction="row" className="justify-start">
 				<Button
 					variant="light"
 					color="primary"
 					size="md"
-					// onPress={handleGoBack}
+					onPress={() => router.back()}
 				>
 					<Icon
 						name="ArrowLeft"
@@ -146,6 +148,6 @@ export const EscortPage = ({ profile }: Props) => {
 					</Modal.Body>
 				</Modal.Content>
 			</Modal>
-		</Container>
+		</div>
 	);
 };

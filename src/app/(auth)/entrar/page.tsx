@@ -42,7 +42,7 @@ export default function SignIn() {
 	};
 
 	return (
-		<Stack className="w-full max-w-md space-y-4 text-center">
+		<Stack className="w-full space-y-4 text-center">
 			{/* <Text align="center" as="h4">
 					Fazer Login
 				</Text> */}

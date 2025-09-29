@@ -15,6 +15,8 @@ const publicRoutes = [
 	{ path: '/termos-e-condicoes', whenAuthenticated: 'next' },
 	{ path: '/politica-de-privacidade', whenAuthenticated: 'next' },
 	{ path: '/politica-de-cookies', whenAuthenticated: 'next' },
+	{ path: '/portugal', whenAuthenticated: 'next' },
+	{ path: '/acompanhante/[public_id]/[slug]', whenAuthenticated: 'next' },
 ] as PublicRoute[];
 
 const REDIRECT_WHEN_NOT_AUTHENTICATED_ROUTE = '/' as Href;
@@ -23,6 +25,12 @@ export function middleware(request: NextRequest) {
 	const session = getSessionCookie(request);
 
 	const path = request.nextUrl.pathname;
+
+	// ✅ Rotas que sempre permitem acesso (prefix matching)
+	if (path.startsWith('/acompanhante/')) {
+		return NextResponse.next();
+	}
+
 	const isPublicRoute = publicRoutes.find((route) => route.path === path);
 
 	// const authToken = false; // por enquanto!

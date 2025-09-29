@@ -35,7 +35,7 @@ export default function SignUp() {
 	};
 
 	return (
-		<Stack className="w-full max-w-md items-center space-y-4 text-center">
+		<Stack className="w-full items-center space-y-4 text-center">
 			<Form
 				validationBehavior="aria"
 				onSubmit={signUpForm.handleSubmit(onSubmitSignUp)}

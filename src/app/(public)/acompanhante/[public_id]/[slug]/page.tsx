@@ -4,7 +4,7 @@ import { api } from '@/lib/orpc';
 import { EscortPage } from './components/Page';
 
 export default async function EscortProfilePage(
-	props: PageProps<'/acompanhantes/[public_id]/[slug]'>,
+	props: PageProps<'/acompanhante/[public_id]/[slug]'>,
 ) {
 	const { params } = props;
 	const { public_id, slug } = await params;

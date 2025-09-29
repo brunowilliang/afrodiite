@@ -8,7 +8,7 @@ type Props = Readonly<{
 
 export default function RootLayout({ children }: Props) {
 	return (
-		<div className="centered mx-auto flex min-h-[100dvh] max-w-lg flex-col gap-14 overflow-hidden px-4">
+		<div className="centered mx-auto flex min-h-[100dvh] w-full max-w-md flex-col gap-14">
 			<Logo className="h-10 w-40" />
 			{children}
 			<Link href="/">

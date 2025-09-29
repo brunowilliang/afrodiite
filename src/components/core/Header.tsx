@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { IProfile } from '@/api/utils/schemas/escort-forms';
+import { Button } from '@/components/core/Button';
 import { Card } from '@/components/core/Card';
 // import { Link } from '@/components/core/Link';
 import { Tabs } from '@/components/core/Tabs';
@@ -123,6 +124,7 @@ export function MenuTabs({ showAuthMenu, onTabClick }: Props) {
 
 export const Header = ({ profile }: Props) => {
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
+	const router = useRouter();
 
 	return (
 		<Navbar
@@ -150,9 +152,15 @@ export const Header = ({ profile }: Props) => {
 				{profile ? (
 					<UserProfile profile={profile} />
 				) : (
-					<Link href="/entrar" onClick={() => setIsMenuOpen(false)}>
-						Entar
-					</Link>
+					<Button
+						variant="flat"
+						onClick={() => {
+							setIsMenuOpen(false);
+							router.push('/entrar');
+						}}
+					>
+						Entrar
+					</Button>
 				)}
 			</Card>
 

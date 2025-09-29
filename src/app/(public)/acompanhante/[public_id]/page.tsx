@@ -3,7 +3,7 @@ import { api } from '@/lib/orpc';
 import { tryCatch } from '@/utils/tryCatch';
 
 export default async function RedirectPage(
-	props: PageProps<'/acompanhantes/[public_id]'>,
+	props: PageProps<'/acompanhante/[public_id]'>,
 ) {
 	const { params } = await props;
 	const { public_id } = await params;
@@ -38,5 +38,5 @@ export default async function RedirectPage(
 	console.log('🚀 Fetch success! public_id:', publicId, 'slug:', profile.slug);
 
 	// Redirect to final URL (outside tryCatch to avoid catching NEXT_REDIRECT)
-	redirect(`/acompanhantes/${publicId}/${profile.slug}`);
+	redirect(`/acompanhante/${publicId}/${profile.slug}`);
 }

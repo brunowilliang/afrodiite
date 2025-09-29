@@ -32,7 +32,7 @@ export default function SignIn() {
 	};
 
 	return (
-		<Stack className="w-full max-w-md items-center space-y-4 text-center">
+		<Stack className="w-full items-center space-y-4 text-center">
 			{/* <Text align="center" as="p">
 							Digite o e-mail cadastrado para receber um link de recuperação
 						</Text> */}

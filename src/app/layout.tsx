@@ -3,6 +3,7 @@ import 'react-photo-view/dist/react-photo-view.css';
 import '@/lib/orpc/server';
 
 import { Geist_Mono, Outfit } from 'next/font/google';
+import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import { Header } from '@/components/Header';
 import { HeroProvider } from '@/providers/HeroUIProvider';
 import QueryClientProvider from '@/providers/QueryClientProvider';
@@ -33,16 +34,18 @@ export default function RootLayout({ children }: Props) {
 				/>
 			</head>
 			<body className={`${outfit.variable} ${mono.variable} antialiased`}>
-				<ThemeProvider>
-					<HeroProvider>
-						<QueryClientProvider>
-							<section className="mx-auto flex min-h-screen max-w-5xl flex-col gap-5 overflow-visible px-4 pb-5">
-								<Header />
-								{children}
-							</section>
-						</QueryClientProvider>
-					</HeroProvider>
-				</ThemeProvider>
+				<NuqsAdapter>
+					<ThemeProvider>
+						<HeroProvider>
+							<QueryClientProvider>
+								<section className="mx-auto flex min-h-screen max-w-5xl flex-col gap-5 overflow-visible px-4 pb-5">
+									<Header />
+									{children}
+								</section>
+							</QueryClientProvider>
+						</HeroProvider>
+					</ThemeProvider>
+				</NuqsAdapter>
 			</body>
 		</html>
 	);

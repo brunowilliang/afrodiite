@@ -34,7 +34,11 @@ export default function Home() {
 				Realize seu login
 			</Button>
 
-			<Button onPress={() => router.push('/')} color="primary" variant="flat">
+			<Button
+				onPress={() => router.push('/portugal')}
+				color="primary"
+				variant="flat"
+			>
 				Descubra as acompanhantes
 			</Button>
 		</div>
