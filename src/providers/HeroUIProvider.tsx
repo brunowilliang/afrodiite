@@ -33,7 +33,10 @@ export const HeroProvider = ({ children }: Props) => {
 		>,
 	) => {
 		// Convert string href to Next.js RouteImpl type
-		router.push(href as Parameters<typeof router.push>[0], routerOptions);
+		router.push(href as Parameters<typeof router.push>[0], {
+			...routerOptions,
+		});
+		router.prefetch(href as Parameters<typeof router.prefetch>[0]);
 	};
 
 	return (

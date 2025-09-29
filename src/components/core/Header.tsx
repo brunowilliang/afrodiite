@@ -54,7 +54,6 @@ const renderMenuItem = (
 	badge?: string | number,
 ) => {
 	const isSection = Boolean(item.sections?.length);
-	const router = useRouter();
 
 	return (
 		<Tabs.Tab

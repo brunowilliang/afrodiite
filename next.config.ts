@@ -9,8 +9,8 @@ const nextConfig: NextConfig = {
 	experimental: {
 		globalNotFound: true,
 		staleTimes: {
-			dynamic: 30, // 5 minutos
-			static: 180, // 5 minutos
+			dynamic: 30, // 30 segundos
+			static: 180, // 3 minutos
 		},
 		useCache: true,
 	},
@@ -20,6 +20,8 @@ const nextConfig: NextConfig = {
 		},
 	},
 	pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx'],
+	// ✅ Configurar externals para dependências problemáticas
+	serverExternalPackages: ['@libsql/hrana-client'],
 };
 
 const withMDX = createMDX({});
