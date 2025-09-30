@@ -2,20 +2,18 @@
 
 import { Card, Form } from '@heroui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useServerAction } from '@orpc/react/hooks';
 import { I18nProvider } from '@react-aria/i18n';
 import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import type { Slot } from '@/api/utils/schemas/escort-core';
 import { createDefaults, SlotEnum } from '@/api/utils/schemas/escort-core';
-import { IProfile } from '@/api/utils/schemas/escort-forms';
 import { Badge } from '@/components/core/Badge';
 import { Button } from '@/components/core/Button';
 import { Icon } from '@/components/core/Icon';
 import { Input } from '@/components/core/Input';
 import { Stack } from '@/components/core/Stack';
 import { toast } from '@/components/core/Toast';
-import { updateProfile } from './actions/updateProfile';
+import { useProfile } from '@/hooks/useProfile';
 
 const formSchema = z
 	.object(
@@ -68,12 +66,8 @@ const slotLabels: Record<Slot, string> = {
 	outcall: 'Outcall',
 };
 
-type Props = {
-	profile?: IProfile.Select;
-};
-
-export const Prices = ({ profile }: Props) => {
-	const { execute, status } = useServerAction(updateProfile);
+export const Prices = () => {
+	const { profile, updateProfile, isUpdating } = useProfile();
 
 	const handleSubmit = async () => {
 		const values = form.getValues();
@@ -85,14 +79,7 @@ export const Prices = ({ profile }: Props) => {
 			currency: (values[slot].currency as 'EUR') || 'EUR',
 		}));
 
-		const [error] = await execute({ prices } as IProfile.Update);
-
-		if (error) {
-			toast.error(error?.message ?? 'Erro ao salvar preços');
-			return;
-		}
-
-		toast.success('Preços salvos com sucesso!');
+		await updateProfile({ prices });
 	};
 
 	const form = useForm({
@@ -217,7 +204,7 @@ export const Prices = ({ profile }: Props) => {
 						);
 					})}
 				</Stack>
-				<Button size="md" isLoading={status === 'pending'} type="submit">
+				<Button size="md" isLoading={isUpdating} type="submit">
 					Salvar
 				</Button>
 			</Form>

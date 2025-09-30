@@ -84,6 +84,7 @@
         "noExplicitAny": "off"
       },
       "style": {
+        "noUselessElse": "off",
         "noNonNullAssertion": "off",
         "useImportType": "off",
         "useTemplate": "off",
@@ -95,8 +96,7 @@
         "useSingleVarDeclarator": "error",
         "noUnusedTemplateLiteral": "off",
         "useNumberNamespace": "error",
-        "noInferrableTypes": "error",
-        "noUselessElse": "error"
+        "noInferrableTypes": "error"
       }
     },
     "domains": {

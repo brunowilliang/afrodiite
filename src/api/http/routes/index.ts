@@ -5,6 +5,7 @@ import { profileRoutes } from './profile';
 import { reviewsRoutes } from './reviews';
 import { sessionRoutes } from './session';
 import { storageRoutes } from './storage';
+import { testeRoutes } from './teste';
 
 export const appRouter = {
 	session: sessionRoutes,
@@ -14,6 +15,7 @@ export const appRouter = {
 	analytics: analyticsRoutes,
 	reviews: reviewsRoutes,
 	auth: authRoutes,
+	teste: testeRoutes,
 };
 
 export type AppRouter = typeof appRouter;

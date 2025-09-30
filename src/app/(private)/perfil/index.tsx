@@ -3,20 +3,15 @@
 import { Form } from '@heroui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { parseDate, toCalendarDate } from '@internationalized/date';
-import { useServerAction } from '@orpc/react/hooks';
 import { useMemo, useRef } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import slugify from 'slugify';
-import {
-	escortProfileSchema,
-	IProfile,
-} from '@/api/utils/schemas/escort-forms';
+import { escortProfileSchema } from '@/api/utils/schemas/escort-forms';
 import { Button } from '@/components/core/Button';
 import { Icon } from '@/components/core/Icon';
 import { Input } from '@/components/core/Input';
-import { toast } from '@/components/core/Toast';
+import { useProfile } from '@/hooks/useProfile';
 import { Countries } from '@/utils/lists/Countries';
-import { updateProfile } from './actions/updateProfile';
 
 const formSchema = escortProfileSchema.pick({
 	artist_name: true,
@@ -28,12 +23,8 @@ const formSchema = escortProfileSchema.pick({
 	whatsapp: true,
 });
 
-type Props = {
-	profile?: IProfile.Select;
-};
-
-export const Information = ({ profile }: Props) => {
-	const { execute, status } = useServerAction(updateProfile);
+export const Information = () => {
+	const { profile, updateProfile, isUpdating } = useProfile();
 
 	const nationalityOptions = useMemo(() => {
 		return Countries.map((country) => {
@@ -43,18 +34,6 @@ export const Information = ({ profile }: Props) => {
 			.filter((item, index, arr) => arr.indexOf(item) === index)
 			.sort();
 	}, []);
-
-	const handleSubmit = async () => {
-		const [error] = await execute(form.getValues());
-
-		if (error) {
-			toast.error(error?.message ?? 'Erro ao salvar perfil');
-			return;
-		}
-
-		toast.success('Perfil salvo com sucesso!');
-		// router.refresh();
-	};
 
 	const form = useForm({
 		resolver: zodResolver(formSchema),
@@ -76,7 +55,7 @@ export const Information = ({ profile }: Props) => {
 	return (
 		<Form
 			validationBehavior="aria"
-			onSubmit={form.handleSubmit(handleSubmit)}
+			onSubmit={form.handleSubmit((data) => updateProfile(data))}
 			className="w-full space-y-3"
 		>
 			<Controller
@@ -245,7 +224,7 @@ export const Information = ({ profile }: Props) => {
 				)}
 			/>
 
-			<Button size="md" isLoading={status === 'pending'} type="submit">
+			<Button size="md" isLoading={isUpdating} type="submit">
 				Salvar
 			</Button>
 		</Form>

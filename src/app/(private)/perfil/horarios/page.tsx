@@ -1,15 +1,12 @@
 import { Stack } from '@/components/core/Stack';
-import { getProfile } from '@/lib/server/profile-cache';
 import { Badge } from '../../components/Badge';
-import { Schedules } from '../../components/Schedules';
+import { Schedules } from '.';
 
-export default async function Horarios() {
-	const profile = await getProfile();
-
+export default function Horarios() {
 	return (
 		<Stack className="gap-5">
 			<Badge icon="ClockSquare" label="Horários" />
-			<Schedules profile={profile} />
+			<Schedules />
 		</Stack>
 	);
 }

@@ -2,27 +2,18 @@
 
 import { Form } from '@heroui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useServerAction } from '@orpc/react/hooks';
 import { Controller, useForm } from 'react-hook-form';
-import {
-	escortProfileSchema,
-	IProfile,
-} from '@/api/utils/schemas/escort-forms';
+import { escortProfileSchema } from '@/api/utils/schemas/escort-forms';
 import { Button } from '@/components/core/Button';
 import { Input } from '@/components/core/Input';
-import { toast } from '@/components/core/Toast';
-import { updateProfile } from './actions/updateProfile';
+import { useProfile } from '@/hooks/useProfile';
 
 const formSchema = escortProfileSchema.pick({
 	characteristics: true,
 });
 
-type Props = {
-	profile?: IProfile.Select;
-};
-
-export const Characteristics = ({ profile }: Props) => {
-	const { execute, status } = useServerAction(updateProfile);
+export const Characteristics = () => {
+	const { profile, updateProfile, isUpdating } = useProfile();
 
 	const languageOptions = [
 		'Português',
@@ -57,17 +48,6 @@ export const Characteristics = ({ profile }: Props) => {
 		'Ucraniano',
 	].sort();
 
-	const handleSubmit = async () => {
-		const [error] = await execute(form.getValues() as IProfile.Update);
-
-		if (error) {
-			toast.error(error?.message ?? 'Erro ao salvar características');
-			return;
-		}
-
-		toast.success('Características salvas com sucesso!');
-	};
-
 	const form = useForm({
 		resolver: zodResolver(formSchema),
 		mode: 'onChange',
@@ -93,7 +73,7 @@ export const Characteristics = ({ profile }: Props) => {
 	return (
 		<Form
 			validationBehavior="aria"
-			onSubmit={form.handleSubmit(handleSubmit)}
+			onSubmit={form.handleSubmit((data) => updateProfile(data))}
 			className="flex w-full flex-col gap-3"
 		>
 			<div className="flex w-full flex-col gap-3 sm:flex-row">
@@ -474,7 +454,7 @@ export const Characteristics = ({ profile }: Props) => {
 				/>
 			</div>
 
-			<Button size="md" type="submit" isLoading={status === 'pending'}>
+			<Button size="md" type="submit" isLoading={isUpdating}>
 				Salvar
 			</Button>
 		</Form>

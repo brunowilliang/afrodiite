@@ -1,15 +1,12 @@
 import { Stack } from '@/components/core/Stack';
-import { getProfile } from '@/lib/server/profile-cache';
 import { Badge } from '../../components/Badge';
-import { Gallery } from '../../components/Gallery';
+import { Gallery } from '.';
 
-export default async function Galeria() {
-	const profile = await getProfile();
-
+export default function Galeria() {
 	return (
 		<Stack className="gap-5">
 			<Badge icon="Gallery" label="Imagens" />
-			<Gallery profile={profile} />
+			<Gallery />
 		</Stack>
 	);
 }

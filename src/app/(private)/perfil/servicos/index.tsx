@@ -1,29 +1,23 @@
 'use client';
 
 import { Card, Divider } from '@heroui/react';
-import { useServerAction } from '@orpc/react/hooks';
 import { Fragment, useMemo, useRef, useState } from 'react';
-import { IProfile } from '@/api/utils/schemas/escort-forms';
 import { Icon } from '@/components/core/Icon';
 import { Input } from '@/components/core/Input';
 import { Modal, ModalRef } from '@/components/core/Modal';
-import { toast } from '@/components/core/Toast';
+import { useProfile } from '@/hooks/useProfile';
 import { cn } from '@/lib/utils';
 import { DATA_SERVICES } from '@/utils/services';
-import { updateProfile } from './actions/updateProfile';
 
-type Props = {
-	profile?: IProfile.Select;
-};
+export const Services = () => {
+	const { profile, updateProfile } = useProfile();
 
-export const Services = ({ profile }: Props) => {
 	const modalRef = useRef<ModalRef>(null);
+
 	const [modalService, setModalService] = useState<{
 		label: string;
 		description: string;
 	} | null>(null);
-
-	const { execute } = useServerAction(updateProfile);
 
 	const initialSelectedIds = useMemo(() => {
 		const existing = (profile as any)?.services as unknown;
@@ -43,8 +37,6 @@ export const Services = ({ profile }: Props) => {
 
 	// Toggle com save imediato usando Server Action
 	const toggle = async (id: number, checked: boolean) => {
-		const previousSelected = new Set(selected);
-
 		// Atualização otimista
 		setSelected((prev) => {
 			const next = new Set(prev);
@@ -58,16 +50,7 @@ export const Services = ({ profile }: Props) => {
 			? [...Array.from(selected), id]
 			: Array.from(selected).filter((serviceId) => serviceId !== id);
 
-		const [error] = await execute({ services: newServices } as IProfile.Update);
-
-		if (error) {
-			// Rollback em caso de erro
-			setSelected(previousSelected);
-			toast.error('Falha ao salvar serviços');
-			return;
-		}
-
-		// toast.success('Serviços salvo com sucesso!');
+		await updateProfile({ services: newServices });
 	};
 
 	return (

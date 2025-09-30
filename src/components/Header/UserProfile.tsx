@@ -1,18 +1,16 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { IProfile } from '@/api/utils/schemas/escort-forms';
 import { Dropdown } from '@/components/core/Dropdown';
 import { Icon } from '@/components/core/Icon';
 import { Profile } from '@/components/core/Profile';
 import { toast } from '@/components/core/Toast';
+import { useProfile } from '@/hooks/useProfile';
 import { api } from '@/lib/orpc';
 
-type Props = {
-	profile?: IProfile.Select;
-};
+export function UserProfile() {
+	const { profile } = useProfile();
 
-export function UserProfile({ profile }: Props) {
 	const router = useRouter();
 
 	const onSubmitSignOut = async () => {

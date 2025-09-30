@@ -71,6 +71,13 @@
       "when": 1757735387519,
       "tag": "0009_mushy_johnny_storm",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "6",
+      "when": 1759230362555,
+      "tag": "0010_steep_vulture",
+      "breakpoints": true
     }
   ]
 }

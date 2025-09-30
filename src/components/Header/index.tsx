@@ -1,18 +1,24 @@
-import { headers as nextHeaders } from 'next/headers';
-import { IProfile } from '@/api/utils/schemas/escort-forms';
-import { auth } from '@/lib/auth/server';
+import {
+	dehydrate,
+	HydrationBoundary,
+	QueryClient,
+} from '@tanstack/react-query';
 import { api } from '@/lib/orpc';
-import { tryCatch } from '@/utils/tryCatch';
 import { Header as HeaderComponent } from '../core/Header';
 
 export async function Header() {
-	const headers = await nextHeaders();
+	const session = await api.orpc.session();
 
-	const [, session] = await tryCatch(auth.api.getSession({ headers }));
+	if (!session?.session) {
+		return <HeaderComponent isAuthenticated={false} />;
+	}
 
-	const profile = session
-		? ((await api.orpc.profile.get()) as IProfile.Select | undefined)
-		: undefined;
+	const queryClient = new QueryClient();
+	await queryClient.ensureQueryData(api.queries.profile.get.queryOptions());
 
-	return <HeaderComponent profile={profile} />;
+	return (
+		<HydrationBoundary state={dehydrate(queryClient)}>
+			<HeaderComponent isAuthenticated />
+		</HydrationBoundary>
+	);
 }

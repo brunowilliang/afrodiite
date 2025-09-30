@@ -1,16 +1,12 @@
-import { IProfile } from '@/api/utils/schemas/escort-forms';
 import { Stack } from '@/components/core/Stack';
-import { api } from '@/lib/orpc';
 import { Badge } from '../components/Badge';
-import SettingsForm from './components/SettingsForm';
+import SettingsForm from '.';
 
-export default async function Ajustes() {
-	const profile = (await api.orpc.profile.get()) as IProfile.Select | undefined;
-
+export default function Ajustes() {
 	return (
 		<Stack className="gap-5">
 			<Badge icon="Settings" label="Ajustes" />
-			<SettingsForm profile={profile} />
+			<SettingsForm />
 		</Stack>
 	);
 }

@@ -1,6 +1,5 @@
 'use client';
 
-import { useServerAction } from '@orpc/react/hooks';
 import { useMemo, useState } from 'react';
 import { IReviews } from '@/api/utils/schemas/reviews';
 import { Button } from '@/components/core/Button';
@@ -9,37 +8,16 @@ import { Icon } from '@/components/core/Icon';
 import { Reviews as ReviewsComponent } from '@/components/core/Reviews';
 import { Stack } from '@/components/core/Stack';
 import { Tabs } from '@/components/core/Tabs';
-import { toast } from '@/components/core/Toast';
-import { updateReview } from './actions/updateReview';
+import { useReviews } from '@/hooks/useReviews';
 
-type Props = {
-	reviews?: IReviews.Output[];
-};
+export const Reviews = () => {
+	const { reviews, updateReview } = useReviews();
 
-export const Reviews = ({ reviews }: Props) => {
 	const [status, setStatus] = useState<IReviews.Output['status']>('pending');
-
-	const { execute } = useServerAction(updateReview);
-
-	const handleUpdateReview = async (
-		id: number | undefined,
-		newStatus: IReviews.Output['status'],
-	) => {
-		if (!id || !newStatus) return;
-
-		const [error] = await execute({ id, status: newStatus });
-
-		if (error) {
-			toast.error(error?.message ?? 'Erro ao atualizar avaliação');
-			return;
-		}
-
-		toast.success('Avaliação atualizada com sucesso!');
-	};
 
 	const filteredReviews = useMemo(() => {
 		if (!reviews) return [];
-		return reviews.filter((review) => review.status === status);
+		return reviews.results.filter((review) => review.status === status);
 	}, [reviews, status]);
 
 	return (
@@ -94,7 +72,9 @@ export const Reviews = ({ reviews }: Props) => {
 									color="warning"
 									className="px-3 py-2.5 text-warning data-[disabled=true]:opacity-40"
 									endContent={<Icon name="ClockSquare" size="20" />}
-									onPress={() => handleUpdateReview(review.id, 'pending')}
+									onPress={() =>
+										updateReview({ id: review.id, status: 'pending' })
+									}
 								>
 									Pendente
 								</Dropdown.Item>
@@ -102,7 +82,9 @@ export const Reviews = ({ reviews }: Props) => {
 									key="approved"
 									className="px-3 py-2.5 text-default-600 data-[disabled=true]:opacity-40"
 									endContent={<Icon name="CheckSquare" size="20" />}
-									onPress={() => handleUpdateReview(review.id, 'approved')}
+									onPress={() =>
+										updateReview({ id: review.id, status: 'approved' })
+									}
 								>
 									Aprovar
 								</Dropdown.Item>
@@ -111,7 +93,9 @@ export const Reviews = ({ reviews }: Props) => {
 									color="danger"
 									className="px-3 py-2.5 text-danger data-[disabled=true]:opacity-40"
 									endContent={<Icon name="CancelSquare" size="20" />}
-									onPress={() => handleUpdateReview(review.id, 'rejected')}
+									onPress={() =>
+										updateReview({ id: review.id, status: 'rejected' })
+									}
 								>
 									Rejeitar
 								</Dropdown.Item>

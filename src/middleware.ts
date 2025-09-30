@@ -17,6 +17,8 @@ const publicRoutes = [
 	{ path: '/politica-de-cookies', whenAuthenticated: 'next' },
 	{ path: '/portugal', whenAuthenticated: 'next' },
 	{ path: '/acompanhante/[public_id]/[slug]', whenAuthenticated: 'next' },
+	{ path: '/teste', whenAuthenticated: 'next' },
+	{ path: '/new', whenAuthenticated: 'next' },
 ] as PublicRoute[];
 
 const REDIRECT_WHEN_NOT_AUTHENTICATED_ROUTE = '/' as Href;

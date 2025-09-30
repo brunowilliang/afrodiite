@@ -2,18 +2,13 @@
 
 import { Form } from '@heroui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useServerAction } from '@orpc/react/hooks';
 import { useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import {
-	escortProfileSchema,
-	IProfile,
-} from '@/api/utils/schemas/escort-forms';
+import { escortProfileSchema } from '@/api/utils/schemas/escort-forms';
 import { Button } from '@/components/core/Button';
 import { Input } from '@/components/core/Input';
-import { toast } from '@/components/core/Toast';
+import { useProfile } from '@/hooks/useProfile';
 import { PortugalDistricts } from '@/utils/lists/Portugal';
-import { updateProfile } from './actions/updateProfile';
 
 const formSchema = escortProfileSchema.pick({
 	country: true,
@@ -21,12 +16,8 @@ const formSchema = escortProfileSchema.pick({
 	city: true,
 });
 
-type Props = {
-	profile?: IProfile.Select;
-};
-
-export const Location = ({ profile }: Props) => {
-	const { execute, status } = useServerAction(updateProfile);
+export const Location = () => {
+	const { profile, updateProfile, isUpdating } = useProfile();
 
 	// Lista de distritos únicos
 	const districtOptions = useMemo(() => {
@@ -44,17 +35,6 @@ export const Location = ({ profile }: Props) => {
 		)
 			.map((item) => item.city)
 			.sort();
-	};
-
-	const handleSubmit = async () => {
-		const [error] = await execute(form.getValues());
-
-		if (error) {
-			toast.error(error?.message ?? 'Erro ao salvar localização');
-			return;
-		}
-
-		toast.success('Localização salva com sucesso!');
 	};
 
 	const form = useForm({
@@ -76,7 +56,7 @@ export const Location = ({ profile }: Props) => {
 	return (
 		<Form
 			validationBehavior="aria"
-			onSubmit={form.handleSubmit(handleSubmit)}
+			onSubmit={form.handleSubmit((data) => updateProfile(data))}
 			className="w-full space-y-3"
 		>
 			<Controller
@@ -156,7 +136,7 @@ export const Location = ({ profile }: Props) => {
 				)}
 			/>
 
-			<Button size="md" isLoading={status === 'pending'} type="submit">
+			<Button size="md" isLoading={isUpdating} type="submit">
 				Salvar
 			</Button>
 		</Form>

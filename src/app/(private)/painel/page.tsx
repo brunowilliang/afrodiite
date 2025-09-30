@@ -4,11 +4,10 @@ import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { IStats } from '@/api/http/routes/analytics';
 import { CardChart } from '@/components/charts/CardChart';
-import { Badge } from '@/components/core/Badge';
-import { Icon } from '@/components/core/Icon';
 import { Stack } from '@/components/core/Stack';
 import { Tabs } from '@/components/core/Tabs';
 import { api } from '@/lib/orpc';
+import { Badge } from '../components/Badge';
 
 export default function Dashboard() {
 	const [period, setPeriod] = useState<IStats>('7d');
@@ -21,10 +20,12 @@ export default function Dashboard() {
 
 	return (
 		<Stack className="gap-5">
-			<Badge>
+			{/* <Badge>
 				<Icon name="Dashboard" variant="bulk" size="20" />
 				Dashboard
-			</Badge>
+			</Badge> */}
+
+			<Badge icon="Dashboard" label="Dashboard" />
 
 			<Tabs
 				aria-label="Filter Stats"

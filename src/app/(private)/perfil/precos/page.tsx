@@ -1,15 +1,12 @@
 import { Stack } from '@/components/core/Stack';
-import { getProfile } from '@/lib/server/profile-cache';
 import { Badge } from '../../components/Badge';
-import { Prices } from '../../components/Prices';
+import { Prices } from '.';
 
-export default async function Precos() {
-	const profile = await getProfile();
-
+export default function Precos() {
 	return (
 		<Stack className="gap-5">
 			<Badge icon="MoneyBag" label="Preços" />
-			<Prices profile={profile} />
+			<Prices />
 		</Stack>
 	);
 }

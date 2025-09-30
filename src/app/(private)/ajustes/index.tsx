@@ -1,22 +1,37 @@
 'use client';
 
 import { Chip } from '@heroui/react';
-import { useServerAction } from '@orpc/react/hooks';
-import { useRouter } from 'next/navigation';
+import {
+	useMutation,
+	useQueryClient,
+	useSuspenseQuery,
+} from '@tanstack/react-query';
 import { useState } from 'react';
-import { IProfile } from '@/api/utils/schemas/escort-forms';
 import { Input } from '@/components/core/Input';
 import { toast } from '@/components/core/Toast';
+import { api } from '@/lib/orpc';
 import { Countries } from '@/utils/lists/Countries';
-import { updateSettings } from './Action';
 
-type Props = {
-	profile?: IProfile.Select;
-};
+export default function SettingsForm() {
+	const queryClient = useQueryClient();
 
-export default function SettingsForm({ profile }: Props) {
-	const router = useRouter();
-	const { execute } = useServerAction(updateSettings);
+	const { data: profile } = useSuspenseQuery(
+		api.queries.profile.get.queryOptions(),
+	);
+
+	const { mutateAsync: updateProfile } = useMutation(
+		api.queries.profile.update.mutationOptions({
+			onSuccess: () => {
+				toast.success('Perfil atualizado com sucesso!');
+				queryClient.invalidateQueries({
+					queryKey: api.queries.profile.get.queryKey(),
+				});
+			},
+			onError: (error) => {
+				toast.error(error?.message ?? 'Erro ao atualizar perfil');
+			},
+		}),
+	);
 
 	// Estado para países selecionados
 	const [selectedCountries, setSelectedCountries] = useState<string[]>(
@@ -34,42 +49,35 @@ export default function SettingsForm({ profile }: Props) {
 			setInputValue(''); // Limpa o input após selecionar
 
 			// Save automático
-			const [error] = await execute({
+			await updateProfile({
 				blocked_countries: newSelection,
-			} as IProfile.Update);
-
-			if (error) {
-				// Rollback em caso de erro
-				setSelectedCountries(selectedCountries);
-				toast.error(error?.message ?? 'Erro ao bloquear país');
-				return;
-			}
-
-			toast.success('País bloqueado com sucesso!');
-			router.refresh();
+			});
 		}
 	};
 
 	// Função para remover país com save automático
 	const removeCountry = async (sigla: string) => {
-		const previousSelection = [...selectedCountries];
+		// const previousSelection = [...selectedCountries];
 		const newSelection = selectedCountries.filter((s) => s !== sigla);
 		setSelectedCountries(newSelection);
 
 		// Save automático
-		const [error] = await execute({
+		await updateProfile({
 			blocked_countries: newSelection,
-		} as IProfile.Update);
+		});
+		// const [error] = await execute({
+		// 	blocked_countries: newSelection,
+		// } as IProfile.Update);
 
-		if (error) {
-			// Rollback em caso de erro
-			setSelectedCountries(previousSelection);
-			toast.error(error?.message ?? 'Erro ao desbloquear país');
-			return;
-		}
+		// if (error) {
+		// 	// Rollback em caso de erro
+		// 	setSelectedCountries(previousSelection);
+		// 	toast.error(error?.message ?? 'Erro ao desbloquear país');
+		// 	return;
+		// }
 
-		toast.success('País desbloqueado com sucesso!');
-		router.refresh();
+		// toast.success('País desbloqueado com sucesso!');
+		// router.refresh();
 	};
 
 	// Países disponíveis (não selecionados)

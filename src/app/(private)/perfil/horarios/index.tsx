@@ -3,19 +3,17 @@
 import { Card, Form } from '@heroui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { parseTime } from '@internationalized/date';
-import { useServerAction } from '@orpc/react/hooks';
 import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import type { Day } from '@/api/utils/schemas/escort-core';
 import { createDefaults, DayEnum } from '@/api/utils/schemas/escort-core';
-import { IProfile } from '@/api/utils/schemas/escort-forms';
 import { Badge } from '@/components/core/Badge';
 import { Button } from '@/components/core/Button';
 import { Icon } from '@/components/core/Icon';
 import { Input } from '@/components/core/Input';
 import { Stack } from '@/components/core/Stack';
 import { toast } from '@/components/core/Toast';
-import { updateProfile } from './actions/updateProfile';
+import { useProfile } from '@/hooks/useProfile';
 
 const timeRegex = /^([01]\d|2[0-3]):([0-5]\d)$/;
 const formSchema = z
@@ -54,12 +52,8 @@ const formSchema = z
 		}
 	});
 
-type Props = {
-	profile?: IProfile.Select;
-};
-
-export const Schedules = ({ profile }: Props) => {
-	const { execute, status } = useServerAction(updateProfile);
+export const Schedules = () => {
+	const { profile, updateProfile, isUpdating } = useProfile();
 
 	const handleSubmit = async () => {
 		const values = form.getValues();
@@ -70,14 +64,7 @@ export const Schedules = ({ profile }: Props) => {
 			end: values[day].end as string,
 		}));
 
-		const [error] = await execute({ office_hours } as IProfile.Update);
-
-		if (error) {
-			toast.error(error?.message ?? 'Erro ao salvar horários');
-			return;
-		}
-
-		toast.success('Horários salvos com sucesso!');
+		await updateProfile({ office_hours });
 	};
 
 	const form = useForm({
@@ -219,7 +206,7 @@ export const Schedules = ({ profile }: Props) => {
 					);
 				})}
 			</Stack>
-			<Button size="md" isLoading={status === 'pending'} type="submit">
+			<Button size="md" isLoading={isUpdating} type="submit">
 				Salvar
 			</Button>
 		</Form>

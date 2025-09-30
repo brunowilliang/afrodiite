@@ -1,28 +1,23 @@
 'use client';
 
-import { useServerAction } from '@orpc/react/hooks';
 import { useUploadFiles } from 'better-upload/client';
 import { nanoid } from 'nanoid';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { MAX_FILE_SIZE_GALLERY } from '@/api/http/routes/storage';
 import { buildGalleryItems } from '@/api/utils/buildGalleryItems';
 import type { GalleryItem } from '@/api/utils/schemas/escort-core';
-import { IProfile } from '@/api/utils/schemas/escort-forms';
 import { Input } from '@/components/core/Input';
 import { Stack } from '@/components/core/Stack';
 import { toast } from '@/components/core/Toast';
 import { SortableGallery } from '@/components/SortableGallery';
+import { useProfile } from '@/hooks/useProfile';
 import { api } from '@/lib/orpc';
 import { tryCatch } from '@/utils/tryCatch';
-import { updateProfile } from './actions/updateProfile';
 
-type Props = {
-	profile?: IProfile.Select;
-};
+export const Gallery = () => {
+	const { profile, updateProfile } = useProfile();
 
-export const Gallery = ({ profile }: Props) => {
 	const { control } = useUploadFiles({ route: 'gallery' });
-	const { execute } = useServerAction(updateProfile);
 
 	const [isSaving, setIsSaving] = useState(false);
 	const [progress, setProgress] = useState<Map<string, number>>(new Map());
@@ -76,10 +71,7 @@ export const Gallery = ({ profile }: Props) => {
 				!!it.path && typeof it.url === 'string' && !it.url.startsWith('blob:'),
 		);
 		if (toPersist.length) {
-			const [error] = await execute({ gallery: toPersist } as IProfile.Update);
-			if (error) {
-				toast.error(error?.message ?? 'Erro ao salvar galeria');
-			}
+			await updateProfile({ gallery: toPersist });
 		}
 	};
 
@@ -230,10 +222,7 @@ export const Gallery = ({ profile }: Props) => {
 		const nextItems = reindex(items.filter((it) => it.id !== key));
 		setItems(nextItems);
 
-		const [error] = await execute({ gallery: nextItems } as IProfile.Update);
-		if (error) {
-			toast.error(error?.message ?? 'Erro ao remover galeria');
-		}
+		await updateProfile({ gallery: nextItems });
 	};
 
 	return (
@@ -277,12 +266,7 @@ export const Gallery = ({ profile }: Props) => {
 						clearTimeout(reorderTimerRef.current);
 					}
 					reorderTimerRef.current = setTimeout(async () => {
-						const [error] = await execute({
-							gallery: toPersist,
-						} as IProfile.Update);
-						if (error) {
-							toast.error(error?.message ?? 'Erro ao reordenar galeria');
-						}
+						await updateProfile({ gallery: toPersist });
 					}, 400) as unknown as number;
 				}}
 				onDelete={handleRemove}
