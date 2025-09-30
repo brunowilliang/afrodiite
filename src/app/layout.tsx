@@ -2,6 +2,8 @@ import '@/styles/globals.css';
 import 'react-photo-view/dist/react-photo-view.css';
 import '@/lib/orpc/server';
 
+export const dynamic = 'force-dynamic';
+
 import { Geist_Mono, Outfit } from 'next/font/google';
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import { Header } from '@/components/Header';

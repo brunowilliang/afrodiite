@@ -13,8 +13,6 @@ import { api } from '@/lib/orpc';
 import { EscortCard } from './components/card';
 import { searchParams } from './searchParams';
 
-export const dynamic = 'force-dynamic';
-
 export default function PortugalIndex() {
 	const [{ page, search }, setParams] = useQueryStates(searchParams);
 	const [typedSearch, setTypedSearch] = useState(search);
