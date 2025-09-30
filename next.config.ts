@@ -20,7 +20,6 @@ const nextConfig: NextConfig = {
 		},
 	},
 	pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx'],
-	// ✅ Configurar externals para dependências problemáticas
 	serverExternalPackages: ['@libsql/hrana-client'],
 };
 

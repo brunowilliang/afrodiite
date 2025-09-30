@@ -12,6 +12,9 @@ import { Stack } from '@/components/core/Stack';
 import { api } from '@/lib/orpc';
 import { EscortCard } from './components/card';
 
+// ✅ Forçar dynamic rendering para evitar prerender com nuqs
+export const dynamic = 'force-dynamic';
+
 export default function PortugalPage() {
 	// ✅ nuqs - Estado sincronizado com URL automaticamente
 	const [page, setPage] = useQueryState('page', parseAsInteger.withDefault(1));
