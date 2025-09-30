@@ -5,18 +5,11 @@ import { tryCatch } from '@/utils/tryCatch';
 export default async function RedirectPage(
 	props: PageProps<'/acompanhante/[public_id]'>,
 ) {
-	const { params } = await props;
-	const { public_id } = await params;
-	const publicId = Number(public_id);
-
-	// Validate public_id is a number
-	if (Number.isNaN(publicId)) {
-		notFound();
-	}
+	const { public_id } = await props.params;
 
 	// Fetch escort profile using tryCatch
 	const [error, profile] = await tryCatch(
-		api.orpc.escorts.detail({ public_id: publicId }),
+		api.orpc.escorts.detail({ public_id: public_id }),
 	);
 
 	if (error) {
@@ -34,9 +27,6 @@ export default async function RedirectPage(
 		notFound();
 	}
 
-	// Debug: Show the data
-	console.log('🚀 Fetch success! public_id:', publicId, 'slug:', profile.slug);
-
 	// Redirect to final URL (outside tryCatch to avoid catching NEXT_REDIRECT)
-	redirect(`/acompanhante/${publicId}/${profile.slug}`);
+	redirect(`/acompanhante/${public_id}/${profile.slug}`);
 }

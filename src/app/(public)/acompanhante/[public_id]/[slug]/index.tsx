@@ -1,8 +1,8 @@
 'use client';
 
+import { useSuspenseQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useRef, useState } from 'react';
-import { IProfile } from '@/api/utils/schemas/escort-forms';
 import { Badge } from '@/components/core/Badge';
 import { Button } from '@/components/core/Button';
 import { Card } from '@/components/core/Card';
@@ -10,25 +10,32 @@ import { Icon } from '@/components/core/Icon';
 import { ImageCarousel } from '@/components/core/ImageCarousel';
 import { Modal, ModalRef } from '@/components/core/Modal';
 import { Stack } from '@/components/core/Stack';
-import { AccordionPrice } from './AccordionPrice';
-import { CharacteristicsCard } from './CharacteristicsCard';
-import { OfficeHoursCard } from './OfficeHoursCard';
-import { PricesCard } from './PricesCard';
-import { ReviewsWrapper } from './ReviewsWrapper';
-import { ServicesCard } from './ServicesCard';
-import { TextCard } from './TextCard';
+import { api } from '@/lib/orpc';
+import { AccordionPrice } from './components/AccordionPrice';
+import { CharacteristicsCard } from './components/CharacteristicsCard';
+import { OfficeHoursCard } from './components/OfficeHoursCard';
+import { PricesCard } from './components/PricesCard';
+import { ReviewsWrapper } from './components/ReviewsWrapper';
+import { ServicesCard } from './components/ServicesCard';
+import { TextCard } from './components/TextCard';
 
 type Props = {
-	profile: IProfile.Select;
+	publicId: string;
 };
 
-export const EscortPage = ({ profile }: Props) => {
+export const AcompanhanteIndex = ({ publicId }: Props) => {
 	const modalServiceRef = useRef<ModalRef>(null);
 	const router = useRouter();
 	const [modalService, setModalService] = useState<{
 		label: string;
 		description: string;
 	} | null>(null);
+
+	const { data: profile } = useSuspenseQuery(
+		api.queries.escorts.detail.queryOptions({
+			input: { public_id: publicId },
+		}),
+	);
 
 	return (
 		<div className="space-y-4">
@@ -52,7 +59,7 @@ export const EscortPage = ({ profile }: Props) => {
 				<div className="col-span-full space-y-4 lg:col-span-8">
 					<Card className="gap-1 p-2">
 						<ImageCarousel
-							images={profile.gallery ?? []}
+							images={profile?.gallery ?? []}
 							drag
 							openPreview
 							width="85%"
@@ -63,33 +70,33 @@ export const EscortPage = ({ profile }: Props) => {
 							<Badge color="primary" variant="flat" radius="sm">
 								Acompanhante
 							</Badge>
-							<h2 className="font-bold">{profile.artist_name}</h2>
+							<h2 className="font-bold">{profile?.artist_name}</h2>
 						</Card>
 					</Card>
 
-					<TextCard title="Sobre Mim" text={profile.description ?? ''} />
-					<CharacteristicsCard characteristics={profile.characteristics} />
+					<TextCard title="Sobre Mim" text={profile?.description ?? ''} />
+					<CharacteristicsCard characteristics={profile?.characteristics} />
 
 					<div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-						<OfficeHoursCard office_hours={profile.office_hours} />
-						<PricesCard prices={profile.prices} />
+						<OfficeHoursCard office_hours={profile?.office_hours} />
+						<PricesCard prices={profile?.prices} />
 					</div>
 
 					<ServicesCard
-						services={profile.services}
+						services={profile?.services}
 						onServiceClick={(service) => {
 							modalServiceRef.current?.open();
 							setModalService(service);
 						}}
 					/>
 
-					<ReviewsWrapper escort_id={profile.id} />
+					<ReviewsWrapper escort_id={profile?.id ?? ''} />
 				</div>
 				<div className="col-span-full lg:col-span-4">
 					<Stack className="hidden gap-4 lg:sticky lg:top-20 lg:flex">
 						<AccordionPrice
 							variant="web"
-							profile={profile}
+							profile={profile ?? {}}
 							// trackEvent={trackEvent}
 						/>
 
@@ -131,7 +138,7 @@ export const EscortPage = ({ profile }: Props) => {
 			{/* Accordion de preços fixo para mobile */}
 			<AccordionPrice
 				variant="mobile"
-				profile={profile}
+				profile={profile ?? {}}
 				// trackEvent={trackEvent}
 			/>
 
