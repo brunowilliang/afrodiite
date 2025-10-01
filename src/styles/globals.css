@@ -6,7 +6,7 @@
 
 html {
   min-height: 100vh;
-  background-color: hsl(var(--heroui-background) / .4);
+  background-color: hsl(var(--heroui-background) / .5);
   scrollbar-gutter: stable;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

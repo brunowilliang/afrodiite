@@ -22,19 +22,20 @@ export const Header = ({ isAuthenticated }: Props) => {
 		<Navbar
 			isMenuOpen={isMenuOpen}
 			onMenuOpenChange={setIsMenuOpen}
-			height={90}
-			className="bg-transparent"
+			height={85}
+			isBlurred={true}
+			className="bg-transparent/50"
 			classNames={{
-				wrapper: 'items-end px-0 bg-transparent',
+				wrapper: 'items-end px-0 pt-4 bg-transparent',
 			}}
 		>
 			<Card
-				className="flex h-[calc(90px-20px)] w-full flex-row items-center justify-between bg-default/10 px-3"
+				className="flex h-full w-full flex-row items-center justify-between bg-default-50 px-4"
 				shadow="none"
 			>
 				<div className="centered flex gap-2">
 					<NavbarMenuToggle
-						className="h-10 w-10 text-default-600"
+						className="h-10 w-10 text-default-600 md:hidden"
 						aria-label={'Toggle menu'}
 					/>
 					<Link href="/painel" onClick={() => setIsMenuOpen(false)}>
@@ -76,7 +77,7 @@ export const Header = ({ isAuthenticated }: Props) => {
 						ease: 'easeInOut',
 					},
 				}}
-				className="mx-auto w-full max-w-5xl bg-tranparent p-4 pt-5"
+				className="mx-auto w-full max-w-5xl bg-tranparent px-4 pt-4 lg:px-0"
 			>
 				<MenuTabs
 					onTabClick={() => setIsMenuOpen(false)}

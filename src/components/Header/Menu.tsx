@@ -11,6 +11,7 @@ const getMenuItems = (isAuthenticated: boolean): Navigation[] => {
 	if (isAuthenticated) {
 		// Filter items to exclude auth-related routes
 		const authExcludeKeys = [
+			'/',
 			'/entrar',
 			'/esqueci-senha',
 			'/cadastrar',

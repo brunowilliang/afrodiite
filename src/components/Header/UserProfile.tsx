@@ -36,6 +36,17 @@ export function UserProfile() {
 					</Dropdown.Trigger>
 					<Dropdown.Menu>
 						<Dropdown.Item
+							key="ir-para-home"
+							color="default"
+							className="px-3 py-2.5 text-default-600 data-[disabled=true]:opacity-40"
+							endContent={<Icon name="Link" size="20" />}
+							onPress={() => {
+								router.push('/');
+							}}
+						>
+							Ver site
+						</Dropdown.Item>
+						<Dropdown.Item
 							key="ver-perfil"
 							color="default"
 							className="px-3 py-2.5 text-default-600 data-[disabled=true]:opacity-40"

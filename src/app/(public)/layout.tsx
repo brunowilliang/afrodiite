@@ -3,5 +3,7 @@ type Props = Readonly<{
 }>;
 
 export default function RootLayout({ children }: Props) {
-	return children;
+	return (
+		<section className="mx-auto w-full max-w-5xl py-4">{children}</section>
+	);
 }

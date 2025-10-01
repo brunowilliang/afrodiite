@@ -40,7 +40,7 @@ export default function RootLayout({ children }: Props) {
 					<ThemeProvider>
 						<HeroProvider>
 							<QueryClientProvider>
-								<section className="mx-auto flex min-h-screen max-w-5xl flex-col gap-5 overflow-visible px-4 pb-5">
+								<section className="px-4">
 									<Header />
 									{children}
 								</section>

@@ -19,7 +19,7 @@ const TabsRoot = useStyled(HeroTabs, {
 				isVertical: true,
 				fullWidth: true,
 				classNames: {
-					tabList: 'relative gap-1 rounded-none rounded-xl bg-default/10 p-1.5',
+					tabList: 'relative gap-1 rounded-none rounded-xl bg-default-50 p-1.5',
 					cursor: 'z-1000 w-full bg-primary/10! shadow-none',
 					tab: 'w-full justify-start px-3 py-5',
 					tabContent: 'w-full group-data-[selected=true]:text-primary-600',
