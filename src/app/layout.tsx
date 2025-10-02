@@ -2,11 +2,10 @@ import '@/styles/globals.css';
 import 'react-photo-view/dist/react-photo-view.css';
 import '@/lib/orpc/server';
 
-export const dynamic = 'force-dynamic';
+export const dynamic = 'auto';
 
 import { Geist_Mono, Outfit } from 'next/font/google';
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
-import { Header } from '@/components/Header';
 import { HeroProvider } from '@/providers/HeroUIProvider';
 import QueryClientProvider from '@/providers/QueryClientProvider';
 import { ThemeProvider } from '@/providers/ThemeProvider';
@@ -39,12 +38,7 @@ export default function RootLayout({ children }: Props) {
 				<NuqsAdapter>
 					<ThemeProvider>
 						<HeroProvider>
-							<QueryClientProvider>
-								<section className="px-4">
-									<Header />
-									{children}
-								</section>
-							</QueryClientProvider>
+							<QueryClientProvider>{children}</QueryClientProvider>
 						</HeroProvider>
 					</ThemeProvider>
 				</NuqsAdapter>

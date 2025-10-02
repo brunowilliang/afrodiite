@@ -2,21 +2,13 @@
 
 import { Navbar, NavbarMenu, NavbarMenuToggle } from '@heroui/react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { Button } from '@/components/core/Button';
 import { Card } from '@/components/core/Card';
-import { UserProfile } from '@/components/Header/UserProfile';
+import { MenuTabs } from '@/components/Header/Public/Menu';
 import { Logo } from '@/components/Logo';
-import { MenuTabs } from '../Header/Menu';
 
-type Props = {
-	isAuthenticated?: boolean;
-};
-
-export const Header = ({ isAuthenticated }: Props) => {
+export const Header = () => {
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
-	const router = useRouter();
 
 	return (
 		<Navbar
@@ -42,19 +34,15 @@ export const Header = ({ isAuthenticated }: Props) => {
 						<Logo className="h-full cursor-pointer" />
 					</Link>
 				</div>
-				{isAuthenticated ? (
-					<UserProfile />
-				) : (
-					<Button
-						variant="flat"
-						onClick={() => {
-							setIsMenuOpen(false);
-							router.push('/entrar');
-						}}
-					>
-						Entrar
-					</Button>
-				)}
+
+				<Link
+					href="/entrar"
+					onClick={() => {
+						setIsMenuOpen(false);
+					}}
+				>
+					Entrar
+				</Link>
 			</Card>
 
 			<NavbarMenu
@@ -79,10 +67,7 @@ export const Header = ({ isAuthenticated }: Props) => {
 				}}
 				className="mx-auto w-full max-w-5xl bg-tranparent px-4 pt-4 lg:px-0"
 			>
-				<MenuTabs
-					onTabClick={() => setIsMenuOpen(false)}
-					isAuthenticated={isAuthenticated}
-				/>
+				<MenuTabs onTabClick={() => setIsMenuOpen(false)} />
 			</NavbarMenu>
 		</Navbar>
 	);

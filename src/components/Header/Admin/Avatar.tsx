@@ -8,7 +8,7 @@ import { toast } from '@/components/core/Toast';
 import { useProfile } from '@/hooks/useProfile';
 import { api } from '@/lib/orpc';
 
-export function UserProfile() {
+export function Avatar() {
 	const { profile } = useProfile();
 
 	const router = useRouter();
