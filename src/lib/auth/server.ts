@@ -126,10 +126,6 @@ export const auth = betterAuth({
 				required: true,
 				defaultValue: 'escort',
 				input: false,
-				validate: (value: string): boolean => {
-					const validRoles: UserRole[] = ['user', 'escort'];
-					return validRoles.includes(value as UserRole);
-				},
 			},
 		},
 	},

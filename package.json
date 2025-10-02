@@ -17,8 +17,8 @@
     "db:migrate": "drizzle-kit migrate --config=src/api/drizzle.config.ts",
     "db:seed": "bun run src/api/database/seed.ts",
     "db:seed:reset": "bun run src/api/database/reset.ts",
-    "auth:gen": "@better-auth/cli@latest generate --output src/api/database/schemas/auth.ts --config src/lib/auth/auth.server.ts --yes",
-    "npx:auth:gen": "npx @better-auth/cli@latest generate --config src/lib/auth/auth.server.ts --output src/api/database/schemas/auth.ts --yes",
+    "auth:gen": "bunx --bun @better-auth/cli@latest generate --config src/lib/auth/server.ts --output src/api/database/schemas/auth.ts --yes",
+    "npx:auth:gen": "npx @better-auth/cli@latest generate --config src/lib/auth/server.ts --output src/api/database/schemas/auth.ts --yes",
     "email:dev": "email dev --dir src/lib/email/templates",
     "email:test": "TEST_TO=$TEST_TO bun run scripts/send-test-email.ts"
   },
