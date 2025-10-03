@@ -1,6 +1,7 @@
 import '@/styles/globals.css';
 import 'react-photo-view/dist/react-photo-view.css';
 import '@/lib/orpc/server';
+import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google';
 
 export const dynamic = 'auto';
 
@@ -34,6 +35,8 @@ export default function RootLayout({ children }: Props) {
 					crossOrigin="anonymous"
 				/>
 			</head>
+			<GoogleTagManager gtmId="GTM-PXW8JX3R" />
+			<GoogleAnalytics gaId="G-NQBNKRB15S" />
 			<body className={`${outfit.variable} ${mono.variable} antialiased`}>
 				<NuqsAdapter>
 					<ThemeProvider>
