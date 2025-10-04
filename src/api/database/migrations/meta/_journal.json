@@ -113,6 +113,13 @@
       "when": 1759535530404,
       "tag": "0015_hot_gladiator",
       "breakpoints": true
+    },
+    {
+      "idx": 16,
+      "version": "6",
+      "when": 1759566264243,
+      "tag": "0016_shallow_ender_wiggin",
+      "breakpoints": true
     }
   ]
 }

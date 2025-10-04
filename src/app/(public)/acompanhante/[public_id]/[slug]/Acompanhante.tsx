@@ -9,6 +9,7 @@ import { Card } from '@/components/core/Card';
 import { Icon } from '@/components/core/Icon';
 import { ImageCarousel } from '@/components/core/ImageCarousel';
 import { Modal, ModalRef } from '@/components/core/Modal';
+import { Reviews } from '@/components/core/Reviews';
 import { Stack } from '@/components/core/Stack';
 import { useAnalytics } from '@/hooks/useAnalytics';
 import { api } from '@/lib/orpc';
@@ -16,7 +17,6 @@ import { AccordionPrice } from './components/AccordionPrice';
 import { CharacteristicsCard } from './components/CharacteristicsCard';
 import { OfficeHoursCard } from './components/OfficeHoursCard';
 import { PricesCard } from './components/PricesCard';
-import { ReviewsWrapper } from './components/ReviewsWrapper';
 import { ServicesCard } from './components/ServicesCard';
 import { TextCard } from './components/TextCard';
 
@@ -24,9 +24,15 @@ type Props = {
 	publicId: string;
 };
 
-export const AcompanhanteIndex = ({ publicId }: Props) => {
+export const Acompanhante = ({ publicId }: Props) => {
 	const { data: profile } = useSuspenseQuery(
 		api.queries.escorts.detail.queryOptions({
+			input: { public_id: publicId },
+		}),
+	);
+
+	const { data: reviews } = useSuspenseQuery(
+		api.queries.escorts.reviews.queryOptions({
 			input: { public_id: publicId },
 		}),
 	);
@@ -97,15 +103,43 @@ export const AcompanhanteIndex = ({ publicId }: Props) => {
 						}}
 					/>
 
-					<ReviewsWrapper escort_id={profile?.id ?? ''} />
+					<Reviews>
+						<Reviews.Header
+							escort_id={profile?.id ?? ''}
+							public_id={profile?.public_id ?? 0}
+						/>
+						{reviews?.results.length === 0 && (
+							<Card className="p-4">
+								<span className="py-5 text-center text-default-600 text-small">
+									Oops! Nenhuma avaliação encontrada...
+								</span>
+							</Card>
+						)}
+						{reviews?.results.map((review) => (
+							<Reviews.Card
+								key={review.id}
+								reviewer_name={review.reviewer_name}
+								created_at={review.created_at}
+								rating={review.rating}
+								title={review.title}
+								comment={review.comment}
+							/>
+						))}
+					</Reviews>
 				</div>
 				<div className="col-span-full lg:col-span-4">
 					<Stack className="hidden gap-4 lg:sticky lg:top-25 lg:flex">
 						<AccordionPrice
 							variant="web"
 							profile={profile ?? {}}
-							handleWhatsAppClick={() => trackEvent('whatsapp_click')}
-							handlePhoneClick={() => trackEvent('phone_click')}
+							handleWhatsAppClick={() => {
+								window.open(`https://wa.me/${profile?.whatsapp}`, '_blank');
+								trackEvent('whatsapp_click');
+							}}
+							handlePhoneClick={() => {
+								window.open(`tel:${profile?.phone}`, '_blank');
+								trackEvent('phone_click');
+							}}
 						/>
 
 						<Card className="gap-4 p-5">
@@ -125,7 +159,7 @@ export const AcompanhanteIndex = ({ publicId }: Props) => {
 										size="24"
 										className="text-foreground"
 									/>
-									<span className="font-normal">{label}</span>
+									<span className="font-normal text-default-600">{label}</span>
 								</Stack>
 							))}
 
@@ -134,6 +168,7 @@ export const AcompanhanteIndex = ({ publicId }: Props) => {
 								color="danger"
 								size="md"
 								className="w-full"
+								isDisabled
 							>
 								<Icon name="Anonymous" variant="bulk" size="24" />
 								Denunciar perfil anonimamente
@@ -147,8 +182,14 @@ export const AcompanhanteIndex = ({ publicId }: Props) => {
 			<AccordionPrice
 				variant="mobile"
 				profile={profile ?? {}}
-				handleWhatsAppClick={() => trackEvent('whatsapp_click')}
-				handlePhoneClick={() => trackEvent('phone_click')}
+				handleWhatsAppClick={() => {
+					window.open(`https://wa.me/${profile?.whatsapp}`, '_blank');
+					trackEvent('whatsapp_click');
+				}}
+				handlePhoneClick={() => {
+					window.open(`tel:${profile?.phone}`, '_blank');
+					trackEvent('phone_click');
+				}}
 			/>
 
 			{/* Modal de serviços */}

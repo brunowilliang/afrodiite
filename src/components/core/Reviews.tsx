@@ -85,7 +85,13 @@ export const ReviewsCard = ({
 	</Card>
 );
 
-export const ReviewsHeader = ({ escort_id }: { escort_id: string }) => {
+export const ReviewsHeader = ({
+	escort_id,
+	public_id,
+}: {
+	escort_id: string;
+	public_id: number;
+}) => {
 	const modalRef = useRef<ModalRef>(null);
 
 	const form = useForm({
@@ -116,6 +122,7 @@ export const ReviewsHeader = ({ escort_id }: { escort_id: string }) => {
 	const handleSubmit = async () => {
 		await createReview.mutateAsync({
 			escort_id,
+			public_id,
 			...form.getValues(),
 		});
 	};

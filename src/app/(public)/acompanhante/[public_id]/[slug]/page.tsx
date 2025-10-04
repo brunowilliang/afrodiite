@@ -5,9 +5,9 @@ import {
 } from '@tanstack/react-query';
 import { notFound } from 'next/navigation';
 import { api } from '@/lib/orpc';
-import { AcompanhanteIndex } from '.';
+import { Acompanhante } from './Acompanhante';
 
-export default async function AcompanhantePage(
+export default async function Page(
 	props: PageProps<'/acompanhante/[public_id]/[slug]'>,
 ) {
 	const { public_id, slug } = await props.params;
@@ -17,6 +17,12 @@ export default async function AcompanhantePage(
 	try {
 		const profile = await queryClient.ensureQueryData(
 			api.queries.escorts.detail.queryOptions({
+				input: { public_id },
+			}),
+		);
+
+		await queryClient.ensureQueryData(
+			api.queries.escorts.reviews.queryOptions({
 				input: { public_id },
 			}),
 		);
@@ -31,7 +37,7 @@ export default async function AcompanhantePage(
 
 		return (
 			<HydrationBoundary state={dehydrate(queryClient)}>
-				<AcompanhanteIndex publicId={public_id} />
+				<Acompanhante publicId={public_id} />
 			</HydrationBoundary>
 		);
 	} catch (error) {

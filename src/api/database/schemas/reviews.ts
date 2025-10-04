@@ -9,6 +9,7 @@ export const escortReviews = sqliteTable(
 		escort_id: text('escort_id')
 			.notNull()
 			.references(() => escortProfiles.id, { onDelete: 'cascade' }),
+		public_id: integer('public_id').unique().notNull(),
 
 		// Dados do reviewer
 		reviewer_name: text('reviewer_name').notNull(),

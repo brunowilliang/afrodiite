@@ -6,12 +6,8 @@ import { ReviewSchema } from '@/api/utils/schemas/reviews';
 
 // ✅ Drizzle-CRUD setup
 export const reviews = createCrud(escortReviews, {
-	allowedFilters: ['status', 'escort_id'],
+	allowedFilters: ['status', 'escort_id', 'public_id'],
 });
-
-// const input = z.object({
-// 	status: z.enum(['pending', 'approved', 'rejected']).default('pending'),
-// });
 
 export const reviewsRoutes = {
 	create: publicProcedure

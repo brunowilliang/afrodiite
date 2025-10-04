@@ -150,6 +150,11 @@ export default function PortugalIndex() {
 
 			<Stack>
 				<div className="grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-6 lg:grid-cols-4">
+					{data?.results?.length === 0 && (
+						<span className="col-span-full py-5 text-center text-default-600 text-small">
+							Oops! Nenhuma acompanhante encontrada, tente refazer a sua busca.
+						</span>
+					)}
 					{data?.results?.map((profile) => {
 						return <EscortCard key={profile.id} profile={profile as any} />;
 					})}

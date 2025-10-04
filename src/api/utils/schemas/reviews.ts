@@ -4,6 +4,7 @@ import { escortReviews } from '@/api/database/schemas/reviews';
 
 export const schema = createInsertSchema(escortReviews, {
 	escort_id: z.string().min(1, 'o id da escort é obrigatório'),
+	public_id: z.number().min(1, 'o id público é obrigatório'),
 	rating: z
 		.number()
 		.min(1, 'o mínimo de rating é 1')
@@ -23,7 +24,7 @@ export const schema = createInsertSchema(escortReviews, {
 
 export const ReviewSchema = {
 	input: schema,
-	output: schema.omit({ escort_id: true }),
+	output: schema.omit({ escort_id: true, public_id: true }),
 };
 
 export namespace IReviews {

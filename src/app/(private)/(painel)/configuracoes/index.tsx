@@ -83,15 +83,11 @@ export const ConfiguracoesIndex = () => {
 
 	return (
 		<div className="w-full space-y-3">
-			<div className="space-y-3">
-				<div className="space-y-2">
-					<label className="font-medium text-sm">Países Bloqueados</label>
-					<p className="text-default-500 text-xs">
-						Selecione os países que você não quer atender
-					</p>
-				</div>
+			<div className="flex flex-col gap-2">
+				<label className="font-medium text-default-600 text-small">
+					Países Bloqueados
+				</label>
 
-				{/* Chips dos países selecionados */}
 				{selectedCountries.length > 0 && (
 					<div className="flex flex-wrap gap-2">
 						{selectedCountries.map((sigla) => {
@@ -110,10 +106,10 @@ export const ConfiguracoesIndex = () => {
 					</div>
 				)}
 
-				{/* AutoComplete para adicionar países */}
 				<Input.AutoComplete
 					label="Digite para buscar países..."
 					inputValue={inputValue}
+					description="Selecione os países que você deseja bloquear"
 					onInputChange={setInputValue}
 					allowsCustomValue={false}
 					onSelectionChange={(key) => {
