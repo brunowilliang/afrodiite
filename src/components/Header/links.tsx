@@ -73,8 +73,8 @@ export const AuthMenu: Navigation[] = [
 		label: 'Geral',
 		sections: [
 			{
-				key: '/ajustes',
-				href: '/ajustes',
+				key: '/configuracoes',
+				href: '/configuracoes',
 				label: 'Configurações',
 				icon: 'Settings',
 			},

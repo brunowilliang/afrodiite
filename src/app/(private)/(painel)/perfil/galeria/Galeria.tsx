@@ -4,7 +4,6 @@ import { useUploadFiles } from 'better-upload/client';
 import { nanoid } from 'nanoid';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { MAX_FILE_SIZE_GALLERY } from '@/api/http/routes/storage';
-import { buildGalleryItems } from '@/api/utils/buildGalleryItems';
 import type { GalleryItem } from '@/api/utils/schemas/escort-core';
 import { Input } from '@/components/core/Input';
 import { Stack } from '@/components/core/Stack';
@@ -13,8 +12,21 @@ import { SortableGallery } from '@/components/SortableGallery';
 import { useProfile } from '@/hooks/useProfile';
 import { api } from '@/lib/orpc';
 import { tryCatch } from '@/utils/tryCatch';
+import { Badge } from '../../components/Badge';
 
-export const Gallery = () => {
+function buildGalleryItems(list: Partial<GalleryItem>[]): GalleryItem[] {
+	const now = new Date().toISOString();
+	return list.map((item, i) => ({
+		id: item.id || nanoid(6),
+		path: item.path || '',
+		url: item.url || '',
+		size: item.size || 0,
+		order: item.order ?? i,
+		createdAt: item.createdAt || now,
+	}));
+}
+
+export const Galeria = () => {
 	const { profile, updateProfile } = useProfile();
 
 	const { control } = useUploadFiles({ route: 'gallery' });
@@ -226,51 +238,54 @@ export const Gallery = () => {
 	};
 
 	return (
-		<Stack className="gap-3">
-			{items.length < MAX_FILES && (
-				<Input.File
-					control={control}
-					accept="image/*"
-					metadata={{ profile_id: profile?.id }}
-					description={{
-						maxFiles: MAX_FILES,
-						maxFileSize: `${MAX_SIZE / 1024 / 1024}MB`,
-						fileTypes: 'JPEG, PNG, WEBP, GIF',
-					}}
-					uploadOverride={handleFilesAdded}
-				/>
-			)}
+		<Stack className="gap-5">
+			<Badge icon="Gallery" label="Imagens" />
+			<Stack className="gap-3">
+				{items.length < MAX_FILES && (
+					<Input.File
+						control={control}
+						accept="image/*"
+						metadata={{ profile_id: profile?.id }}
+						description={{
+							maxFiles: MAX_FILES,
+							maxFileSize: `${MAX_SIZE / 1024 / 1024}MB`,
+							fileTypes: 'JPEG, PNG, WEBP, GIF',
+						}}
+						uploadOverride={handleFilesAdded}
+					/>
+				)}
 
-			<SortableGallery
-				items={display}
-				order={order}
-				progress={progress}
-				disabled={progress.size > 0 || isSaving}
-				onOrderChange={async (next) => {
-					const ordered = next
-						.map((oid) => items.find((it) => it.id === oid) || null)
-						.filter(Boolean) as GalleryItem[];
-					const nextItems = reindex(ordered);
-					setItems(nextItems);
-					const toPersist = nextItems.filter(
-						(it) =>
-							!!it.path &&
-							typeof it.url === 'string' &&
-							!it.url.startsWith('blob:'),
-					);
-					// debounce persist to avoid multiple sequential updates
-					if (!reorderTimerRef.current) {
-						reorderTimerRef.current = undefined;
-					}
-					if (reorderTimerRef.current) {
-						clearTimeout(reorderTimerRef.current);
-					}
-					reorderTimerRef.current = setTimeout(async () => {
-						await updateProfile({ gallery: toPersist });
-					}, 400) as unknown as number;
-				}}
-				onDelete={handleRemove}
-			/>
+				<SortableGallery
+					items={display}
+					order={order}
+					progress={progress}
+					disabled={progress.size > 0 || isSaving}
+					onOrderChange={async (next) => {
+						const ordered = next
+							.map((oid) => items.find((it) => it.id === oid) || null)
+							.filter(Boolean) as GalleryItem[];
+						const nextItems = reindex(ordered);
+						setItems(nextItems);
+						const toPersist = nextItems.filter(
+							(it) =>
+								!!it.path &&
+								typeof it.url === 'string' &&
+								!it.url.startsWith('blob:'),
+						);
+						// debounce persist to avoid multiple sequential updates
+						if (!reorderTimerRef.current) {
+							reorderTimerRef.current = undefined;
+						}
+						if (reorderTimerRef.current) {
+							clearTimeout(reorderTimerRef.current);
+						}
+						reorderTimerRef.current = setTimeout(async () => {
+							await updateProfile({ gallery: toPersist });
+						}, 400) as unknown as number;
+					}}
+					onDelete={handleRemove}
+				/>
+			</Stack>
 		</Stack>
 	);
 };

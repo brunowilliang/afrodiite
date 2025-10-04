@@ -1,37 +1,33 @@
 'use client';
 
 import { Chip } from '@heroui/react';
-import {
-	useMutation,
-	useQueryClient,
-	useSuspenseQuery,
-} from '@tanstack/react-query';
 import { useState } from 'react';
 import { Input } from '@/components/core/Input';
-import { toast } from '@/components/core/Toast';
-import { api } from '@/lib/orpc';
+import { useProfile } from '@/hooks/useProfile';
 import { Countries } from '@/utils/lists/Countries';
 
-export default function SettingsForm() {
-	const queryClient = useQueryClient();
+export const ConfiguracoesIndex = () => {
+	// const queryClient = useQueryClient();
 
-	const { data: profile } = useSuspenseQuery(
-		api.queries.profile.get.queryOptions(),
-	);
+	const { profile, updateProfile } = useProfile();
 
-	const { mutateAsync: updateProfile } = useMutation(
-		api.queries.profile.update.mutationOptions({
-			onSuccess: () => {
-				toast.success('Perfil atualizado com sucesso!');
-				queryClient.invalidateQueries({
-					queryKey: api.queries.profile.get.queryKey(),
-				});
-			},
-			onError: (error) => {
-				toast.error(error?.message ?? 'Erro ao atualizar perfil');
-			},
-		}),
-	);
+	// const { data: profile } = useSuspenseQuery(
+	// 	api.queries.profile.get.queryOptions(),
+	// );
+
+	// const { mutateAsync: updateProfile } = useMutation(
+	// 	api.queries.profile.update.mutationOptions({
+	// 		onSuccess: () => {
+	// 			toast.success('Perfil atualizado com sucesso!');
+	// 			queryClient.invalidateQueries({
+	// 				queryKey: api.queries.profile.get.queryKey(),
+	// 			});
+	// 		},
+	// 		onError: (error) => {
+	// 			toast.error(error?.message ?? 'Erro ao atualizar perfil');
+	// 		},
+	// 	}),
+	// );
 
 	// Estado para países selecionados
 	const [selectedCountries, setSelectedCountries] = useState<string[]>(
@@ -135,4 +131,4 @@ export default function SettingsForm() {
 			</div>
 		</div>
 	);
-}
+};

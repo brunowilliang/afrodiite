@@ -14,5 +14,9 @@ export default function RootLayout({ children }: Props) {
 		return redirect('/painel');
 	}
 
-	return children;
+	return (
+		<div className="mx-auto w-full max-w-3xl overflow-visible py-4">
+			{children}
+		</div>
+	);
 }

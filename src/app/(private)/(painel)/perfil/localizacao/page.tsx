@@ -1,12 +1,5 @@
-import { Stack } from '@/components/core/Stack';
-import { Badge } from '../../components/Badge';
-import { Location } from '.';
+import { Localizacao } from './Localizacao';
 
-export default function Localizacao() {
-	return (
-		<Stack className="gap-5">
-			<Badge icon="Location" label="Localização" />
-			<Location />
-		</Stack>
-	);
+export default function Page() {
+	return <Localizacao />;
 }

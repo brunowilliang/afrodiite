@@ -1,12 +1,5 @@
-import { Stack } from '@/components/core/Stack';
-import { Badge } from '../components/Badge';
-import { Information } from '.';
+import { Informacoes } from './Informacoes';
 
-export default function Profile() {
-	return (
-		<Stack className="gap-5">
-			<Badge icon="Profile" label="Informações" />
-			<Information />
-		</Stack>
-	);
+export default function Page() {
+	return <Informacoes />;
 }

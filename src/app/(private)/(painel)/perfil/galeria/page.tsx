@@ -1,12 +1,5 @@
-import { Stack } from '@/components/core/Stack';
-import { Badge } from '../../components/Badge';
-import { Gallery } from '.';
+import { Galeria } from './Galeria';
 
-export default function Galeria() {
-	return (
-		<Stack className="gap-5">
-			<Badge icon="Gallery" label="Imagens" />
-			<Gallery />
-		</Stack>
-	);
+export default function Page() {
+	return <Galeria />;
 }

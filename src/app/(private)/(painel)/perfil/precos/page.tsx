@@ -1,12 +1,5 @@
-import { Stack } from '@/components/core/Stack';
-import { Badge } from '../../components/Badge';
-import { Prices } from '.';
+import { Precos } from './Precos';
 
-export default function Precos() {
-	return (
-		<Stack className="gap-5">
-			<Badge icon="MoneyBag" label="Preços" />
-			<Prices />
-		</Stack>
-	);
+export default function Page() {
+	return <Precos />;
 }

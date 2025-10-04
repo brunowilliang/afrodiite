@@ -9,8 +9,9 @@ import { Reviews as ReviewsComponent } from '@/components/core/Reviews';
 import { Stack } from '@/components/core/Stack';
 import { Tabs } from '@/components/core/Tabs';
 import { useReviews } from '@/hooks/useReviews';
+import { Badge } from '../../components/Badge';
 
-export const Reviews = () => {
+export const Avaliacoes = () => {
 	const { reviews, updateReview } = useReviews();
 
 	const [status, setStatus] = useState<IReviews.Output['status']>('pending');
@@ -22,6 +23,8 @@ export const Reviews = () => {
 
 	return (
 		<Stack className="gap-5">
+			<Badge icon="Reviews" label="Avaliações" />
+
 			<Tabs
 				aria-label="Filter Stats"
 				selectedKey={status}

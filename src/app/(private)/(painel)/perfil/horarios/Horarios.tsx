@@ -7,13 +7,12 @@ import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import type { Day } from '@/api/utils/schemas/escort-core';
 import { createDefaults, DayEnum } from '@/api/utils/schemas/escort-core';
-import { Badge } from '@/components/core/Badge';
 import { Button } from '@/components/core/Button';
-import { Icon } from '@/components/core/Icon';
 import { Input } from '@/components/core/Input';
 import { Stack } from '@/components/core/Stack';
 import { toast } from '@/components/core/Toast';
 import { useProfile } from '@/hooks/useProfile';
+import { Badge } from '../../components/Badge';
 
 const timeRegex = /^([01]\d|2[0-3]):([0-5]\d)$/;
 const formSchema = z
@@ -52,7 +51,7 @@ const formSchema = z
 		}
 	});
 
-export const Schedules = () => {
+export const Horarios = () => {
 	const { profile, updateProfile, isUpdating } = useProfile();
 
 	const handleSubmit = async () => {
@@ -114,101 +113,101 @@ export const Schedules = () => {
 	};
 
 	return (
-		<Form
-			validationBehavior="aria"
-			onSubmit={form.handleSubmit(handleSubmit, onInvalid)}
-			className="flex w-full flex-col gap-5"
-		>
-			<Stack className="grid w-full grid-cols-1 gap-5 md:grid-cols-2">
-				{(
-					[
-						['monday', 'Segunda-Feira'],
-						['tuesday', 'Terça-Feira'],
-						['wednesday', 'Quarta-Feira'],
-						['thursday', 'Quinta-Feira'],
-						['friday', 'Sexta-Feira'],
-						['saturday', 'Sábado'],
-						['sunday', 'Domingo'],
-					] as Array<[Day, string]>
-				).map(([day, label]) => {
-					const isActive = form.watch(`${day}.is_available`);
-					return (
-						<Card key={day} className="w-full gap-3 p-4 last:md:col-span-2">
-							<Badge>
-								<Icon name="Stars" variant="bulk" size="20" />
-								{label}
-							</Badge>
-							<Stack
-								direction="row"
-								className="centered w-full justify-between"
-							>
-								<Controller
-									control={form.control}
-									name={`${day}.is_available` as const}
-									render={({ field }) => (
+		<Stack className="gap-5">
+			<Badge icon="ClockSquare" label="Horários" />
+			<Form
+				validationBehavior="aria"
+				onSubmit={form.handleSubmit(handleSubmit, onInvalid)}
+				className="flex w-full flex-col gap-5"
+			>
+				<Stack className="grid w-full grid-cols-1 gap-5 md:grid-cols-2">
+					{(
+						[
+							['monday', 'Segunda-Feira'],
+							['tuesday', 'Terça-Feira'],
+							['wednesday', 'Quarta-Feira'],
+							['thursday', 'Quinta-Feira'],
+							['friday', 'Sexta-Feira'],
+							['saturday', 'Sábado'],
+							['sunday', 'Domingo'],
+						] as Array<[Day, string]>
+					).map(([day, label]) => {
+						const isActive = form.watch(`${day}.is_available`);
+						return (
+							<Card key={day} className="w-full gap-3 p-4 last:md:col-span-2">
+								<Badge icon="Stars" label={label} />
+								<Stack
+									direction="row"
+									className="centered w-full justify-between"
+								>
+									<Controller
+										control={form.control}
+										name={`${day}.is_available` as const}
+										render={({ field }) => (
+											<Input.Switch
+												isSelected={field.value}
+												onValueChange={field.onChange}
+											>
+												{isActive ? 'Disponível' : 'Indisponível'}
+											</Input.Switch>
+										)}
+									/>
+									{isActive && (
 										<Input.Switch
-											isSelected={field.value}
-											onValueChange={field.onChange}
+											isSelected={isFullDay(day)}
+											onValueChange={(enabled) => setFullDay(day, enabled)}
+											size="sm"
 										>
-											{isActive ? 'Disponível' : 'Indisponível'}
+											Dia inteiro?
 										</Input.Switch>
 									)}
-								/>
-								{isActive && (
-									<Input.Switch
-										isSelected={isFullDay(day)}
-										onValueChange={(enabled) => setFullDay(day, enabled)}
-										size="sm"
-									>
-										Dia inteiro?
-									</Input.Switch>
-								)}
-							</Stack>
-							<Stack direction="row" className="w-full gap-4">
-								<Controller
-									control={form.control}
-									name={`${day}.start` as const}
-									render={({ field, fieldState }) => (
-										<Input.Time
-											label="Início"
-											variant="faded"
-											value={field.value ? parseTime(field.value) : null}
-											isRequired={isActive}
-											isDisabled={!isActive}
-											onChange={(t) =>
-												field.onChange(t ? t.toString().slice(0, 5) : '')
-											}
-											isInvalid={!!fieldState.error}
-											errorMessage={fieldState.error?.message}
-										/>
-									)}
-								/>
-								<Controller
-									control={form.control}
-									name={`${day}.end` as const}
-									render={({ field, fieldState }) => (
-										<Input.Time
-											label="Fim"
-											variant="faded"
-											isRequired={isActive}
-											isDisabled={!isActive}
-											value={field.value ? parseTime(field.value) : null}
-											onChange={(t) =>
-												field.onChange(t ? t.toString().slice(0, 5) : '')
-											}
-											isInvalid={!!fieldState.error}
-											errorMessage={fieldState.error?.message}
-										/>
-									)}
-								/>
-							</Stack>
-						</Card>
-					);
-				})}
-			</Stack>
-			<Button size="md" isLoading={isUpdating} type="submit">
-				Salvar
-			</Button>
-		</Form>
+								</Stack>
+								<Stack direction="row" className="w-full gap-4">
+									<Controller
+										control={form.control}
+										name={`${day}.start` as const}
+										render={({ field, fieldState }) => (
+											<Input.Time
+												label="Início"
+												variant="faded"
+												value={field.value ? parseTime(field.value) : null}
+												isRequired={isActive}
+												isDisabled={!isActive}
+												onChange={(t) =>
+													field.onChange(t ? t.toString().slice(0, 5) : '')
+												}
+												isInvalid={!!fieldState.error}
+												errorMessage={fieldState.error?.message}
+											/>
+										)}
+									/>
+									<Controller
+										control={form.control}
+										name={`${day}.end` as const}
+										render={({ field, fieldState }) => (
+											<Input.Time
+												label="Fim"
+												variant="faded"
+												isRequired={isActive}
+												isDisabled={!isActive}
+												value={field.value ? parseTime(field.value) : null}
+												onChange={(t) =>
+													field.onChange(t ? t.toString().slice(0, 5) : '')
+												}
+												isInvalid={!!fieldState.error}
+												errorMessage={fieldState.error?.message}
+											/>
+										)}
+									/>
+								</Stack>
+							</Card>
+						);
+					})}
+				</Stack>
+				<Button size="md" isLoading={isUpdating} type="submit">
+					Salvar
+				</Button>
+			</Form>
+		</Stack>
 	);
 };

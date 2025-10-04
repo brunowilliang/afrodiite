@@ -7,13 +7,12 @@ import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import type { Slot } from '@/api/utils/schemas/escort-core';
 import { createDefaults, SlotEnum } from '@/api/utils/schemas/escort-core';
-import { Badge } from '@/components/core/Badge';
 import { Button } from '@/components/core/Button';
-import { Icon } from '@/components/core/Icon';
 import { Input } from '@/components/core/Input';
 import { Stack } from '@/components/core/Stack';
 import { toast } from '@/components/core/Toast';
 import { useProfile } from '@/hooks/useProfile';
+import { Badge } from '../../components/Badge';
 
 const formSchema = z
 	.object(
@@ -66,7 +65,7 @@ const slotLabels: Record<Slot, string> = {
 	outcall: 'Outcall',
 };
 
-export const Prices = () => {
+export const Precos = () => {
 	const { profile, updateProfile, isUpdating } = useProfile();
 
 	const handleSubmit = async () => {
@@ -124,90 +123,90 @@ export const Prices = () => {
 
 	return (
 		<I18nProvider locale="en-US">
-			<Form
-				validationBehavior="aria"
-				onSubmit={form.handleSubmit(handleSubmit, onInvalid)}
-				className="w-full space-y-6"
-			>
-				<Stack className="grid w-full grid-cols-1 gap-5 md:grid-cols-2">
-					{(SlotEnum.options as readonly Slot[]).map((slot) => {
-						const isActive = form.watch(`${slot}.is_available`);
-						const negotiated = form.watch(`${slot}.negotiated`);
-						return (
-							<Card key={slot} className="flex w-full flex-col gap-3 p-4">
-								<Stack direction="row" className="w-full justify-between">
-									<Badge>
-										<Icon name="Stars" variant="bulk" size="20" />
-										{slotLabels[slot]}
-									</Badge>
-									<Controller
-										control={form.control}
-										name={`${slot}.is_available` as const}
-										render={({ field }) => (
-											<Input.Switch
-												isSelected={field.value}
-												onValueChange={field.onChange}
-											>
-												{isActive ? 'Ativado' : 'Desativado'}
-											</Input.Switch>
-										)}
-									/>
-								</Stack>
-								<Stack direction="row" className="w-full gap-4">
-									<Controller
-										control={form.control}
-										name={`${slot}.amount` as const}
-										render={({ field, fieldState }) => (
-											<Input.Number
-												isRequired={isActive && !negotiated}
-												label="Valor"
-												minValue={0}
-												variant="faded"
-												maxValue={999999}
-												formatOptions={{
-													style: 'currency',
-													currency: 'EUR',
-													currencyDisplay: 'symbol',
-												}}
-												isDisabled={!isActive || negotiated}
-												value={field.value as number}
-												onValueChange={field.onChange}
-												onBlur={field.onBlur}
-												isInvalid={
-													isActive && !negotiated ? !!fieldState.error : false
-												}
-												errorMessage={
-													isActive && !negotiated
-														? fieldState.error?.message
-														: undefined
-												}
-											/>
-										)}
-									/>
-									<Controller
-										control={form.control}
-										name={`${slot}.negotiated` as const}
-										render={({ field }) => (
-											<Input.Switch
-												isSelected={isActive && field.value}
-												className="w-full"
-												onValueChange={field.onChange}
-												isDisabled={!isActive}
-												size="sm"
-											>
-												A combinar?
-											</Input.Switch>
-										)}
-									/>
-								</Stack>
-							</Card>
-						);
-					})}
-				</Stack>
-				<Button size="md" isLoading={isUpdating} type="submit">
-					Salvar
-				</Button>
-			</Form>
+			<Stack className="gap-5">
+				<Badge icon="MoneyBag" label="Preços" />
+				<Form
+					validationBehavior="aria"
+					onSubmit={form.handleSubmit(handleSubmit, onInvalid)}
+					className="w-full space-y-6"
+				>
+					<Stack className="grid w-full grid-cols-1 gap-5 md:grid-cols-2">
+						{(SlotEnum.options as readonly Slot[]).map((slot) => {
+							const isActive = form.watch(`${slot}.is_available`);
+							const negotiated = form.watch(`${slot}.negotiated`);
+							return (
+								<Card key={slot} className="flex w-full flex-col gap-3 p-4">
+									<Stack direction="row" className="w-full justify-between">
+										<Badge icon="Stars" label={slotLabels[slot]} />
+										<Controller
+											control={form.control}
+											name={`${slot}.is_available` as const}
+											render={({ field }) => (
+												<Input.Switch
+													isSelected={field.value}
+													onValueChange={field.onChange}
+												>
+													{isActive ? 'Ativado' : 'Desativado'}
+												</Input.Switch>
+											)}
+										/>
+									</Stack>
+									<Stack direction="row" className="w-full gap-4">
+										<Controller
+											control={form.control}
+											name={`${slot}.amount` as const}
+											render={({ field, fieldState }) => (
+												<Input.Number
+													isRequired={isActive && !negotiated}
+													label="Valor"
+													minValue={0}
+													variant="faded"
+													maxValue={999999}
+													formatOptions={{
+														style: 'currency',
+														currency: 'EUR',
+														currencyDisplay: 'symbol',
+													}}
+													isDisabled={!isActive || negotiated}
+													value={field.value as number}
+													onValueChange={field.onChange}
+													onBlur={field.onBlur}
+													isInvalid={
+														isActive && !negotiated ? !!fieldState.error : false
+													}
+													errorMessage={
+														isActive && !negotiated
+															? fieldState.error?.message
+															: undefined
+													}
+												/>
+											)}
+										/>
+										<Controller
+											control={form.control}
+											name={`${slot}.negotiated` as const}
+											render={({ field }) => (
+												<Input.Switch
+													isSelected={isActive && field.value}
+													className="w-full"
+													onValueChange={field.onChange}
+													isDisabled={!isActive}
+													size="sm"
+												>
+													A combinar?
+												</Input.Switch>
+											)}
+										/>
+									</Stack>
+								</Card>
+							);
+						})}
+					</Stack>
+					<Button size="md" isLoading={isUpdating} type="submit">
+						Salvar
+					</Button>
+				</Form>
+			</Stack>
 		</I18nProvider>
 	);
 };
