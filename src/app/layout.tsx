@@ -6,10 +6,8 @@ import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google';
 export const dynamic = 'auto';
 
 import { Geist_Mono, Outfit } from 'next/font/google';
-import { NuqsAdapter } from 'nuqs/adapters/next/app';
-import { HeroProvider } from '@/providers/HeroUIProvider';
-import QueryClientProvider from '@/providers/QueryClientProvider';
-import { ThemeProvider } from '@/providers/ThemeProvider';
+import Script from 'next/script';
+import { Providers } from '@/providers';
 
 const outfit = Outfit({
 	variable: '--font-outfit',
@@ -34,17 +32,16 @@ export default function RootLayout({ children }: Props) {
 					href="https://sets.hugeicons.com/tilwtevunhk.css"
 					crossOrigin="anonymous"
 				/>
+				<Script
+					defer
+					src="https://cloud.umami.is/script.js"
+					data-website-id="1933715a-8066-4081-8944-00d09e273ca9"
+				/>
 			</head>
 			<GoogleTagManager gtmId="GTM-PXW8JX3R" />
 			<GoogleAnalytics gaId="G-NQBNKRB15S" />
 			<body className={`${outfit.variable} ${mono.variable} antialiased`}>
-				<NuqsAdapter>
-					<ThemeProvider>
-						<HeroProvider>
-							<QueryClientProvider>{children}</QueryClientProvider>
-						</HeroProvider>
-					</ThemeProvider>
-				</NuqsAdapter>
+				<Providers>{children}</Providers>
 			</body>
 		</html>
 	);

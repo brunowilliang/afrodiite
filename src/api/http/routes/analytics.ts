@@ -6,259 +6,197 @@ import { authProcedure, publicProcedure } from '@/api/http/middlewares';
 // ✅ Drizzle-CRUD setup
 const analytics = createCrud(analyticsEvents, {
 	searchFields: ['event_type'],
-	allowedFilters: ['escort_id', 'event_type', 'user_session'],
+	allowedFilters: ['escort_id', 'event_type'],
 });
 
 // ✅ Schemas Zod v4 - EXPORTADOS
 export const TrackSchema = {
 	input: z.object({
 		escort_id: z.string().min(1),
+		public_id: z.string().min(1),
 		event_type: z.enum(['profile_view', 'whatsapp_click', 'phone_click']),
-		user_session: z.string().optional(),
-		metadata: z
-			.object({
-				user_agent: z.string().optional(),
-				referrer: z.string().optional(),
-				device: z.enum(['mobile', 'desktop']).optional(),
-				source: z.string().optional(),
-			})
-			.loose()
-			.optional(),
+		device: z.enum(['mobile', 'desktop']),
 	}),
 };
 
 const StatsSchema = {
 	input: z.object({
-		period: z.enum(['7d', '14d', '30d', '60d', '90d']).default('7d'),
+		period: z
+			.enum(['7daysAgo', '14daysAgo', '30daysAgo', '60daysAgo', '90daysAgo'])
+			.default('7daysAgo'),
 	}),
 };
 
-export type IStats = z.infer<typeof StatsSchema.input>['period'];
+export namespace IAnalytics {
+	export type Input = z.infer<typeof TrackSchema.input>;
+	export type Period = z.infer<typeof StatsSchema.input>['period'];
+}
 
 export const analyticsRoutes = {
 	track: publicProcedure.input(TrackSchema.input).handler(async ({ input }) => {
+		// Calculate hour and day automatically
 		const now = new Date();
+		const hour = now.getHours(); // 0-23
+		const days = [
+			'sunday',
+			'monday',
+			'tuesday',
+			'wednesday',
+			'thursday',
+			'friday',
+			'saturday',
+		];
+		const day = days[now.getDay()];
 
-		const result = await analytics.create({
+		// Save to database
+		await analytics.create({
 			escort_id: input.escort_id,
+			public_id: input.public_id,
 			event_type: input.event_type,
-			user_session: input.user_session,
-			metadata: input.metadata,
-			hour: now.getHours(),
-			day_of_week: now.getDay(),
+			device: input.device,
+			hour,
+			day,
 		});
 
-		return { success: true, id: result.id };
+		return { success: true };
 	}),
 	stats: authProcedure
 		.input(StatsSchema.input)
-		.handler(async ({ input, context }) => {
-			const now = new Date();
-			const daysMap = { '7d': 7, '14d': 14, '30d': 30, '60d': 60, '90d': 90 };
-			const startDate = new Date(
-				now.getTime() - daysMap[input.period] * 24 * 60 * 60 * 1000,
-			);
+		.handler(async ({ context, input }) => {
+			// 1. Get escort_id from authenticated user
+			const escort_id = context.session.user.id;
 
-			// Buscar eventos
-			const [events, rankingData] = await Promise.all([
-				analytics.list({
-					filters: {
-						escort_id: context.session.user.id,
-						created_at: { gte: startDate.toISOString() },
-					},
-					perPage: 100000,
-				}),
-				getRanking(context.session.user.id, startDate),
-			]);
+			// 2. Convert period to start date
+			const daysAgo = Number.parseInt(input.period.replace('daysAgo', ''));
+			const startDate = new Date();
+			startDate.setDate(startDate.getDate() - daysAgo);
+			startDate.setHours(0, 0, 0, 0);
 
-			// Métricas básicas
-			type EventStats = {
-				profile_view?: number;
-				whatsapp_click?: number;
-				phone_click?: number;
-			};
+			// 3. Fetch all events from period
+			const { results: events } = await analytics.list({
+				filters: {
+					escort_id,
+					created_at: { gte: startDate.toISOString() },
+				},
+				perPage: 100000, // Large number to get all events
+			});
 
-			const stats = events.results.reduce<EventStats>((acc, event: any) => {
-				const eventType = event.event_type as keyof EventStats;
-				acc[eventType] = (acc[eventType] || 0) + 1;
-				return acc;
-			}, {});
+			// 4. Calculate metrics
+			// ✅ Metric 1: profile_views
+			const profile_views = events.filter(
+				(e) => e.event_type === 'profile_view',
+			).length;
 
-			// Device breakdown
-			const deviceStats = events.results.reduce(
-				(acc: { mobile: number; desktop: number }, event: any) => {
-					const device = event.metadata?.device as
-						| 'mobile'
-						| 'desktop'
-						| undefined;
-					if (device && (device === 'mobile' || device === 'desktop')) {
-						acc[device]++;
-					}
+			// ✅ Metric 2: whatsapp_clicks
+			const whatsapp_clicks = events.filter(
+				(e) => e.event_type === 'whatsapp_click',
+			).length;
+
+			// ✅ Metric 3: phone_clicks
+			const phone_clicks = events.filter(
+				(e) => e.event_type === 'phone_click',
+			).length;
+
+			// ✅ Metric 4: whatsapp_conversion
+			const whatsapp_conversion =
+				profile_views > 0
+					? ((whatsapp_clicks / profile_views) * 100).toFixed(2)
+					: '0.00';
+
+			// ✅ Metric 5: phone_conversion
+			const phone_conversion =
+				profile_views > 0
+					? ((phone_clicks / profile_views) * 100).toFixed(2)
+					: '0.00';
+
+			// ✅ Metric 6: mobile_access (only profile_views)
+			const mobile_access = events.filter(
+				(e) => e.event_type === 'profile_view' && e.device === 'mobile',
+			).length;
+
+			// ✅ Metric 7: desktop_access (only profile_views)
+			const desktop_access = events.filter(
+				(e) => e.event_type === 'profile_view' && e.device === 'desktop',
+			).length;
+
+			// ✅ Metric 8: mobile_percentage
+			const total_device_views = mobile_access + desktop_access;
+			const mobile_percentage =
+				total_device_views > 0
+					? ((mobile_access / total_device_views) * 100).toFixed(2)
+					: '0.00';
+
+			// ✅ Metric 9: desktop_percentage
+			const desktop_percentage =
+				total_device_views > 0
+					? ((desktop_access / total_device_views) * 100).toFixed(2)
+					: '0.00';
+
+			// ✅ Metric 10: best_hour
+			const hourCounts = events.reduce(
+				(acc, e) => {
+					acc[e.hour] = (acc[e.hour] || 0) + 1;
 					return acc;
 				},
-				{ mobile: 0, desktop: 0 },
+				{} as Record<number, number>,
+			);
+			const best_hour =
+				Object.keys(hourCounts).length > 0
+					? Number(
+							Object.entries(hourCounts).sort(([, a], [, b]) => b - a)[0][0],
+						)
+					: 0;
+
+			// ✅ Metric 11: best_day
+			const dayCounts = events.reduce(
+				(acc, e) => {
+					acc[e.day] = (acc[e.day] || 0) + 1;
+					return acc;
+				},
+				{} as Record<string, number>,
+			);
+			const best_day =
+				Object.keys(dayCounts).length > 0
+					? Object.entries(dayCounts).sort(([, a], [, b]) => b - a)[0][0]
+					: 'monday';
+
+			// ✅ Metric 12: ranking
+			const { results: allProfileViews } = await analytics.list({
+				filters: {
+					event_type: 'profile_view',
+					created_at: { gte: startDate.toISOString() },
+				},
+				perPage: 100000,
+			});
+
+			const escortViewCounts = allProfileViews.reduce(
+				(acc, e) => {
+					acc[e.escort_id] = (acc[e.escort_id] || 0) + 1;
+					return acc;
+				},
+				{} as Record<string, number>,
 			);
 
-			// Performance por hora (melhorada)
-			const hourlyPerformance = Array.from({ length: 24 }, (_, hour) => {
-				const hourEvents = events.results.filter((e: any) => e.hour === hour);
-				const views = hourEvents.filter(
-					(e: any) => e.event_type === 'profile_view',
-				).length;
-				const clicks = hourEvents.filter((e: any) =>
-					['whatsapp_click', 'phone_click'].includes(e.event_type),
-				).length;
+			const sortedEscorts = Object.entries(escortViewCounts)
+				.map(([id, count]) => ({ escort_id: id, views: count }))
+				.sort((a, b) => b.views - a.views);
 
-				return {
-					hour,
-					hour_label: `${hour.toString().padStart(2, '0')}:00`,
-					views,
-					clicks,
-					conversion:
-						views > 0 ? Math.min((clicks / views) * 100, 100).toFixed(1) : '0',
-				};
-			});
-
-			// Performance por dia
-			const weekDays = [
-				'Domingo',
-				'Segunda',
-				'Terça',
-				'Quarta',
-				'Quinta',
-				'Sexta',
-				'Sábado',
-			];
-			const dailyPerformance = Array.from({ length: 7 }, (_, day) => {
-				const dayEvents = events.results.filter(
-					(e: any) => e.day_of_week === day,
-				);
-				const views = dayEvents.filter(
-					(e: any) => e.event_type === 'profile_view',
-				).length;
-				const clicks = dayEvents.filter((e: any) =>
-					['whatsapp_click', 'phone_click'].includes(e.event_type),
-				).length;
-
-				return {
-					day_index: day,
-					day_name: weekDays[day],
-					views,
-					clicks,
-					conversion:
-						views > 0 ? Math.min((clicks / views) * 100, 100).toFixed(1) : '0',
-				};
-			});
-
-			// Identificar melhores horários e dias
-			const peakHours = [...hourlyPerformance]
-				.sort((a, b) => b.views + b.clicks - (a.views + a.clicks))
-				.slice(0, 3);
-
-			const bestDays = [...dailyPerformance]
-				.sort((a, b) => b.views + b.clicks - (a.views + a.clicks))
-				.slice(0, 3);
-
-			// Métricas finais
-			const views = stats.profile_view || 0;
-			const whatsappClicks = stats.whatsapp_click || 0;
-			const phoneClicks = stats.phone_click || 0;
-			const totalClicks = whatsappClicks + phoneClicks;
-			const totalDevice = deviceStats.mobile + deviceStats.desktop;
+			const ranking =
+				sortedEscorts.findIndex((e) => e.escort_id === escort_id) + 1 || 0;
 
 			return {
-				period: input.period,
-				summary: {
-					views,
-					whatsapp_clicks: whatsappClicks,
-					phone_clicks: phoneClicks,
-					total_clicks: totalClicks,
-					conversion_rate:
-						views > 0
-							? Math.min((totalClicks / views) * 100, 100).toFixed(2)
-							: '0',
-				},
-				ranking: {
-					position: rankingData.position,
-					total_escorts: rankingData.total,
-					percentile: rankingData.percentile,
-					is_top_30: rankingData.position > 0 && rankingData.position <= 30,
-					trend: 'stable', // Você pode implementar comparação com período anterior
-				},
-				devices: {
-					mobile: {
-						count: deviceStats.mobile,
-						percentage:
-							totalDevice > 0
-								? ((deviceStats.mobile / totalDevice) * 100).toFixed(1)
-								: '0',
-					},
-					desktop: {
-						count: deviceStats.desktop,
-						percentage:
-							totalDevice > 0
-								? ((deviceStats.desktop / totalDevice) * 100).toFixed(1)
-								: '0',
-					},
-				},
-				performance: {
-					hourly: hourlyPerformance,
-					daily: dailyPerformance,
-					insights: {
-						peak_hours: peakHours.map((h) => ({
-							hour: h.hour_label,
-							activity: h.views + h.clicks,
-						})),
-						best_days: bestDays.map((d) => ({
-							day: d.day_name,
-							activity: d.views + d.clicks,
-						})),
-					},
-				},
-				total_events: events.totalItems,
+				profile_views,
+				whatsapp_clicks,
+				phone_clicks,
+				whatsapp_conversion,
+				phone_conversion,
+				mobile_access,
+				desktop_access,
+				mobile_percentage,
+				desktop_percentage,
+				best_hour,
+				best_day,
+				ranking,
 			};
 		}),
 };
-
-// Função auxiliar para ranking usando drizzle-crud
-async function getRanking(escortId: string, startDate: Date) {
-	try {
-		// Buscar TODOS os eventos de profile_view do período
-		const allEvents = await analytics.list({
-			filters: {
-				event_type: 'profile_view',
-				created_at: { gte: startDate.toISOString() },
-			},
-			perPage: 1000000, // Buscar todos
-		});
-
-		// Agrupar e contar em memória
-		const escortCounts = allEvents.results.reduce(
-			(acc: Record<string, number>, event: any) => {
-				acc[event.escort_id] = (acc[event.escort_id] || 0) + 1;
-				return acc;
-			},
-			{},
-		);
-
-		// Converter para array e ordenar
-		const sortedEscorts = Object.entries(escortCounts)
-			.map(([escort_id, count]) => ({ escort_id, total_views: count }))
-			.sort((a, b) => b.total_views - a.total_views);
-
-		const position =
-			sortedEscorts.findIndex((e) => e.escort_id === escortId) + 1;
-		const total = sortedEscorts.length;
-		const percentile =
-			position > 0 ? (((total - position + 1) / total) * 100).toFixed(1) : '0';
-
-		return {
-			position: position || 0,
-			total,
-			percentile,
-		};
-	} catch (error) {
-		console.error('Error calculating ranking:', error);
-		return { position: 0, total: 0, percentile: '0' };
-	}
-}

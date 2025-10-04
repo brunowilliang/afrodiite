@@ -10,6 +10,7 @@ import { Icon } from '@/components/core/Icon';
 import { ImageCarousel } from '@/components/core/ImageCarousel';
 import { Modal, ModalRef } from '@/components/core/Modal';
 import { Stack } from '@/components/core/Stack';
+import { useAnalytics } from '@/hooks/useAnalytics';
 import { api } from '@/lib/orpc';
 import { AccordionPrice } from './components/AccordionPrice';
 import { CharacteristicsCard } from './components/CharacteristicsCard';
@@ -24,6 +25,12 @@ type Props = {
 };
 
 export const AcompanhanteIndex = ({ publicId }: Props) => {
+	const { data: profile } = useSuspenseQuery(
+		api.queries.escorts.detail.queryOptions({
+			input: { public_id: publicId },
+		}),
+	);
+
 	const modalServiceRef = useRef<ModalRef>(null);
 	const router = useRouter();
 	const [modalService, setModalService] = useState<{
@@ -31,11 +38,7 @@ export const AcompanhanteIndex = ({ publicId }: Props) => {
 		description: string;
 	} | null>(null);
 
-	const { data: profile } = useSuspenseQuery(
-		api.queries.escorts.detail.queryOptions({
-			input: { public_id: publicId },
-		}),
-	);
+	const { trackEvent } = useAnalytics(profile);
 
 	return (
 		<div className="space-y-4">
@@ -97,7 +100,8 @@ export const AcompanhanteIndex = ({ publicId }: Props) => {
 						<AccordionPrice
 							variant="web"
 							profile={profile ?? {}}
-							// trackEvent={trackEvent}
+							handleWhatsAppClick={() => trackEvent('whatsapp_click')}
+							handlePhoneClick={() => trackEvent('phone_click')}
 						/>
 
 						<Card className="gap-4 p-5">
@@ -139,7 +143,8 @@ export const AcompanhanteIndex = ({ publicId }: Props) => {
 			<AccordionPrice
 				variant="mobile"
 				profile={profile ?? {}}
-				// trackEvent={trackEvent}
+				handleWhatsAppClick={() => trackEvent('whatsapp_click')}
+				handlePhoneClick={() => trackEvent('phone_click')}
 			/>
 
 			{/* Modal de serviços */}

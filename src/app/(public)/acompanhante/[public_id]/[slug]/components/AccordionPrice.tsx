@@ -11,13 +11,15 @@ interface AccordionPriceProps {
 	profile: {
 		prices?: Price[] | null;
 	};
-	// trackEvent: (event: AnalyticsEventType) => void;
+	handleWhatsAppClick?: () => void;
+	handlePhoneClick?: () => void;
 }
 
 export const AccordionPrice = ({
 	variant,
 	profile,
-	// trackEvent,
+	handleWhatsAppClick,
+	handlePhoneClick,
 }: AccordionPriceProps) => {
 	const priceTranslations: Record<Price['slot'], string> = {
 		'30m': '30 minutos:',
@@ -29,7 +31,6 @@ export const AccordionPrice = ({
 		travel: 'Diária de viagem:',
 		outcall: 'Deslocação:',
 	};
-
 	const price = profile.prices?.find((price) => price.slot === '1h');
 	const priceLabel = price?.amount ? `€${price.amount} / 1h` : 'Consultar';
 
@@ -76,14 +77,14 @@ export const AccordionPrice = ({
 				<Button
 					className="w-full"
 					size={variant === 'mobile' ? 'md' : undefined}
-					// onPress={() => trackEvent('whatsapp_click')}
+					onPress={handleWhatsAppClick}
 				>
 					WhatsApp
 				</Button>
 				<Button
 					className="w-full"
 					size={variant === 'mobile' ? 'md' : undefined}
-					// onPress={() => trackEvent('phone_click')}
+					onPress={handlePhoneClick}
 				>
 					Telefone
 				</Button>
