@@ -14,7 +14,7 @@ import { toast } from '@/components/core/Toast';
 import { useProfile } from '@/hooks/useProfile';
 import { Badge } from '../../components/Badge';
 
-const formSchema = z
+export const PrecosSchema = z
 	.object(
 		Object.fromEntries(
 			(SlotEnum.options as readonly Slot[]).map((slot) => [
@@ -82,7 +82,7 @@ export const Precos = () => {
 	};
 
 	const form = useForm({
-		resolver: zodResolver(formSchema) as any,
+		resolver: zodResolver(PrecosSchema) as any,
 		mode: 'onChange',
 		defaultValues: profile?.prices?.length
 			? Object.fromEntries(

@@ -52,7 +52,13 @@ export const Servicos = () => {
 			? [...Array.from(selected), id]
 			: Array.from(selected).filter((serviceId) => serviceId !== id);
 
-		await updateProfile({ services: newServices });
+		await updateProfile(
+			{ services: newServices },
+			{
+				skipRedirect: true,
+				showToast: false,
+			},
+		);
 	};
 
 	return (
@@ -101,7 +107,7 @@ export const Servicos = () => {
 					)}
 				</div>
 
-				<Modal ref={modalRef} placement="top-center" isDismissable={false}>
+				<Modal ref={modalRef} placement="bottom-center">
 					<Modal.Content>
 						<Modal.Header className="px-6 pt-5 pb-3 text-default-700">
 							{modalService?.label}

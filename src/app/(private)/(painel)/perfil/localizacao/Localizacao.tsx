@@ -12,7 +12,7 @@ import { useProfile } from '@/hooks/useProfile';
 import { PortugalDistricts } from '@/utils/lists/Portugal';
 import { Badge } from '../../components/Badge';
 
-const formSchema = escortProfileSchema.pick({
+export const LocalizacaoSchema = escortProfileSchema.pick({
 	country: true,
 	district: true,
 	city: true,
@@ -40,7 +40,7 @@ export const Localizacao = () => {
 	};
 
 	const form = useForm({
-		resolver: zodResolver(formSchema),
+		resolver: zodResolver(LocalizacaoSchema),
 		mode: 'onChange',
 		defaultValues: {
 			district: profile?.district ?? '',

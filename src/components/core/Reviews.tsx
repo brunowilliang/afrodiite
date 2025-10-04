@@ -13,6 +13,7 @@ import { Modal, ModalRef } from '@/components/core/Modal';
 import { Rating } from '@/components/core/Rating';
 import { toast } from '@/components/core/Toast';
 import { api } from '@/lib/orpc';
+import { Badge } from './Badge';
 
 export type ReviewsCardProps = CardProps &
 	IReviews.Output & {
@@ -21,7 +22,7 @@ export type ReviewsCardProps = CardProps &
 
 const ReviewsRoot = useStyled('div', {
 	base: {
-		className: 'flex flex-col gap-4',
+		className: 'flex flex-col gap-4 pt-6',
 	},
 });
 
@@ -121,14 +122,14 @@ export const ReviewsHeader = ({ escort_id }: { escort_id: string }) => {
 
 	return (
 		<div className="flex items-center justify-between">
-			<h2 className="font-bold text-2xl">Avaliações</h2>
+			<Badge.Custom label="Avaliações" icon="Star" size="md" className="py-5" />
 			<Button size="md" onClick={() => modalRef.current?.open()}>
-				<Icon name="AddComment" />
+				<Icon name="AddComment" size="20" />
 				Faça sua avaliação
 			</Button>
 
 			<Modal ref={modalRef} size="lg" placement="top-center">
-				<Modal.Content>
+				<Modal.Content className="bg-default-50">
 					<Modal.Header>Faça sua avaliação</Modal.Header>
 					<Modal.Body className="pt-0 pb-5">
 						<Form
@@ -195,17 +196,18 @@ export const ReviewsHeader = ({ escort_id }: { escort_id: string }) => {
 									/>
 								)}
 							/>
-							<span className="w-full text-center text-default-600 text-sm">
-								o seu review requer aprovação antes de ser publicado.
-							</span>
+
 							<Button
 								fullWidth
 								size="md"
 								type="submit"
 								isLoading={createReview.isPending}
 							>
-								Fazer avaliação
+								Enviar a sua avaliação
 							</Button>
+							<span className="w-full text-center text-default-600 text-sm">
+								A sua avaliação requer aprovação antes de ser publicada!
+							</span>
 						</Form>
 					</Modal.Body>
 				</Modal.Content>

@@ -19,6 +19,7 @@ export const OfficeHoursCard = ({ office_hours }: OfficeHoursCardProps) => {
 	return (
 		<InfoCard
 			title="Horário de expediente"
+			icon="ClockSquare"
 			data={(office_hours ?? []).map((hour) => ({
 				key: hour.day,
 				label: officeHourTranslations[hour.day],

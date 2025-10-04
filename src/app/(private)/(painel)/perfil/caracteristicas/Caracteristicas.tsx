@@ -10,7 +10,7 @@ import { Stack } from '@/components/core/Stack';
 import { useProfile } from '@/hooks/useProfile';
 import { Badge } from '../../components/Badge';
 
-const formSchema = escortProfileSchema.pick({
+export const CaracteristicasSchema = escortProfileSchema.pick({
 	characteristics: true,
 });
 
@@ -51,7 +51,7 @@ export const Caracteristicas = () => {
 	].sort();
 
 	const form = useForm({
-		resolver: zodResolver(formSchema),
+		resolver: zodResolver(CaracteristicasSchema),
 		mode: 'onChange',
 		defaultValues: {
 			characteristics: {

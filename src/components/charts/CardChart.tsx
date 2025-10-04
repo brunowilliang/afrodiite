@@ -1,8 +1,9 @@
 import { useRef } from 'react';
 import { Card } from '@/components/core/Card';
 import { Modal, ModalRef } from '@/components/core/Modal';
-import { Skeleton } from '@/components/core/Skeleton';
+import { Badge } from '../core/Badge';
 import { Icon } from '../core/Icon';
+import { Skeleton } from '../core/Skeleton';
 
 type Props = {
 	title: string;
@@ -17,25 +18,31 @@ export const CardChart = (props: Props) => {
 
 	return (
 		<>
-			<Card radius="md" className="bg-default/10" shadow="none">
-				<Card.Header className="items-center gap-2 pb-0">
-					<p className="font-light text-default-500">{props.title}</p>
-
-					<Icon
-						name="Info"
-						variant="bulk"
-						size="18"
-						className="cursor-pointer"
-						onClick={() => modalRef.current?.open()}
-					/>
-				</Card.Header>
-				<Card.Body className="pt-2">
+			<Card
+				isPressable
+				onPress={() => modalRef.current?.open()}
+				radius="md"
+				className="flex min-h-[90px] w-full flex-col items-start justify-center gap-2 bg-default/10 p-4"
+				shadow="none"
+			>
+				<div className="flex w-full flex-row items-center justify-start gap-1 overflow-hidden text-default-500">
+					<div className="h-5 w-1 animate-pulse rounded-full bg-primary/80 duration-1000" />
+					<span className="overflow-hidden text-ellipsis whitespace-nowrap">
+						{props.title}
+					</span>
+					<Icon name="Info" variant="bulk" size="20" />
+				</div>
+				<div className="w-full pt-2">
 					{props.isLoading ? (
-						<Skeleton className="h-8 w-1/2" />
+						<Skeleton className="h-10 w-2/3" />
 					) : (
-						<p className="font-bold text-2xl text-default-600">{props.value}</p>
+						<div className="w-fit">
+							<Badge className="py-5" size="lg">
+								{props.value}
+							</Badge>
+						</div>
 					)}
-				</Card.Body>
+				</div>
 			</Card>
 
 			{props.modalText && (

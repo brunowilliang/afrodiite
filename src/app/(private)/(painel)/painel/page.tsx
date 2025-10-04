@@ -36,7 +36,7 @@ export default function Dashboard() {
 			</Tabs>
 
 			<Stack className="gap-4">
-				<Stack className="grid grid-cols-3 gap-4">
+				<Stack className="grid grid-cols-2 gap-4 lg:grid-cols-3">
 					<CardChart
 						title="Visitas no perfil"
 						value={stats?.profile_views || 0}
@@ -58,8 +58,6 @@ export default function Dashboard() {
 						modalTitle="Cliques no Telefone"
 						modalText="Mostra quantas vezes usuários clicaram no botão de telefone do seu perfil no período selecionado. Assim como os cliques no WhatsApp, esse dado representa uma ação concreta de interesse em contato direto. Alguns clientes preferem ligar ao invés de enviar mensagem, por isso é importante monitorar ambas as formas de contato. Um volume equilibrado entre telefone e WhatsApp indica que você está oferecendo opções adequadas para diferentes perfis de clientes."
 					/>
-				</Stack>
-				<Stack className="grid grid-cols-3 gap-4">
 					<CardChart
 						title="Ranking Geral"
 						value={stats?.ranking ? `#${stats.ranking}` : '-'}
@@ -82,7 +80,7 @@ export default function Dashboard() {
 						modalText="Indica o dia da semana (0=domingo, 6=sábado) em que seu perfil recebe mais visualizações no período selecionado. Conhecer os dias de maior tráfego permite otimizar sua estratégia de atendimento e presença online. Você pode programar atualizações de fotos ou conteúdo nos dias de maior movimento para aproveitar o pico de visitantes e aumentar suas chances de conversão."
 					/>
 				</Stack>
-				<Stack className="grid grid-cols-2 gap-4">
+				<Stack className="grid grid-cols-2 gap-4 lg:grid-cols-3">
 					<CardChart
 						title="Taxa de conversão (WhatsApp)"
 						value={stats?.whatsapp_conversion || '0%'}

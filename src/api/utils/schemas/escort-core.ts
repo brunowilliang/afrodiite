@@ -69,8 +69,6 @@ export const createDefaults = {
 	officeHours: () =>
 		DayEnum.options.map((day) => OfficeHourSchema.parse({ day })),
 	prices: () => SlotEnum.options.map((slot) => PriceSchema.parse({ slot })),
-	characteristics: () => CharacteristicsSchema.parse({}),
-	gallery: () => [] as GalleryItem[],
 };
 
 // 4. Tipos base

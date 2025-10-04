@@ -78,12 +78,12 @@ export const Galeria = () => {
 		});
 
 	const persistProfileSafe = async (finalItems: GalleryItem[]) => {
-		const toPersist = finalItems.filter(
+		const gallery = finalItems.filter(
 			(it) =>
 				!!it.path && typeof it.url === 'string' && !it.url.startsWith('blob:'),
 		);
-		if (toPersist.length) {
-			await updateProfile({ gallery: toPersist });
+		if (gallery.length) {
+			await updateProfile({ gallery }, { skipRedirect: true });
 		}
 	};
 
@@ -234,7 +234,7 @@ export const Galeria = () => {
 		const nextItems = reindex(items.filter((it) => it.id !== key));
 		setItems(nextItems);
 
-		await updateProfile({ gallery: nextItems });
+		await updateProfile({ gallery: nextItems }, { skipRedirect: true });
 	};
 
 	return (
@@ -266,7 +266,7 @@ export const Galeria = () => {
 							.filter(Boolean) as GalleryItem[];
 						const nextItems = reindex(ordered);
 						setItems(nextItems);
-						const toPersist = nextItems.filter(
+						const gallery = nextItems.filter(
 							(it) =>
 								!!it.path &&
 								typeof it.url === 'string' &&
@@ -280,7 +280,7 @@ export const Galeria = () => {
 							clearTimeout(reorderTimerRef.current);
 						}
 						reorderTimerRef.current = setTimeout(async () => {
-							await updateProfile({ gallery: toPersist });
+							await updateProfile({ gallery }, { skipRedirect: true });
 						}, 400) as unknown as number;
 					}}
 					onDelete={handleRemove}

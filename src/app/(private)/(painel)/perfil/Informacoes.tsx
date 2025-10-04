@@ -15,7 +15,7 @@ import { useProfile } from '@/hooks/useProfile';
 import { Countries } from '@/utils/lists/Countries';
 import { Badge } from '../components/Badge';
 
-const formSchema = escortProfileSchema.pick({
+export const InformacoesSchema = escortProfileSchema.pick({
 	artist_name: true,
 	slug: true,
 	description: true,
@@ -38,7 +38,7 @@ export const Informacoes = () => {
 	}, []);
 
 	const form = useForm({
-		resolver: zodResolver(formSchema),
+		resolver: zodResolver(InformacoesSchema),
 		mode: 'onChange',
 		defaultValues: {
 			artist_name: profile?.artist_name ?? '',

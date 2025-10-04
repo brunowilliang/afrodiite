@@ -15,7 +15,7 @@ export default function RootLayout({ children }: Props) {
 	}
 
 	return (
-		<div className="mx-auto w-full max-w-3xl overflow-visible py-4">
+		<div className="mx-auto w-full max-w-3xl overflow-visible p-4">
 			{children}
 		</div>
 	);

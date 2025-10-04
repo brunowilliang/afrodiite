@@ -27,6 +27,7 @@ export const CharacteristicsCard = ({
 	return (
 		<InfoCard
 			title="Características"
+			icon="Diamond"
 			data={Object.entries(characteristics ?? {}).map(([key, value]) => ({
 				key,
 				label: `${caracteristicsTranslations[key as keyof Characteristics]}:`,

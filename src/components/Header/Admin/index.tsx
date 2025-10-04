@@ -2,14 +2,43 @@
 
 import { Navbar, NavbarMenu, NavbarMenuToggle } from '@heroui/react';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Card } from '@/components/core/Card';
+import { Input } from '@/components/core/Input';
 import { MenuTabs } from '@/components/Header/Admin/Menu';
 import { Logo } from '@/components/Logo';
+import { useProfile } from '@/hooks/useProfile';
 import { Avatar } from './Avatar';
 
 export const Header = () => {
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+	const { profile, updateProfile } = useProfile();
+
+	// Optimistic state for visibility toggle
+	const [isVisible, setIsVisible] = useState(profile?.is_visible ?? false);
+
+	// Sync with server state when profile changes
+	useEffect(() => {
+		setIsVisible(profile?.is_visible ?? false);
+	}, [profile?.is_visible]);
+
+	const handleVisibilityToggle = async (value: boolean) => {
+		// Optimistic update
+		setIsVisible(value);
+
+		try {
+			await updateProfile(
+				{ is_visible: value },
+				{
+					toastTitle: value ? 'Perfil Ativado' : 'Perfil Desativado',
+				},
+			);
+		} catch {
+			// Rollback on error
+			setIsVisible(!value);
+		}
+	};
 
 	return (
 		<Navbar
@@ -23,10 +52,10 @@ export const Header = () => {
 			}}
 		>
 			<Card
-				className="flex h-full w-full flex-row items-center justify-between bg-default-50 px-4"
+				className="flex h-full w-full flex-row items-center justify-between gap-4 bg-default-50 px-4"
 				shadow="none"
 			>
-				<div className="centered flex gap-2">
+				<div className="centered flex flex-1 justify-start gap-2">
 					<NavbarMenuToggle
 						className="h-10 w-10 text-default-600 md:hidden"
 						aria-label={'Toggle menu'}
@@ -35,6 +64,13 @@ export const Header = () => {
 						<Logo className="h-full cursor-pointer" />
 					</Link>
 				</div>
+				<Input.Switch
+					size="sm"
+					onValueChange={handleVisibilityToggle}
+					isSelected={isVisible}
+				>
+					Perfil Visível
+				</Input.Switch>
 				<Avatar />
 			</Card>
 

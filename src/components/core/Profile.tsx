@@ -23,7 +23,7 @@ export const Profile = ({
 }: Props) => {
 	return (
 		<button {...props} className="flex items-center gap-2">
-			<div className="flex flex-col items-end gap-0">
+			<div className="hidden flex-col items-end gap-0 sm:flex">
 				<span className="text-default-600 text-tiny">{description}</span>
 				<p className="font-medium text-small">{name}</p>
 				{linkText && (

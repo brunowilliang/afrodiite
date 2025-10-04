@@ -70,14 +70,18 @@ export const AcompanhanteIndex = ({ publicId }: Props) => {
 							dotSize="medium"
 						/>
 						<Card className="gap-4 p-5 px-3" shadow="none">
-							<Badge color="primary" variant="flat" radius="sm">
-								Acompanhante
-							</Badge>
-							<h2 className="font-bold">{profile?.artist_name}</h2>
+							<Badge.Custom label="Acompanhante" size="md" className="py-5" />
+							<h2 className="font-normal text-default-600 text-xl">
+								{profile?.artist_name}
+							</h2>
 						</Card>
 					</Card>
 
-					<TextCard title="Sobre Mim" text={profile?.description ?? ''} />
+					<TextCard
+						title="Sobre Mim"
+						icon="Stars"
+						text={profile?.description ?? ''}
+					/>
 					<CharacteristicsCard characteristics={profile?.characteristics} />
 
 					<div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
@@ -96,7 +100,7 @@ export const AcompanhanteIndex = ({ publicId }: Props) => {
 					<ReviewsWrapper escort_id={profile?.id ?? ''} />
 				</div>
 				<div className="col-span-full lg:col-span-4">
-					<Stack className="hidden gap-4 lg:sticky lg:top-20 lg:flex">
+					<Stack className="hidden gap-4 lg:sticky lg:top-25 lg:flex">
 						<AccordionPrice
 							variant="web"
 							profile={profile ?? {}}

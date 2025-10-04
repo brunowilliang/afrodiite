@@ -20,6 +20,7 @@ export const PricesCard = ({ prices }: PricesCardProps) => {
 	return (
 		<InfoCard
 			title="Valores"
+			icon="MoneyBag"
 			data={(prices ?? []).map((price) => ({
 				key: price.slot,
 				label: priceTranslations[price.slot],

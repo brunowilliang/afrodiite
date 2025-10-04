@@ -2,9 +2,11 @@
 
 import { Chip } from '@heroui/react';
 import { ComponentProps } from 'react';
-import { useStyled } from 'use-styled';
+import { useSlot, useStyled } from 'use-styled';
 
-export const Badge = useStyled(Chip, {
+export type BadgeProps = ComponentProps<typeof BadgeRoot>;
+
+export const BadgeRoot = useStyled(Chip, {
 	base: {
 		color: 'primary',
 		size: 'md',
@@ -17,4 +19,22 @@ export const Badge = useStyled(Chip, {
 	},
 });
 
-export type BadgeProps = ComponentProps<typeof Badge>;
+import { Icon, IconProps } from '@/components/core/Icon';
+
+type Props = BadgeProps & {
+	icon?: IconProps['name'];
+	label: string;
+};
+
+export const BadgeCustom = ({ icon, label, ...props }: Props) => {
+	return (
+		<BadgeRoot {...props}>
+			{icon && <Icon name={icon} variant="bulk" size="20" />}
+			{label}
+		</BadgeRoot>
+	);
+};
+
+export const Badge = useSlot(BadgeRoot, {
+	Custom: BadgeCustom,
+});

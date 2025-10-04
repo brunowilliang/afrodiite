@@ -1,4 +1,4 @@
-import { Accordion, AccordionItem, Card, Chip } from '@heroui/react';
+import { Accordion, AccordionItem, Card } from '@heroui/react';
 import type { Price } from '@/api/utils/schemas/escort-core';
 import { Button } from '@/components/core/Button';
 import { Icon } from '@/components/core/Icon';
@@ -40,9 +40,12 @@ export const AccordionPrice = ({
 				variant === 'mobile' ? 'rounded-t-xl rounded-b-none p-5' : 'p-5'
 			}
 		>
-			<Chip color="primary" variant="flat" radius="sm">
-				Preços
-			</Chip>
+			{/* <Badge.Custom
+				label="Preços"
+				icon="MoneyBag"
+				size="md"
+				className="mb-2 py-5"
+			/> */}
 			<Accordion>
 				<AccordionItem
 					key="prices"
@@ -52,9 +55,11 @@ export const AccordionPrice = ({
 					title={
 						<Stack
 							direction="row"
-							className="w-full items-center justify-between"
+							className="-mt-3 w-full items-center justify-between"
 						>
-							<h3>{priceLabel}</h3>
+							<h3 className="font-normal text-default-600 text-xl lg:text-2xl">
+								{priceLabel}
+							</h3>
 						</Stack>
 					}
 				>
@@ -64,8 +69,10 @@ export const AccordionPrice = ({
 							direction="row"
 							className="items-center gap-1 border-divider/40 border-b py-4 first:pt-0 last:border-b-0"
 						>
-							<span className="font-bold">{priceTranslations[price.slot]}</span>
-							<span className="font-light">
+							<span className="font-normal text-default-600">
+								{priceTranslations[price.slot]}
+							</span>
+							<span className="font-light text-default-800">
 								{price.is_available ? `€ ${price.amount}` : 'Não realiza'}
 							</span>
 						</Stack>
@@ -94,7 +101,7 @@ export const AccordionPrice = ({
 
 	if (variant === 'mobile') {
 		return (
-			<div className="fixed right-0 bottom-0 left-0 z-50 lg:hidden">
+			<div className="fixed right-0 bottom-0 left-0 z-50 pt-10 lg:hidden">
 				{cardContent}
 			</div>
 		);

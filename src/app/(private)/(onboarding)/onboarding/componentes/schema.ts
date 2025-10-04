@@ -1,210 +1,116 @@
-// import { z } from 'zod';
-// import type { Day, Slot } from '@/api/utils/schemas/escort-core';
-// import { DayEnum, SlotEnum } from '@/api/utils/schemas/escort-core';
-// import { escortProfileSchema } from '@/api/utils/schemas/escort-forms';
+import { IProfile } from '@/api/utils/schemas/escort-forms';
+import { CaracteristicasSchema } from '@/app/(private)/(painel)/perfil/caracteristicas/Caracteristicas';
+import { HorariosSchema } from '@/app/(private)/(painel)/perfil/horarios/Horarios';
+import { InformacoesSchema } from '@/app/(private)/(painel)/perfil/Informacoes';
+import { LocalizacaoSchema } from '@/app/(private)/(painel)/perfil/localizacao/Localizacao';
+import { PrecosSchema } from '@/app/(private)/(painel)/perfil/precos/Precos';
 
-// export const informationSchema = escortProfileSchema.pick({
-// 	artist_name: true,
-// 	slug: true,
-// 	description: true,
-// 	birthday: true,
-// 	nationality: true,
-// 	phone: true,
-// 	whatsapp: true,
-// });
+// Validation functions
+export function isInformacoesComplete(profile: IProfile.Select): boolean {
+	return InformacoesSchema.safeParse(profile).success;
+}
 
-// export const locationSchema = escortProfileSchema.pick({
-// 	country: true,
-// 	district: true,
-// 	city: true,
-// });
+export function isLocalizacaoComplete(profile: IProfile.Select): boolean {
+	return LocalizacaoSchema.safeParse(profile).success;
+}
 
-// export const characteristicsSchema = escortProfileSchema.pick({
-// 	characteristics: true,
-// });
+export function isCaracteristicasComplete(profile: IProfile.Select): boolean {
+	return CaracteristicasSchema.safeParse(profile).success;
+}
 
-// // Schema para formulário de office hours (por dia)
-// const timeRegex = /^([01]\d|2[0-3]):([0-5]\d)$/;
-// export const officeHoursSchema = z
-// 	.object(
-// 		Object.fromEntries(
-// 			(DayEnum.options as readonly Day[]).map((day) => [
-// 				day,
-// 				z
-// 					.object({
-// 						is_available: z.boolean(),
-// 						start: z.string().regex(timeRegex),
-// 						end: z.string().regex(timeRegex),
-// 					})
-// 					.superRefine((val, ctx) => {
-// 						if (!val.is_available) return;
-// 						if ((val.start ?? '') >= (val.end ?? '')) {
-// 							ctx.addIssue({
-// 								code: 'custom',
-// 								message: 'Hora de início deve ser menor que a hora de fim',
-// 								path: ['end'],
-// 							});
-// 						}
-// 					}),
-// 			]),
-// 		) as Record<Day, z.ZodObject<any>>,
-// 	)
-// 	.superRefine((val, ctx) => {
-// 		const anyActive = Object.values(val).some((v: any) => !!v.is_available);
-// 		if (!anyActive) {
-// 			const firstDay = (DayEnum.options as readonly Day[])[0];
-// 			ctx.addIssue({
-// 				code: 'custom',
-// 				message: 'Ative pelo menos um dia para salvar os horários.',
-// 				path: [firstDay, 'is_available'],
-// 			});
-// 		}
-// 	});
+export function isHorariosComplete(profile: IProfile.Select): boolean {
+	const officeHours = Array.isArray(profile.office_hours)
+		? profile.office_hours
+		: [];
 
-// // Schema para formulário de preços (por slot)
-// export const pricesSchema = z
-// 	.object(
-// 		Object.fromEntries(
-// 			(SlotEnum.options as readonly Slot[]).map((slot) => [
-// 				slot,
-// 				z
-// 					.object({
-// 						is_available: z.boolean(),
-// 						amount: z.number().optional(),
-// 						negotiated: z.boolean().optional(),
-// 						currency: z.literal('EUR').optional(),
-// 					})
-// 					.superRefine((val, ctx) => {
-// 						if (val.is_available && !val.negotiated && (val.amount ?? 0) < 40) {
-// 							ctx.addIssue({
-// 								code: 'custom',
-// 								message:
-// 									'Quando ativo, o valor deve ser pelo menos €40 ou marque "A combinar".',
-// 								path: ['amount'],
-// 							});
-// 						}
-// 					}),
-// 			]),
-// 		) as Record<Slot, z.ZodObject<any>>,
-// 	)
-// 	.superRefine((val, ctx) => {
-// 		// Pelo menos um slot deve estar ativo (com valor >= 40 ou negociado)
-// 		const anyValid = Object.values(val).some(
-// 			(v: any) => !!v.is_available && ((v.amount ?? 0) >= 40 || !!v.negotiated),
-// 		);
-// 		if (!anyValid) {
-// 			const firstSlot = (SlotEnum.options as readonly Slot[])[0];
-// 			ctx.addIssue({
-// 				code: 'custom',
-// 				message: 'Pelo menos um item deve estar ativo.',
-// 				path: [firstSlot, 'amount'],
-// 			});
-// 		}
-// 	});
+	// Convert array to object format expected by HorariosSchema
+	const hoursObj = Object.fromEntries(
+		officeHours.map((h) => [
+			h.day,
+			{ is_available: h.is_available, start: h.start, end: h.end },
+		]),
+	);
 
-// export const servicesSchema = escortProfileSchema.pick({
-// 	services: true,
-// });
+	return HorariosSchema.safeParse(hoursObj).success;
+}
 
-// export const gallerySchema = escortProfileSchema.pick({
-// 	gallery: true,
-// });
+export function isPrecosComplete(profile: IProfile.Select): boolean {
+	const prices = Array.isArray(profile.prices) ? profile.prices : [];
 
-// export function isInformationComplete(profile: ProfileSelect): boolean {
-// 	return informationSchema.safeParse(profile).success;
-// }
+	// Convert array to object format expected by PrecosSchema
+	const pricesObj = Object.fromEntries(
+		prices.map((p) => [
+			p.slot,
+			{
+				is_available: p.is_available,
+				amount: p.amount,
+				negotiated: p.negotiated,
+				currency: p.currency,
+			},
+		]),
+	);
 
-// export function isLocationComplete(profile: ProfileSelect): boolean {
-// 	return locationSchema.safeParse(profile).success;
-// }
+	return PrecosSchema.safeParse(pricesObj).success;
+}
 
-// export function isCharacteristicsComplete(profile: ProfileSelect): boolean {
-// 	return characteristicsSchema.safeParse({
-// 		characteristics: profile.characteristics,
-// 	}).success;
-// }
+export function getServicosStatus(profile: IProfile.Select) {
+	const services = Array.isArray(profile.services) ? profile.services : [];
+	const count = services.length;
+	const isComplete = count >= 5;
+	const hasPartialProgress = count > 0 && count < 5;
 
-// export function isOfficeHoursComplete(profile: ProfileSelect): boolean {
-// 	const items = Array.isArray(profile.office_hours) ? profile.office_hours : [];
-// 	return items.some((it) => {
-// 		if (!it?.is_available) return false;
-// 		const s = (it?.start ?? '').trim();
-// 		const e = (it?.end ?? '').trim();
-// 		if (!/^\d{2}:\d{2}$/.test(s) || !/^\d{2}:\d{2}$/.test(e)) return false;
-// 		return s < e;
-// 	});
-// }
+	return { isComplete, hasPartialProgress, count };
+}
 
-// export function isPricesComplete(profile: ProfileSelect): boolean {
-// 	const prices = Array.isArray(profile.prices) ? profile.prices : [];
-// 	return prices.some(
-// 		(p) =>
-// 			Boolean(p?.is_available) &&
-// 			((p?.amount ?? 0) >= 40 || Boolean(p?.negotiated)),
-// 	);
-// }
+export function getGaleriaStatus(profile: IProfile.Select) {
+	const gallery = Array.isArray(profile.gallery) ? profile.gallery : [];
+	const validPhotos = gallery.filter(
+		(g) => typeof g?.url === 'string' && g.url.length > 0,
+	);
+	const count = validPhotos.length;
+	const isComplete = count >= 5;
+	const hasPartialProgress = count > 0 && count < 5;
 
-// export function isServicesComplete(profile: ProfileSelect): boolean {
-// 	const services = Array.isArray(profile.services) ? profile.services : [];
-// 	return services.length > 5;
-// }
+	return { isComplete, hasPartialProgress, count };
+}
 
-// export function getServicesProgress(profile: ProfileSelect): {
-// 	count: number;
-// 	isComplete: boolean;
-// 	hasPartialProgress: boolean;
-// } {
-// 	const services = Array.isArray(profile.services) ? profile.services : [];
-// 	const count = services.length;
-// 	const isComplete = count > 5;
-// 	const hasPartialProgress = count > 0 && count <= 5;
+export function computeOnboardingCompletion(
+	profile: IProfile.Select,
+): boolean[] {
+	return [
+		isInformacoesComplete(profile),
+		isLocalizacaoComplete(profile),
+		isCaracteristicasComplete(profile),
+		isHorariosComplete(profile),
+		isPrecosComplete(profile),
+		getServicosStatus(profile).isComplete,
+		getGaleriaStatus(profile).isComplete,
+	];
+}
 
-// 	return {
-// 		count,
-// 		isComplete,
-// 		hasPartialProgress,
-// 	};
-// }
-
-// export function isGalleryComplete(
-// 	profile: ProfileSelect,
-// 	minPhotos = 5,
-// ): boolean {
-// 	const gallery = Array.isArray(profile.gallery) ? profile.gallery : [];
-// 	const validPhotos = gallery.filter(
-// 		(g) => typeof g?.url === 'string' && g.url.length > 0,
-// 	);
-// 	return validPhotos.length >= minPhotos;
-// }
-
-// export function getGalleryProgress(profile: ProfileSelect): {
-// 	count: number;
-// 	isComplete: boolean;
-// 	hasPartialProgress: boolean;
-// } {
-// 	const gallery = Array.isArray(profile.gallery) ? profile.gallery : [];
-// 	const validPhotos = gallery.filter(
-// 		(g) => typeof g?.url === 'string' && g.url.length > 0,
-// 	);
-// 	const count = validPhotos.length;
-// 	const isComplete = count >= 5;
-// 	const hasPartialProgress = count > 0 && count < 5;
-
-// 	return {
-// 		count,
-// 		isComplete,
-// 		hasPartialProgress,
-// 	};
-// }
-
-// export function computeOnboardingCompletion(profile: ProfileSelect): boolean[] {
-// 	return [
-// 		isInformationComplete(profile),
-// 		isLocationComplete(profile),
-// 		isCharacteristicsComplete(profile),
-// 		isOfficeHoursComplete(profile),
-// 		isPricesComplete(profile),
-// 		isServicesComplete(profile),
-// 		isGalleryComplete(profile),
-// 	];
-// }
+export function getOnboardingStatus(profile: IProfile.Select) {
+	return {
+		informacoes: {
+			isComplete: isInformacoesComplete(profile),
+			hasPartialProgress: false,
+		},
+		localizacao: {
+			isComplete: isLocalizacaoComplete(profile),
+			hasPartialProgress: false,
+		},
+		caracteristicas: {
+			isComplete: isCaracteristicasComplete(profile),
+			hasPartialProgress: false,
+		},
+		horarios: {
+			isComplete: isHorariosComplete(profile),
+			hasPartialProgress: false,
+		},
+		precos: {
+			isComplete: isPrecosComplete(profile),
+			hasPartialProgress: false,
+		},
+		servicos: getServicosStatus(profile),
+		galeria: getGaleriaStatus(profile),
+	};
+}

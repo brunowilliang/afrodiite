@@ -14,6 +14,7 @@ export const ServicesCard = ({
 	return (
 		<InfoCard
 			title="Serviços"
+			icon="Services"
 			data={
 				(services ?? [])
 					.map((serviceId) => {

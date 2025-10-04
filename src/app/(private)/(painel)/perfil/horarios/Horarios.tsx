@@ -15,7 +15,7 @@ import { useProfile } from '@/hooks/useProfile';
 import { Badge } from '../../components/Badge';
 
 const timeRegex = /^([01]\d|2[0-3]):([0-5]\d)$/;
-const formSchema = z
+export const HorariosSchema = z
 	.object(
 		Object.fromEntries(
 			(DayEnum.options as readonly Day[]).map((day) => [
@@ -67,7 +67,7 @@ export const Horarios = () => {
 	};
 
 	const form = useForm({
-		resolver: zodResolver(formSchema) as any,
+		resolver: zodResolver(HorariosSchema) as any,
 		mode: 'onChange',
 		defaultValues: profile?.office_hours?.length
 			? Object.fromEntries(
