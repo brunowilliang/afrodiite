@@ -1,4 +1,5 @@
 import type { MetadataRoute } from 'next';
+import '@/lib/orpc/server';
 import { api } from '@/lib/orpc';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
