@@ -133,7 +133,11 @@ export const Acompanhante = ({ publicId }: Props) => {
 							variant="web"
 							profile={profile ?? {}}
 							handleWhatsAppClick={() => {
-								window.open(`https://wa.me/${profile?.whatsapp}`, '_blank');
+								const message = `Olá ${profile?.artist_name}, vi o seu anúncio no https://afrodiite.com e gostaria de saber mais informações!`;
+								window.open(
+									`https://wa.me/${profile?.whatsapp}?text=${encodeURIComponent(message)}`,
+									'_blank',
+								);
 								trackEvent('whatsapp_click');
 							}}
 							handlePhoneClick={() => {
@@ -183,7 +187,11 @@ export const Acompanhante = ({ publicId }: Props) => {
 				variant="mobile"
 				profile={profile ?? {}}
 				handleWhatsAppClick={() => {
-					window.open(`https://wa.me/${profile?.whatsapp}`, '_blank');
+					const message = `Olá ${profile?.artist_name}, vi o seu anúncio no https://afrodiite.com e gostaria de saber mais informações!`;
+					window.open(
+						`https://wa.me/${profile?.whatsapp}?text=${encodeURIComponent(message)}`,
+						'_blank',
+					);
 					trackEvent('whatsapp_click');
 				}}
 				handlePhoneClick={() => {

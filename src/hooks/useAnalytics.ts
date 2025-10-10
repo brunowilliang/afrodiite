@@ -11,9 +11,11 @@ type Profile = {
 };
 
 export const useAnalytics = (profile: Profile | null) => {
+	const isDev = process.env.NODE_ENV === 'development';
 	const getSessionKey = () => `analytics_events_${profile?.id}`;
 
-	if (!profile?.id) {
+	// Disable analytics in development or if no profile
+	if (!profile?.id || isDev) {
 		return { trackEvent: () => {} };
 	}
 

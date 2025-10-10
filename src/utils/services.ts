@@ -271,4 +271,12 @@ export const DATA_SERVICES = [
 		short_description:
 			'Troca de papéis dominante/submisso com dinâmicas de poder invertidas e cenários personalizados.',
 	},
+	{
+		id: 35,
+		label: 'Webshow',
+		description:
+			'Apresentações sensuais ao vivo por vídeo chamada com interação em tempo real. Shows incluem strip-tease, masturbação e outras performances eróticas personalizadas. Conversa íntima e direcionamento durante toda sessão conforme desejo do cliente. Uso de brinquedos e acessórios para tornar a experiência mais completa. Figurinos e cenários podem ser escolhidos mediante solicitação prévia. Horários flexíveis para agendamento conforme disponibilidade mútua. Experiência intimista mesmo à distância.',
+		short_description:
+			'Shows sensuais ao vivo por vídeo chamada com strip, masturbação e interação personalizada em tempo real.',
+	},
 ] as const;
