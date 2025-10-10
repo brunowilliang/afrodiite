@@ -13,9 +13,6 @@ export const env = createEnv({
 		CLOUDFLARE_ENDPOINT: z.string(),
 		CLOUDFLARE_ACCESS_KEY_ID: z.string().min(1),
 		CLOUDFLARE_SECRET_ACCESS_KEY: z.string().min(1),
-		GA_CLIENT_EMAIL: z.email(),
-		GA_PRIVATE_KEY: z.string().min(1),
-		GA_PROPERTY_ID: z.string().min(1),
 	},
 	client: {
 		NEXT_PUBLIC_BETTER_AUTH_URL: z.string(),
@@ -34,9 +31,6 @@ export const env = createEnv({
 		CLOUDFLARE_ENDPOINT: process.env.CLOUDFLARE_ENDPOINT,
 		CLOUDFLARE_ACCESS_KEY_ID: process.env.CLOUDFLARE_ACCESS_KEY_ID,
 		CLOUDFLARE_SECRET_ACCESS_KEY: process.env.CLOUDFLARE_SECRET_ACCESS_KEY,
-		GA_CLIENT_EMAIL: process.env.GA_CLIENT_EMAIL,
-		GA_PRIVATE_KEY: process.env.GA_PRIVATE_KEY,
-		GA_PROPERTY_ID: process.env.GA_PROPERTY_ID,
 		// Client
 		NEXT_PUBLIC_BETTER_AUTH_URL: process.env.NEXT_PUBLIC_BETTER_AUTH_URL,
 		NEXT_PUBLIC_CORS_ORIGIN: process.env.NEXT_PUBLIC_CORS_ORIGIN,
