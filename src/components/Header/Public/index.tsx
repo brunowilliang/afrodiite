@@ -4,8 +4,8 @@ import { Navbar, NavbarMenu, NavbarMenuToggle } from '@heroui/react';
 import Link from 'next/link';
 import { useState } from 'react';
 import { Card } from '@/components/core/Card';
+import { Logo } from '@/components/core/Logo';
 import { MenuTabs } from '@/components/Header/Public/Menu';
-import { Logo } from '@/components/Logo';
 
 export const Header = () => {
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -31,7 +31,7 @@ export const Header = () => {
 						aria-label={'Toggle menu'}
 					/>
 					<Link href="/painel" onClick={() => setIsMenuOpen(false)}>
-						<Logo className="h-full cursor-pointer" />
+						<Logo />
 					</Link>
 				</div>
 

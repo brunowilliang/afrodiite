@@ -2,13 +2,13 @@
 
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/core/Button';
-import { Logo } from '@/components/Logo';
+import { Logo } from '@/components/core/Logo';
 
 export default function Home() {
 	const router = useRouter();
 	return (
 		<div className="centered mx-auto flex min-h-[100dvh] max-w-lg flex-col gap-4 overflow-hidden px-4">
-			<Logo className="h-10 w-40" />
+			<Logo />
 			<div className="my-10 flex flex-col gap-1">
 				{/* <Text as="h4" weight="light" className="text-center">
 						Algo intenso está se aproximando!

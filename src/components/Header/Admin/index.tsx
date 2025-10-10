@@ -5,8 +5,8 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { Card } from '@/components/core/Card';
 import { Input } from '@/components/core/Input';
+import { Logo } from '@/components/core/Logo';
 import { MenuTabs } from '@/components/Header/Admin/Menu';
-import { Logo } from '@/components/Logo';
 import { useProfile } from '@/hooks/useProfile';
 import { Avatar } from './Avatar';
 
@@ -61,7 +61,7 @@ export const Header = () => {
 						aria-label={'Toggle menu'}
 					/>
 					<Link href="/painel" onClick={() => setIsMenuOpen(false)}>
-						<Logo className="h-full cursor-pointer" />
+						<Logo />
 					</Link>
 				</div>
 				<Input.Switch
