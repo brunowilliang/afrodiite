@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
 		const hasParams = name || city;
 
 		// Load Outfit fonts from local files
-		const fontsDir = join(process.cwd(), 'public', 'fonts', 'Outfit');
+		const fontsDir = join(process.cwd(), 'public', 'fonts', 'outfit');
 
 		const outfitRegular = await readFile(join(fontsDir, 'outfit-regular.ttf'));
 
