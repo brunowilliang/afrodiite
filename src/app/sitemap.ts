@@ -1,6 +1,7 @@
+import { and, eq } from 'drizzle-orm';
 import type { MetadataRoute } from 'next';
-import '@/lib/orpc/server';
-import { api } from '@/lib/orpc';
+import { db } from '@/api/database';
+import { escortProfiles } from '@/api/database/schemas';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 	const baseUrl =
@@ -40,9 +41,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 		},
 	];
 
-	// Fetch all visible escort profiles
+	// Fetch all visible escort profiles directly from database
 	try {
-		const profiles = await api.orpc.escorts.listAll({});
+		const profiles = await db
+			.select({
+				public_id: escortProfiles.public_id,
+				slug: escortProfiles.slug,
+				updated_at: escortProfiles.updated_at,
+			})
+			.from(escortProfiles)
+			.where(
+				and(
+					eq(escortProfiles.is_visible, true),
+					eq(escortProfiles.is_onboarding_complete, true),
+				),
+			);
 
 		const escortPages: MetadataRoute.Sitemap = profiles
 			.filter((profile) => profile.slug)
