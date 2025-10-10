@@ -25,14 +25,17 @@ type ReviewData = {
 export function generateProfileMetadata(profile: ProfileData): Metadata {
 	const displayName = profile.artist_name || profile.name;
 	const location = profile.city || 'Portugal';
+	const baseUrl =
+		process.env.NEXT_PUBLIC_CORS_ORIGIN || 'https://afrodiite.com';
 
 	const title = `${displayName} - Acompanhante em ${location}`;
 	const description =
 		profile.description?.slice(0, 160) ||
 		`Conheça ${displayName}, acompanhante de luxo em ${location}. Perfil verificado com avaliações reais.`;
 
-	// Generate dynamic OG image URL
-	const ogImageUrl = `/api/og?name=${encodeURIComponent(displayName)}&city=${encodeURIComponent(location)}`;
+	// Generate dynamic OG image URL (absolute URL required for crawlers)
+	const ogImageUrl = `${baseUrl}/api/og?name=${encodeURIComponent(displayName)}&city=${encodeURIComponent(location)}`;
+	const profileUrl = `${baseUrl}/acompanhante/${profile.public_id}/${profile.slug}`;
 
 	return {
 		title,
@@ -41,7 +44,7 @@ export function generateProfileMetadata(profile: ProfileData): Metadata {
 			title,
 			description,
 			type: 'profile',
-			url: `/acompanhante/${profile.public_id}/${profile.slug}`,
+			url: profileUrl,
 			images: [
 				{
 					url: ogImageUrl,
@@ -58,7 +61,7 @@ export function generateProfileMetadata(profile: ProfileData): Metadata {
 			images: [ogImageUrl],
 		},
 		alternates: {
-			canonical: `/acompanhante/${profile.public_id}/${profile.slug}`,
+			canonical: profileUrl,
 		},
 	};
 }
@@ -139,6 +142,9 @@ export function generateProfileJsonLd(
  * Generate metadata for search/listing pages
  */
 export function generateListingMetadata(search?: string): Metadata {
+	const baseUrl =
+		process.env.NEXT_PUBLIC_CORS_ORIGIN || 'https://afrodiite.com';
+
 	const title = search
 		? `Acompanhantes em ${search} | Portugal`
 		: 'Acompanhantes de Luxo em Portugal';
@@ -147,7 +153,10 @@ export function generateListingMetadata(search?: string): Metadata {
 		? `Encontre acompanhantes de luxo em ${search}. Perfis verificados, avaliações reais e experiências exclusivas em Portugal.`
 		: 'Descubra as melhores acompanhantes de luxo em Portugal. Perfis verificados em Lisboa, Porto, Braga, Coimbra e mais cidades.';
 
-	const ogImageUrl = '/api/og';
+	const ogImageUrl = `${baseUrl}/api/og`;
+	const pageUrl = search
+		? `${baseUrl}/portugal?search=${encodeURIComponent(search)}`
+		: `${baseUrl}/portugal`;
 
 	return {
 		title,
@@ -156,9 +165,7 @@ export function generateListingMetadata(search?: string): Metadata {
 			title,
 			description,
 			type: 'website',
-			url: search
-				? `/portugal?search=${encodeURIComponent(search)}`
-				: '/portugal',
+			url: pageUrl,
 			images: [
 				{
 					url: ogImageUrl,
@@ -175,9 +182,7 @@ export function generateListingMetadata(search?: string): Metadata {
 			images: [ogImageUrl],
 		},
 		alternates: {
-			canonical: search
-				? `/portugal?search=${encodeURIComponent(search)}`
-				: '/portugal',
+			canonical: pageUrl,
 		},
 	};
 }
