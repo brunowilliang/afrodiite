@@ -1,6 +1,6 @@
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 import { z } from 'zod';
-import { createCrud } from '@/api/database';
+import { createCrud, db } from '@/api/database';
 import { escortProfiles } from '@/api/database/schemas';
 import { publicProcedure } from '@/api/http/middlewares';
 import { reviews } from './reviews';
@@ -32,6 +32,10 @@ const Reviews = {
 	input: z.object({
 		public_id: z.coerce.number(),
 	}),
+};
+
+const ListAll = {
+	input: z.object({}),
 };
 
 export const escortRoutes = {
@@ -69,4 +73,21 @@ export const escortRoutes = {
 
 			return profiles;
 		}),
+	listAll: publicProcedure.input(ListAll.input).handler(async () => {
+		const profiles = await db
+			.select({
+				public_id: escortProfiles.public_id,
+				slug: escortProfiles.slug,
+				updated_at: escortProfiles.updated_at,
+			})
+			.from(escortProfiles)
+			.where(
+				and(
+					eq(escortProfiles.is_visible, true),
+					eq(escortProfiles.is_onboarding_complete, true),
+				),
+			);
+
+		return profiles;
+	}),
 };
