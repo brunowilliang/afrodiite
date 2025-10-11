@@ -279,4 +279,28 @@ export const DATA_SERVICES = [
 		short_description:
 			'Shows sensuais ao vivo por vídeo chamada com strip, masturbação e interação personalizada em tempo real.',
 	},
+	{
+		id: 36,
+		label: 'Massagem erótica',
+		description:
+			'Massagem corporal sensual focada em despertar o desejo através de toques estratégicos e prolongados. Técnicas que combinam relaxamento com estimulação gradual das zonas erógenas do corpo. Uso de óleos aquecidos e aromatizados para intensificar as sensações táteis. Movimentos lentos e firmes explorando todo o corpo de forma provocativa. Pode servir como preliminar para outras práticas ou ser apreciada isoladamente. Pressão e intensidade ajustadas conforme resposta e preferência do cliente.',
+		short_description:
+			'Massagem corporal sensual com toques estratégicos, óleos aquecidos e estímulo gradual das zonas erógenas.',
+	},
+	{
+		id: 37,
+		label: 'Massagem Nuru',
+		description:
+			'Massagem erótica japonesa corpo-a-corpo usando gel especial à base de algas marinhas. Técnica onde a acompanhante usa todo seu corpo deslizando sobre o cliente. Gel incolor, inodoro e extremamente escorregadio para deslize perfeito e sensual. Ambiente aquecido e superfície adequada para movimentos fluidos e seguros. Experiência sensorial completa com contato físico intenso e íntimo. Duração estendida para aproveitar todos os benefícios desta prática ancestral.',
+		short_description:
+			'Massagem japonesa corpo-a-corpo com gel especial de algas, contato físico intenso e deslize sensual.',
+	},
+	{
+		id: 38,
+		label: 'Massagem prostática',
+		description:
+			'Estimulação da próstata através de técnicas manuais específicas para intensificar o prazer masculino. Conhecimento anatômico preciso para localização e estímulo adequado da glândula. Lubrificação abundante e movimentos delicados respeitando a sensibilidade da região. Pode intensificar significativamente a qualidade do orgasmo masculino. Higiene rigorosa e uso de luvas quando solicitado. Comunicação constante sobre sensações e ajuste de pressão.',
+		short_description:
+			'Estimulação prostática especializada com conhecimento anatômico preciso, lubrificação abundante e higiene rigorosa.',
+	},
 ] as const;

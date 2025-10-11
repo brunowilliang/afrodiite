@@ -20,22 +20,15 @@ export const HorariosSchema = z
 		Object.fromEntries(
 			(DayEnum.options as readonly Day[]).map((day) => [
 				day,
-				z
-					.object({
-						is_available: z.boolean(),
-						start: z.string().regex(timeRegex),
-						end: z.string().regex(timeRegex),
-					})
-					.superRefine((val, ctx) => {
-						if (!val.is_available) return;
-						if ((val.start ?? '') >= (val.end ?? '')) {
-							ctx.addIssue({
-								code: 'custom',
-								message: 'Hora de início deve ser menor que a hora de fim',
-								path: ['end'],
-							});
-						}
-					}),
+				z.object({
+					is_available: z.boolean(),
+					start: z
+						.string()
+						.regex(timeRegex, 'Formato inválido. Use HH:MM (ex: 14:30)'),
+					end: z
+						.string()
+						.regex(timeRegex, 'Formato inválido. Use HH:MM (ex: 14:30)'),
+				}),
 			]),
 		) as Record<Day, z.ZodObject<any>>,
 	)
