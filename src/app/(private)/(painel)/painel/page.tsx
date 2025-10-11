@@ -8,6 +8,16 @@ import { Tabs } from '@/components/core/Tabs';
 import { api } from '@/lib/orpc';
 import { Badge } from '../components/Badge';
 
+const DAYS_PT: Record<string, string> = {
+	sunday: 'Domingo',
+	monday: 'Segunda-feira',
+	tuesday: 'Terça-feira',
+	wednesday: 'Quarta-feira',
+	thursday: 'Quinta-feira',
+	friday: 'Sexta-feira',
+	saturday: 'Sábado',
+};
+
 export default function Dashboard() {
 	const [period, setPeriod] = useState<IAnalytics.Period>('7daysAgo');
 
@@ -74,7 +84,9 @@ export default function Dashboard() {
 					/>
 					<CardChart
 						title="Melhor Dia"
-						value={stats?.best_day || '-'}
+						value={
+							stats?.best_day ? DAYS_PT[stats.best_day] || stats.best_day : '-'
+						}
 						isLoading={isStatsLoading}
 						modalTitle="Melhor Dia"
 						modalText="Indica o dia da semana (0=domingo, 6=sábado) em que seu perfil recebe mais visualizações no período selecionado. Conhecer os dias de maior tráfego permite otimizar sua estratégia de atendimento e presença online. Você pode programar atualizações de fotos ou conteúdo nos dias de maior movimento para aproveitar o pico de visitantes e aumentar suas chances de conversão."
